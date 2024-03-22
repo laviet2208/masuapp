@@ -1,11 +1,18 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/main_screen/user_main_screen.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/restaurant_screen/restaurant_directory_page/restaurant_directory_page.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/restaurant_screen/restaurant_main_screen/shop_type_item.dart';
+
+import '../../../../Data/accountData/shopData/shopDirectory.dart';
+import '../../../../Data/adsData/restaurantAdsData.dart';
 
 class restaurant_main_screen extends StatefulWidget {
   const restaurant_main_screen({super.key});
@@ -16,6 +23,52 @@ class restaurant_main_screen extends StatefulWidget {
 
 class _restaurant_main_screenState extends State<restaurant_main_screen> {
   String locationName = '';
+  String areaName = '';
+  List<restaurantAdsData> dataList = [];
+  List<shopDirectory> directoryList = [];
+  final PageController _pageController = PageController(viewportFraction: 1, keepPage: true);
+  Timer? _timer;
+  int _currentPage = 0;
+
+  void get_ads_restaurant_page_data() {
+    final reference = FirebaseDatabase.instance.reference();
+    reference.child("Ads").orderByChild('direction').equalTo(3).onValue.listen((event) {
+      final dynamic ads = event.snapshot.value;
+      dataList.clear();
+      ads.forEach((key, value) {
+        if (value['area'].toString() == finalData.user_account.area) {
+          restaurantAdsData data = restaurantAdsData.fromJson(value);
+          dataList.add(data);
+          setState(() {
+
+          });
+        }
+      }
+      );
+      setState(() {
+
+      });
+    });
+  }
+
+  void get_res_directory_data() {
+    final reference = FirebaseDatabase.instance.reference();
+    reference.child("RestaurantDirectory").orderByChild('area').equalTo(finalData.user_account.area).onValue.listen((event) {
+      final dynamic ads = event.snapshot.value;
+      directoryList.clear();
+      ads.forEach((key, value) {
+        shopDirectory data = shopDirectory.fromJson(value);
+        directoryList.add(data);
+        setState(() {
+
+        });
+      }
+      );
+      setState(() {
+
+      });
+    });
+  }
 
   void fetchLocationName(double latitude, double longitude) async {
     final Uri uri = Uri.parse('https://rsapi.goong.io/Geocode?latlng=$latitude,$longitude&api_key=3u7W0CAOa9hi3SLC6RI3JWfBf6k8uZCSUTCHKOLf');
@@ -33,11 +86,40 @@ class _restaurant_main_screenState extends State<restaurant_main_screen> {
     }
   }
 
+  Future<String> _getImageURL(String imagePath) async {
+    final ref = FirebaseStorage.instance.ref().child('Ads').child(imagePath);
+    final url = await ref.getDownloadURL();
+    print(url);
+    return url;
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     fetchLocationName(finalData.user_account.location.latitude, finalData.user_account.location.longitude);
+    get_ads_restaurant_page_data();
+    get_res_directory_data();
+    _timer = Timer.periodic(Duration(seconds: 5), (timer) {
+      if (_currentPage < dataList.length - 1) {
+        _currentPage++;
+      } else {
+        _currentPage = 0;
+      }
+      _pageController.animateToPage(
+        _currentPage,
+        duration: Duration(milliseconds: 2000),
+        curve: Curves.fastOutSlowIn,
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _pageController.dispose();
+    _timer?.cancel();
   }
 
   @override
@@ -182,26 +264,98 @@ class _restaurant_main_screenState extends State<restaurant_main_screen> {
                   child: ListView(
                     padding: EdgeInsets.zero,
                     children: [
-                      Container(height: 10,),
+                      Container(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(height: 10,),
 
-                      Padding(
-                        padding: EdgeInsets.only(left: 10, right: 10),
-                        child: Container(
-                          height: (width - 40)*3/4 + 60,
-                          child: GridView.builder(
-                            itemCount: finalData.restaurant_type_images.length,
-                            padding: EdgeInsets.zero,
-                            physics: NeverScrollableScrollPhysics(),
-                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 4, // số phần tử trên mỗi hàng
-                              mainAxisSpacing: 10, // khoảng cách giữa các hàng
-                              crossAxisSpacing: 30, // khoảng cách giữa các cột
-                              childAspectRatio: 1, // tỷ lệ chiều rộng và chiều cao
+                            Container(
+                              height: width/2,
+                              child: PageView.builder(
+                                scrollDirection: Axis.horizontal,
+                                controller: _pageController,
+                                itemCount: dataList.length,
+                                itemBuilder: (context, index) {
+                                  return GestureDetector(
+                                    child: Container(
+                                      width: width - 10,
+                                      height: height - 25,
+                                      alignment: Alignment.center,
+                                      child: FutureBuilder(
+                                        future: _getImageURL(dataList[index].id + '.png'),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.connectionState == ConnectionState.waiting) {
+                                            return Container(
+                                              width: 30,
+                                              height: 30,
+                                              child: CircularProgressIndicator(color: Colors.black,),
+                                            );
+                                          }
+
+                                          if (snapshot.hasError) {
+                                            return Container(
+                                              alignment: Alignment.center,
+                                              child: Icon(Icons.image_outlined, color: Colors.black, size: 30,),
+                                            );
+                                          }
+
+                                          if (!snapshot.hasData) {
+                                            return Text('Image not found');
+                                          }
+
+                                          return Image.network(snapshot.data.toString(),fit: BoxFit.fill,);
+                                        },
+                                      ),
+                                    ),
+                                    onTap: () {
+
+                                    },
+                                  );
+                                },
+                              ),
                             ),
-                            itemBuilder: (context, index) {
-                              return shop_type_item(imagePath: finalData.restaurant_type_images[index], title: finalData.restaurant_type_names[index]);
-                            },
-                          ),
+
+                            Container(height: 10,),
+
+                            Padding(
+                              padding: EdgeInsets.only(left: 10, right: 10),
+                              child: Container(
+                                height: (width - 20 - 90)/4*3 + 20,
+                                child: GridView.builder(
+                                  itemCount: finalData.restaurant_type_images.length,
+                                  padding: EdgeInsets.zero,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 4, // số phần tử trên mỗi hàng
+                                    mainAxisSpacing: 10, // khoảng cách giữa các hàng
+                                    crossAxisSpacing: 30, // khoảng cách giữa các cột
+                                    childAspectRatio: 1, // tỷ lệ chiều rộng và chiều cao
+                                  ),
+                                  itemBuilder: (context, index) {
+                                    return shop_type_item(imagePath: finalData.restaurant_type_images[index], title: finalData.restaurant_type_names[index]);
+                                  },
+                                ),
+                              ),
+                            ),
+
+                            Container(height: 20,),
+
+                            Container(
+                              child: ListView.builder(
+                                padding: EdgeInsets.zero,
+                                shrinkWrap: true,
+                                itemCount: directoryList.length,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                    padding: EdgeInsets.only(bottom: 30),
+                                    child: restaurant_directory_page(directory: directoryList[index]),
+                                  );
+                                },
+                              ),
+                            )
+                          ],
                         ),
                       )
                     ],

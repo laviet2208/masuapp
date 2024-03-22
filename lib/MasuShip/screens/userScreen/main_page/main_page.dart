@@ -1,9 +1,14 @@
+import 'dart:async';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/main_page/ingredient/catch_order_ingredient/catch_order_ingredient_dialog.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/restaurant_screen/restaurant_main_screen/restaurant_main_screen.dart';
+
+import '../../../Data/adsData/restaurantAdsData.dart';
 
 class main_page extends StatefulWidget {
   const main_page({super.key});
@@ -14,6 +19,31 @@ class main_page extends StatefulWidget {
 
 class _main_pageState extends State<main_page> {
   String areaName = '';
+  List<restaurantAdsData> dataList = [];
+  final PageController _pageController = PageController(viewportFraction: 1, keepPage: true);
+  Timer? _timer;
+  int _currentPage = 0;
+
+  void get_ads_main_page_data() {
+    final reference = FirebaseDatabase.instance.reference();
+    reference.child("Ads").orderByChild('direction').equalTo(2).onValue.listen((event) {
+      final dynamic ads = event.snapshot.value;
+
+      ads.forEach((key, value) {
+        if (value['area'].toString() == finalData.user_account.area) {
+          restaurantAdsData data = restaurantAdsData.fromJson(value);
+          dataList.add(data);
+          setState(() {
+
+          });
+        }
+      }
+      );
+      setState(() {
+
+      });
+    });
+  }
 
   void get_area_name() {
     final reference = FirebaseDatabase.instance.reference();
@@ -26,11 +56,39 @@ class _main_pageState extends State<main_page> {
     });
   }
 
+  Future<String> _getImageURL(String imagePath) async {
+    final ref = FirebaseStorage.instance.ref().child('Ads').child(imagePath);
+    final url = await ref.getDownloadURL();
+    print(url);
+    return url;
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     get_area_name();
+    get_ads_main_page_data();
+    _timer = Timer.periodic(Duration(seconds: 5), (timer) {
+      if (_currentPage < dataList.length - 1) {
+        _currentPage++;
+      } else {
+        _currentPage = 0;
+      }
+      _pageController.animateToPage(
+        _currentPage,
+        duration: Duration(milliseconds: 2000),
+        curve: Curves.fastOutSlowIn,
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _pageController.dispose();
+    _timer?.cancel();
   }
 
   @override
@@ -56,8 +114,47 @@ class _main_pageState extends State<main_page> {
               right: 0,
               child: Container(
                 height: height/3 - 70,
-                decoration: BoxDecoration(
-                  border: Border.all(),
+                child: PageView.builder(
+                  scrollDirection: Axis.horizontal,
+                  controller: _pageController,
+                  itemCount: dataList.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      child: Container(
+                        width: width - 10,
+                        height: height - 25,
+                        alignment: Alignment.center,
+                        child: FutureBuilder(
+                          future: _getImageURL(dataList[index].id + '.png'),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return Container(
+                                width: 30,
+                                height: 30,
+                                child: CircularProgressIndicator(color: Colors.black,),
+                              );
+                            }
+
+                            if (snapshot.hasError) {
+                              return Container(
+                                alignment: Alignment.center,
+                                child: Icon(Icons.image_outlined, color: Colors.black, size: 30,),
+                              );
+                            }
+
+                            if (!snapshot.hasData) {
+                              return Text('Image not found');
+                            }
+
+                            return Image.network(snapshot.data.toString(),fit: BoxFit.fill,);
+                          },
+                        ),
+                      ),
+                      onTap: () {
+
+                      },
+                    );
+                  },
                 ),
               ),
             ),
