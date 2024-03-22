@@ -1,0 +1,167 @@
+name: masuapp
+description: Main app Masu.
+# The following line prevents the package from being accidentally published to
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+# The following defines the version and build number for your application.
+# A version number is three numbers separated by dots, like 1.2.43
+# followed by an optional build number separated by a +.
+# Both the version and the builder number may be overridden in flutter
+# build by specifying --build-name and --build-number, respectively.
+# In Android, build-name is used as versionName while build-number used as versionCode.
+# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
+# In iOS, build-name is used as CFBundleShortVersionString while build-number is used as CFBundleVersion.
+# Read more about iOS versioning at
+# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+# In Windows, build-name is used as the major, minor, and patch parts
+# of the product and file versions while build-number is used as the build suffix.
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.19.6 <3.0.0'
+
+# Dependencies specify other packages that your package needs in order to work.
+# To automatically upgrade your package dependencies to the latest versions
+# consider running `flutter pub upgrade --major-versions`. Alternatively,
+# dependencies can be manually updated by changing the version numbers below to
+# the latest version available on pub.dev. To see which dependencies have newer
+# versions available, run `flutter pub outdated`.
+dependencies:
+  flutter:
+    sdk: flutter
+
+
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^1.0.2
+  firebase_core: ^2.17.0
+  firebase_auth: ^4.7.2
+  firebase_database: ^10.1.1
+  firebase_storage: ^11.1.1
+  fluttertoast: ^8.2.1
+  auto_size_text: ^3.0.0
+  webview_flutter: ^4.2.0
+  url_launcher: ^6.1.10
+  responsive_builder: ^0.6.4
+  google_nav_bar: ^5.0.6
+  pinput: ^2.2.31
+  flutter_polyline_points: ^1.0.0
+  http:
+  uuid: ^3.0.7
+  flutter_svg: ^2.0.5
+  google_maps_flutter: ^2.3.0
+  geocoding: ^2.1.0
+  flutter_typeahead: ^4.6.2
+  provider: ^6.0.5
+  camera: ^0.10.5+5
+  path: ^1.8.2
+  image: ^4.1.3
+  path_provider: ^2.1.1
+  dio: ^5.2.1+1
+  geolocator: ^10.1.0
+  audioplayers: ^4.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  # The "flutter_lints" package below contains a set of recommended lints to
+  # encourage good coding practices. The lint set provided by the package is
+  # activated in the `analysis_options.yaml` file located at the root of your
+  # package. See that file for information about deactivating specific lint
+  # rules and activating additional ones.
+  flutter_lints: ^2.0.0
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+# The following section is specific to Flutter packages.
+flutter:
+
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+
+  assets:
+    - assets/image/notice.png
+    - assets/image/bginfo.png
+    - assets/image/phoneicon.png
+    - assets/image/mainLogo.png
+    - assets/image/iconbag.png
+    - assets/image/icondelivery.png
+    - assets/image/iconfood.png
+    - assets/image/icongift.png
+    - assets/image/iconmart.png
+    - assets/image/iconoffer.png
+    - assets/image/icontransport.png
+    - assets/image/iconbike.png
+    - assets/image/iconlocation.png
+    - assets/image/linhtinh1.png
+    - assets/image/linhtinh2.png
+    - assets/image/linhtinh3.png
+    - assets/image/linhtinh4.png
+    - assets/image/linhtinh5.png
+    - assets/image/linhtinh6.png
+    - assets/image/pickicon.png
+    - assets/image/backicon.png
+    - assets/image/backicon1.png
+    - assets/image/bluecircle.png
+    - assets/image/locationRounditem.png
+    - assets/image/tickicon.png
+    - assets/image/fire.png
+    - assets/image/rightarrow.png
+    - assets/image/bikeLogo1.png
+    - assets/image/carLogo1.png
+    - assets/image/realmoneyicon.png
+    - assets/image/parcel.png
+    - assets/image/iconorder.png
+    - assets/image/carticon.png
+    - assets/image/stick.png
+    - assets/image/bgfood1.png
+    - assets/image/bgfood2.png
+    - assets/image/bgfood3.png
+    - assets/image/garbageicon.png
+    - assets/image/righticon.png
+    - assets/image/icontrang1/
+    - assets/image/iconhoatdong/
+    - assets/image/iconaccinfo/
+    - assets/volume/ting.mp3
+    - assets/image/minibike.png
+    - assets/image/minicar.png
+    - assets/image/ghichu.png
+    - assets/image/clock.png
+    - assets/image/khuyenmai.png
+    - assets/image/pen.png
+    - assets/image/redcircle.png
+    - assets/image/greycircle.png
+    - assets/image/redlocation.png
+    - assets/image/orangecircle.png
+    - assets/image/catchtype1.png
+    - assets/image/catchtype2.png
+    - assets/image/catchtype3.png
+    - assets/image/catchtype4.png
+
+  fonts:
+    - family: logo_font_1
+      fonts:
+        - asset: assets/font/logofont1.otf
+
+    - family: Dmsan_regular
+      fonts:
+        - asset: assets/font/DMSans_regu.ttf
+
+
+    - family: arial
+      fonts:
+        - asset: assets/font/arial.TTF
+
+
+    - family: timenew
+      fonts:
+        - asset: assets/font/times.ttf
+
+    - family: roboto
+      fonts:
+        - asset: assets/font/Roboto.ttf

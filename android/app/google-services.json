@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "788990781107",
+    "firebase_url": "https://masuship-5b377-default-rtdb.firebaseio.com",
+    "project_id": "masuship-5b377",
+    "storage_bucket": "masuship-5b377.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:788990781107:android:14eb59ab5692689cdf72c6",
+        "android_client_info": {
+          "package_name": "com.masuapp.masuapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA50xxfLFzKgf3rOafs3dWf6P6lPTl2tZI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:788990781107:android:a143612ad874581cdf72c6",
+        "android_client_info": {
+          "package_name": "com.masuapp.masuapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA50xxfLFzKgf3rOafs3dWf6P6lPTl2tZI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:788990781107:android:72802a73fd77b332df72c6",
+        "android_client_info": {
+          "package_name": "com.masumerchant.masumerchant"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA50xxfLFzKgf3rOafs3dWf6P6lPTl2tZI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
