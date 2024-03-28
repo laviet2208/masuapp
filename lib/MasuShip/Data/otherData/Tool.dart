@@ -1,5 +1,8 @@
 import 'dart:math';
-
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
+import '../accountData/shopData/cartProduct.dart';
 import '../voucherData/Voucher.dart';
 import 'Time.dart';
 
@@ -156,3 +159,12 @@ bool isCurrentTimeInRange(DateTime openTime, DateTime closeTime) {
   // Kiểm tra xem currentTime có nằm trong khoảng openTime và closeTime không
   return currentTime.isAfter(openTime) && currentTime.isBefore(closeTime);
 }
+
+double get_total_cart_money() {
+  double money = 0;
+  for(int i = 0; i < finalData.cartList.length; i++) {
+    money = money + (finalData.cartList[i].number * finalData.cartList[i].product.cost);
+  }
+  return money;
+}
+

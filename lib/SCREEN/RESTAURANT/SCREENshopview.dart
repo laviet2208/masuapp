@@ -328,7 +328,7 @@ class _SCREENshopmainState extends State<SCREENshopview> {
                                 },
                               ),
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),

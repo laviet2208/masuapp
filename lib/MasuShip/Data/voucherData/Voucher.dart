@@ -5,6 +5,7 @@ import '../otherData/Time.dart';
 class Voucher {
   String id;
   String eventName;
+  String area;
   double Money;
   double mincost;
   double maxSale;
@@ -21,7 +22,7 @@ class Voucher {
   List<UserUse> CustomList = [];
 
 
-  Voucher({required this.id, required this.Money,required this.mincost,required this.startTime,required this.endTime,required this.useCount,required this.maxCount, required this.eventName, required this.LocationId, required this.type, required this.Otype, required this.perCustom, required this.CustomList, required this.maxSale});
+  Voucher({required this.id, required this.Money,required this.mincost,required this.startTime,required this.endTime,required this.useCount,required this.maxCount, required this.eventName, required this.LocationId, required this.type, required this.Otype, required this.perCustom, required this.CustomList, required this.maxSale, required this.area});
 
   Map<dynamic, dynamic> toJson() => {
     'id' : id,
@@ -37,7 +38,8 @@ class Voucher {
     'Otype' : Otype,
     'perCustom' : perCustom,
     'CustomList' : CustomList.map((e) => e.toJson()).toList(),
-    'maxSale' : maxSale
+    'maxSale' : maxSale,
+    'area' : area,
   };
 
   factory Voucher.fromJson(Map<dynamic, dynamic> json) {
@@ -64,6 +66,7 @@ class Voucher {
       perCustom: int.parse(json['perCustom'].toString()),
       CustomList: userList,
       maxSale: double.parse(json['maxSale'].toString()),
+      area: json['area'].toString(),
     );
   }
 

@@ -1,5 +1,10 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_one_bike_screen/type_one_bike_step_1.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_three_bike_screen/type_three_bike_step_1.dart';
+
+import '../../../bike_screen/type_two_bike_screen/type_two_bike_step_1.dart';
 
 class catch_order_ingredient_dialog extends StatefulWidget {
   const catch_order_ingredient_dialog({super.key});
@@ -60,7 +65,7 @@ class _catch_order_ingredient_dialogState extends State<catch_order_ingredient_d
                             'Đã biết điểm đến',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontFamily: 'roboto',
+                              fontFamily: 'muli',
                               fontWeight: FontWeight.bold,
                               fontSize: 13,
                             ),
@@ -71,7 +76,7 @@ class _catch_order_ingredient_dialogState extends State<catch_order_ingredient_d
                   ),
                 ),
                 onTap: () {
-
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => type_one_bike_step_1(),),);
                 },
               ),
             ),
@@ -110,7 +115,7 @@ class _catch_order_ingredient_dialogState extends State<catch_order_ingredient_d
                             'Tự chỉ đường',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontFamily: 'roboto',
+                              fontFamily: 'muli',
                               fontWeight: FontWeight.bold,
                               fontSize: 13,
                             ),
@@ -121,7 +126,7 @@ class _catch_order_ingredient_dialogState extends State<catch_order_ingredient_d
                   ),
                 ),
                 onTap: () {
-
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => type_two_bike_step_1(),),);
                 },
               ),
             ),
@@ -160,7 +165,7 @@ class _catch_order_ingredient_dialogState extends State<catch_order_ingredient_d
                             'Lái xe về hộ',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontFamily: 'roboto',
+                              fontFamily: 'muli',
                               fontWeight: FontWeight.bold,
                               fontSize: 13,
                             ),
@@ -171,7 +176,7 @@ class _catch_order_ingredient_dialogState extends State<catch_order_ingredient_d
                   ),
                 ),
                 onTap: () {
-
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => type_three_bike_step_1(),),);
                 },
               ),
             ),
@@ -210,7 +215,7 @@ class _catch_order_ingredient_dialogState extends State<catch_order_ingredient_d
                             'Gọi hotline đặt xe',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontFamily: 'roboto',
+                              fontFamily: 'muli',
                               fontWeight: FontWeight.bold,
                               fontSize: 13,
                             ),

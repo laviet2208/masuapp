@@ -314,7 +314,7 @@ class _ITEMrestaurantIndirectState extends State<ITEMfoodIndirect> {
                             },
                           ),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 );

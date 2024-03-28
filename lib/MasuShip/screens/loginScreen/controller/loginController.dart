@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../Data/accountData/Account.dart';
 import '../../../Data/accountData/shipperAccount.dart';
 import '../../../Data/accountData/userAccount.dart';
+import '../../../Data/costData/Cost.dart';
 import '../../../Data/finalData/finalData.dart';
 import '../../../screens/loginScreen/enter_name_screen.dart';
 import '../../../screens/shipperScreen/main_screen/shipper_main_screen.dart';
@@ -50,8 +51,10 @@ class loginController {
             finalData.account = UserAccount.fromJson(value);
             finalData.user_account = UserAccount.fromJson(value);
             if (finalData.user_account.name == '') {
+              getCost();
               Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => enter_name_screen(),),);
             } else if (finalData.user_account.lockStatus == 1) {
+              getCost();
               Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => user_main_screen(),),);
             }
           } else {
@@ -66,6 +69,14 @@ class loginController {
       );
     }).onDone(() {
 
+    });
+  }
+
+  static void getCost() {
+    final reference = FirebaseDatabase.instance.reference();
+    reference.child('CostFee').child(finalData.user_account.area).onValue.listen((event) {
+      final dynamic data = event.snapshot.value;
+      finalData.bikeCost = Cost.fromJson(data['Bike']);
     });
   }
 }

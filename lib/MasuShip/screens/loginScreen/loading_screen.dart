@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:masuapp/MasuShip/Data/costData/Cost.dart';
 import '../../Data/accountData/shipperAccount.dart';
 import '../../Data/accountData/userAccount.dart';
 import '../../Data/finalData/finalData.dart';
@@ -50,10 +51,19 @@ class _loading_screenState extends State<loading_screen> {
     });
   }
 
+  Future<void> getCost() async {
+    final reference = FirebaseDatabase.instance.reference();
+    await reference.child('CostFee').child(finalData.user_account.area).onValue.listen((event) {
+      final dynamic data = event.snapshot.value;
+      finalData.bikeCost = Cost.fromJson(data['Bike']);
+    });
+  }
+
   final auth = FirebaseAuth.instance;
 
   void asyncMethod(String phone) async {
     await getData(phone);
+    await getCost();
   }
 
 

@@ -34,7 +34,6 @@ class _item_restaurant_in_directoryState extends State<item_restaurant_in_direct
   Future<String> _getImageURL(String imagePath) async {
     final ref = FirebaseStorage.instance.ref().child('Restaurant').child(imagePath);
     final url = await ref.getDownloadURL();
-    print(url);
     return url;
   }
 

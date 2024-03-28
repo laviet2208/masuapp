@@ -166,3 +166,7 @@ flutter:
     - family: roboto
       fonts:
         - asset: assets/font/Roboto.ttf
+
+    - family: muli
+      fonts:
+        - asset: assets/font/Muli-Regular.ttf

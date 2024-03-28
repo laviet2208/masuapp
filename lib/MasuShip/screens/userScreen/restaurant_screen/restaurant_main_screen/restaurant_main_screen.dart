@@ -1,18 +1,18 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
+import 'package:masuapp/MasuShip/Data/otherData/utils.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/main_screen/user_main_screen.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/restaurant_screen/restaurant_directory_page/restaurant_directory_page.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/restaurant_screen/restaurant_main_screen/shop_type_item.dart';
-
 import '../../../../Data/accountData/shopData/shopDirectory.dart';
 import '../../../../Data/adsData/restaurantAdsData.dart';
+import '../food_order_screen/cart_screen/view_cart_screen.dart';
 
 class restaurant_main_screen extends StatefulWidget {
   const restaurant_main_screen({super.key});
@@ -37,11 +37,13 @@ class _restaurant_main_screenState extends State<restaurant_main_screen> {
       dataList.clear();
       ads.forEach((key, value) {
         if (value['area'].toString() == finalData.user_account.area) {
-          restaurantAdsData data = restaurantAdsData.fromJson(value);
-          dataList.add(data);
-          setState(() {
+          if (int.parse(value['status'].toString()) == 1) {
+            restaurantAdsData data = restaurantAdsData.fromJson(value);
+            dataList.add(data);
+            setState(() {
 
-          });
+            });
+          }
         }
       }
       );
@@ -71,7 +73,7 @@ class _restaurant_main_screenState extends State<restaurant_main_screen> {
   }
 
   void fetchLocationName(double latitude, double longitude) async {
-    final Uri uri = Uri.parse('https://rsapi.goong.io/Geocode?latlng=$latitude,$longitude&api_key=3u7W0CAOa9hi3SLC6RI3JWfBf6k8uZCSUTCHKOLf');
+    final Uri uri = Uri.parse('https://rsapi.goong.io/Geocode?latlng=$latitude,$longitude&api_key=npcYThxwWdlxPTuGGZ8Tu4QAF7IyO3u2vYyWlV5Z');
     final response = await http.get(uri);
     if (response.statusCode == 200) {
       setState(() {
@@ -89,7 +91,6 @@ class _restaurant_main_screenState extends State<restaurant_main_screen> {
   Future<String> _getImageURL(String imagePath) async {
     final ref = FirebaseStorage.instance.ref().child('Ads').child(imagePath);
     final url = await ref.getDownloadURL();
-    print(url);
     return url;
   }
 
@@ -268,8 +269,6 @@ class _restaurant_main_screenState extends State<restaurant_main_screen> {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Container(height: 10,),
-
                             Container(
                               height: width/2,
                               child: PageView.builder(
@@ -348,9 +347,11 @@ class _restaurant_main_screenState extends State<restaurant_main_screen> {
                                 itemCount: directoryList.length,
                                 physics: NeverScrollableScrollPhysics(),
                                 itemBuilder: (context, index) {
-                                  return Padding(
-                                    padding: EdgeInsets.only(bottom: 30),
-                                    child: restaurant_directory_page(directory: directoryList[index]),
+                                  return GestureDetector(
+                                    child: Padding(
+                                      padding: EdgeInsets.only(bottom: 30),
+                                      child: restaurant_directory_page(directory: directoryList[index]),
+                                    ),
                                   );
                                 },
                               ),
@@ -360,6 +361,74 @@ class _restaurant_main_screenState extends State<restaurant_main_screen> {
                       )
                     ],
                   ),
+                ),
+              ),
+
+              Positioned(
+                bottom: 10,
+                right: 10,
+                child: GestureDetector(
+                  child: Container(
+                    height: width/6,
+                    width: width/6,
+                    decoration: BoxDecoration(
+                      color: Colors.yellow,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.4), // màu của shadow
+                          spreadRadius: 5, // bán kính của shadow
+                          blurRadius: 7, // độ mờ của shadow
+                          offset: Offset(0, 3), // vị trí của shadow
+                        ),
+                      ],
+                    ),
+                    child: Stack(
+                      children: <Widget>[
+                        Positioned(
+                          top: 0,
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          child: Icon(
+                            Icons.shopping_cart_outlined,
+                            color: Colors.black,
+                          ),
+                        ),
+
+                        Positioned(
+                          top: 5,
+                          right: 5,
+                          child: Container(
+                            height: 15,
+                            width: 15,
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(100)
+                            ),
+                            child: Center(
+                              child: Text(
+                                finalData.cartList.length.toString(),
+                                style: TextStyle(
+                                  fontFamily: 'muli',
+                                  color: Colors.white,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  onTap: () {
+                    if (finalData.cartList.length == 0) {
+                      toastMessage('Giỏ hàng trống');
+                    } else {
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => view_cart_screen(beforewidget: restaurant_main_screen(),),),);
+                    }
+                  },
                 ),
               )
             ],

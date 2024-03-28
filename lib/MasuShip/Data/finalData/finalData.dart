@@ -1,8 +1,11 @@
 
 
 import 'package:masuapp/MasuShip/Data/accountData/shipperAccount.dart';
+import 'package:masuapp/MasuShip/Data/accountData/shopData/cartProduct.dart';
+import 'package:masuapp/MasuShip/Data/costData/Cost.dart';
 
 import '../accountData/Account.dart';
+import '../accountData/shopData/Product.dart';
 import '../accountData/userAccount.dart';
 import '../locationData/Location.dart';
 import '../otherData/Time.dart';
@@ -22,4 +25,8 @@ class finalData {
   static List<String> restaurant_type_images = ['assets/image/icontrang1/icon_5sao.png', 'assets/image/icontrang1/icon_anvat.png', 'assets/image/icontrang1/icon_bun.png', 'assets/image/icontrang1/icon_com.png', 'assets/image/icontrang1/icon_khuyenmai.png', 'assets/image/icontrang1/icon_monnhau.png', 'assets/image/icontrang1/icon_nuocuong.png', 'assets/image/icontrang1/icon_thucannhanh.png', 'assets/image/icontrang1/icon_trasua.png',];
 
   static List<String> restaurant_type_names = ['Năm sao', 'Ăn vặt', 'Bún phở', 'Cơm', 'Khuyến mãi', 'Món nhậu', 'Nước uống', 'Fast food', 'Trà sữa',];
+
+  static Cost bikeCost = Cost(departKM: 0, departCost: 0, perKMcost: 0, discount: 0);
+
+  static List<cartProduct> cartList = [];
 }

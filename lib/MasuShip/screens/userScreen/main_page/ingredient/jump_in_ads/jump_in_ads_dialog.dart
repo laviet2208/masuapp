@@ -27,11 +27,13 @@ class _jump_in_ads_dialogState extends State<jump_in_ads_dialog> {
 
       ads.forEach((key, value) {
         if (value['area'].toString() == finalData.user_account.area) {
-          restaurantAdsData data = restaurantAdsData.fromJson(value);
-          dataList.add(data);
-          setState(() {
+          if (int.parse(value['status'].toString()) == 1) {
+            restaurantAdsData data = restaurantAdsData.fromJson(value);
+            dataList.add(data);
+            setState(() {
 
-          });
+            });
+          }
         }
       }
       );
@@ -95,7 +97,7 @@ class _jump_in_ads_dialogState extends State<jump_in_ads_dialog> {
               bottom: 10,
               left: 5,
               right: 5,
-              child: Container(
+              child: dataList.length == 0 ? Container(alignment: Alignment.center, child: Text('Chưa có quảng cáo', style: TextStyle(fontFamily: 'muli'),),) : Container(
                 child: PageView.builder(
                   scrollDirection: Axis.horizontal,
                   controller: _pageController,

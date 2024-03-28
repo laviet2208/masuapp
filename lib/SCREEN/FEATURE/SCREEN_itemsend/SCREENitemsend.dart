@@ -33,7 +33,7 @@ class _SCREENitemsendState extends State<SCREENitemsend> {
     final path = "/Geocode";
     final queryParams = {
       "place_id": placeId,
-      "api_key": '3u7W0CAOa9hi3SLC6RI3JWfBf6k8uZCSUTCHKOLf',
+      "api_key": 'npcYThxwWdlxPTuGGZ8Tu4QAF7IyO3u2vYyWlV5Z',
     };
 
     final uri = Uri.https(baseUrl, path, queryParams);
@@ -60,7 +60,7 @@ class _SCREENitemsendState extends State<SCREENitemsend> {
     final path = "/Geocode";
     final queryParams = {
       "place_id": placeId,
-      "api_key": '3u7W0CAOa9hi3SLC6RI3JWfBf6k8uZCSUTCHKOLf',
+      "api_key": 'npcYThxwWdlxPTuGGZ8Tu4QAF7IyO3u2vYyWlV5Z',
     };
 
     final uri = Uri.https(baseUrl, path, queryParams);
@@ -83,7 +83,7 @@ class _SCREENitemsendState extends State<SCREENitemsend> {
   }
 
   Future<double> getDistance(double startLatitude, double startLongitude, double endLatitude, double endLongitude) async {
-    final url = Uri.parse("https://rsapi.goong.io/DistanceMatrix?origins=$startLatitude,$startLongitude&destinations=$endLatitude,$endLongitude&vehicle=bike&api_key=3u7W0CAOa9hi3SLC6RI3JWfBf6k8uZCSUTCHKOLf");
+    final url = Uri.parse("https://rsapi.goong.io/DistanceMatrix?origins=$startLatitude,$startLongitude&destinations=$endLatitude,$endLongitude&vehicle=bike&api_key=npcYThxwWdlxPTuGGZ8Tu4QAF7IyO3u2vYyWlV5Z");
 
 
     try {
@@ -105,7 +105,7 @@ class _SCREENitemsendState extends State<SCREENitemsend> {
 
   Future<List<AutocompletePrediction>> placeAutocomplete(String query) async{
     List<AutocompletePrediction> placePredictions = [];
-    final url = Uri.parse('https://rsapi.goong.io/Place/AutoComplete?api_key=3u7W0CAOa9hi3SLC6RI3JWfBf6k8uZCSUTCHKOLf&input=$query');
+    final url = Uri.parse('https://rsapi.goong.io/Place/AutoComplete?api_key=npcYThxwWdlxPTuGGZ8Tu4QAF7IyO3u2vYyWlV5Z&input=$query');
 
     var response = await http.get(url);
 

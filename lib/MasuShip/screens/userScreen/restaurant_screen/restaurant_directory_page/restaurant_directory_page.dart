@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/Data/accountData/shopData/shopDirectory.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/restaurant_screen/restaurant_directory_page/item_restaurant_in_directory.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/restaurant_screen/restaurant_main_screen/restaurant_main_screen.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/restaurant_screen/restaurant_view_screen/restaurant_view_screen.dart';
 
 class restaurant_directory_page extends StatefulWidget {
   final shopDirectory directory;
@@ -62,9 +64,14 @@ class _restaurant_directory_pageState extends State<restaurant_directory_page> {
                 itemCount: widget.directory.restaurantList.length,
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
-                  return Padding(
-                    padding: EdgeInsets.only(right: 15),
-                    child: item_restaurant_in_directory(shopId: widget.directory.restaurantList[index]),
+                  return GestureDetector(
+                    child: Padding(
+                      padding: EdgeInsets.only(right: 15),
+                      child: item_restaurant_in_directory(shopId: widget.directory.restaurantList[index]),
+                    ),
+                    onTap: () {
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => restaurant_view_screen(shopId: widget.directory.restaurantList[index], beforeWidget: restaurant_main_screen())));
+                    },
                   );
                 },
               ),

@@ -31,11 +31,13 @@ class _main_pageState extends State<main_page> {
 
       ads.forEach((key, value) {
         if (value['area'].toString() == finalData.user_account.area) {
-          restaurantAdsData data = restaurantAdsData.fromJson(value);
-          dataList.add(data);
-          setState(() {
+          if (int.parse(value['status'].toString()) == 1) {
+            restaurantAdsData data = restaurantAdsData.fromJson(value);
+            dataList.add(data);
+            setState(() {
 
-          });
+            });
+          }
         }
       }
       );
@@ -114,7 +116,8 @@ class _main_pageState extends State<main_page> {
               right: 0,
               child: Container(
                 height: height/3 - 70,
-                child: PageView.builder(
+                alignment: Alignment.center,
+                child:dataList.length == 0 ? Container(alignment: Alignment.center, child: Text('Chưa có quảng cáo', style: TextStyle(fontFamily: 'muli'),),) : PageView.builder(
                   scrollDirection: Axis.horizontal,
                   controller: _pageController,
                   itemCount: dataList.length,
@@ -200,7 +203,7 @@ class _main_pageState extends State<main_page> {
                               areaName,
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                  fontFamily: 'roboto',
+                                  fontFamily: 'muli',
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 100
@@ -262,7 +265,7 @@ class _main_pageState extends State<main_page> {
                           child: AutoSizeText(
                             'Gọi xe ôm',
                             style: TextStyle(
-                              fontFamily: 'arial',
+                              fontFamily: 'muli',
                               fontSize: 100,
                               color: Colors.black,
                               fontWeight: FontWeight.bold
@@ -331,7 +334,7 @@ class _main_pageState extends State<main_page> {
                           child: AutoSizeText(
                             'Mua đồ ăn',
                             style: TextStyle(
-                                fontFamily: 'arial',
+                                fontFamily: 'muli',
                                 fontSize: 100,
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold
@@ -395,7 +398,7 @@ class _main_pageState extends State<main_page> {
                           child: AutoSizeText(
                             'Mua hộ',
                             style: TextStyle(
-                                fontFamily: 'arial',
+                                fontFamily: 'muli',
                                 fontSize: 100,
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold
@@ -459,7 +462,7 @@ class _main_pageState extends State<main_page> {
                           child: AutoSizeText(
                             'Giao hàng nhanh',
                             style: TextStyle(
-                                fontFamily: 'arial',
+                                fontFamily: 'muli',
                                 fontSize: 100,
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold
