@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_three_bike_screen/type_three_bike_step_2.dart';
 import '../../../../Data/locationData/Location.dart';
+import '../../general/search_location_dialog.dart';
 import '../../main_screen/user_main_screen.dart';
 import 'dart:convert';
 
@@ -17,9 +18,11 @@ class type_three_bike_step_1 extends StatefulWidget {
 class _type_three_bike_screen_step_1State extends State<type_three_bike_step_1> {
   bool loading = false;
   String locationName = '';
-  Location location_set = Location(placeId: '', description: '', longitude: 0, latitude: 0, mainText: '', secondaryText: '');
+  Location start_location = Location(placeId: '', description: '', longitude: 0, latitude: 0, mainText: '', secondaryText: '');
 
-  Future<String> fetchLocationName(double latitude, double longitude) async {
+  Future<String> fetchLocationName(Location location) async {
+    double latitude = location.latitude;
+    double longitude = location.longitude;
     final Uri uri = Uri.parse('https://rsapi.goong.io/Geocode?latlng=$latitude,$longitude&api_key=npcYThxwWdlxPTuGGZ8Tu4QAF7IyO3u2vYyWlV5Z');
 
     try {
@@ -27,7 +30,7 @@ class _type_three_bike_screen_step_1State extends State<type_three_bike_step_1> 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         locationName = data['results'][0]['formatted_address'];
-        location_set.mainText = locationName;
+        start_location.mainText = locationName;
         return data['results'][0]['formatted_address'];
       } else {
         throw Exception('Failed to load location');
@@ -38,9 +41,15 @@ class _type_three_bike_screen_step_1State extends State<type_three_bike_step_1> 
   }
 
   void change_to_next_step(int customer, int bike) {
-    location_set.longitude = finalData.user_account.location.longitude;
-    location_set.latitude = finalData.user_account.location.latitude;
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => type_three_bike_step_2(beforeWidget: type_three_bike_step_1(), customer_number: customer, bike_number: bike, startLocation: location_set,),),);
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => type_three_bike_step_2(beforeWidget: type_three_bike_step_1(), customer_number: customer, bike_number: bike, start_location: start_location,),),);
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    start_location.latitude = finalData.user_account.location.latitude;
+    start_location.longitude = finalData.user_account.location.longitude;
   }
 
   @override
@@ -249,6 +258,24 @@ class _type_three_bike_screen_step_1State extends State<type_three_bike_step_1> 
                                         ),
                                       ),
                                     ),
+
+                                    GestureDetector(
+                                      child: Container(
+                                        child: Icon(Icons.mode_edit_outline_outlined, color: Colors.grey,size: 20,),
+                                      ),
+                                      onTap: () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return search_location_dialog(location: start_location, title: 'Chọn điểm bắt đầu', event: () {
+                                                setState(() {
+
+                                                });
+                                              });
+                                            }
+                                        );
+                                      },
+                                    ),
                                   ],
                                 ),
                               ),
@@ -256,7 +283,7 @@ class _type_three_bike_screen_step_1State extends State<type_three_bike_step_1> 
                               Padding(
                                 padding: EdgeInsets.only(left: 50, right: 10),
                                 child: FutureBuilder(
-                                  future: fetchLocationName(finalData.user_account.location.latitude, finalData.user_account.location.longitude),
+                                  future: fetchLocationName(start_location),
                                   builder: (context, snapshot) {
                                     if (snapshot.connectionState == ConnectionState.waiting) {
                                       return Container(

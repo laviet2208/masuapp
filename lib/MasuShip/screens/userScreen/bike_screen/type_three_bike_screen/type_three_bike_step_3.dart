@@ -67,7 +67,7 @@ class _type_three_bike_step_3State extends State<type_three_bike_step_3> {
     for (Location location in widget.bikeLocations) {
       cost = cost + await getCost(location);
     }
-    //order.cost = cost;
+    order.cost = cost;
     return cost;
   }
 
@@ -84,7 +84,7 @@ class _type_three_bike_step_3State extends State<type_three_bike_step_3> {
       S2time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
       S3time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
       S4time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
-      costFee: finalData.bikeCost
+      costFee: finalData.bikeCost, subFee: 0,
   );
   
   @override

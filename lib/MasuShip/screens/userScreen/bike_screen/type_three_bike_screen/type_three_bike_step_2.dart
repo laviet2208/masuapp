@@ -8,10 +8,10 @@ import '../../general/search_location_dialog.dart';
 
 class type_three_bike_step_2 extends StatefulWidget {
   final Widget beforeWidget;
-  final Location startLocation;
+  final Location start_location;
   final int customer_number;
   final int bike_number;
-  const type_three_bike_step_2({super.key, required this.beforeWidget, required this.customer_number, required this.bike_number, required this.startLocation});
+  const type_three_bike_step_2({super.key, required this.beforeWidget, required this.customer_number, required this.bike_number, required this.start_location});
 
   @override
   State<type_three_bike_step_2> createState() => _type_three_bike_step_2State();
@@ -81,6 +81,170 @@ class _type_three_bike_step_2State extends State<type_three_bike_step_2> {
                     ),
 
                   ],
+                ),
+              ),
+
+              Container(height: 20,),
+
+              Padding(
+                padding: EdgeInsets.only(left: 10, right: 10),
+                child: Container(
+                  height: 170,
+                  child: Stack(
+                    children: <Widget>[
+                      Positioned(
+                        top: 20,
+                        left: 0,
+                        right: 0,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(25),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.4), // màu của shadow
+                                spreadRadius: 2, // bán kính của shadow
+                                blurRadius: 7, // độ mờ của shadow
+                                offset: Offset(0, 3), // vị trí của shadow
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(height: 30,),
+
+                              Container(
+                                height: 30,
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 10,
+                                    ),
+
+                                    Container(
+                                      width: 30,
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                              fit: BoxFit.cover,
+                                              image: AssetImage('assets/image/orangecircle.png')
+                                          )
+                                      ),
+                                    ),
+
+                                    Container(
+                                      width: 10,
+                                    ),
+
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 7, bottom: 7),
+                                      child: Container(
+                                        height: 30,
+                                        width: width - 40 - 30 - 30 - 10,
+                                        child: AutoSizeText(
+                                          'Điểm đón',
+                                          style: TextStyle(
+                                              fontFamily: 'muli',
+                                              color: Colors.black,
+                                              fontSize: 200,
+                                              fontWeight: FontWeight.normal
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                              Padding(
+                                padding: EdgeInsets.only(left: 50, right: 10),
+                                child: Container(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    widget.start_location.mainText + ' ' + widget.start_location.secondaryText,
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(
+                                        fontFamily: 'muli',
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                              Container(
+                                width: 30,
+                              ),
+
+                              Container(height: 30,),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      Positioned(
+                        top: 0,
+                        left: 30,
+                        child: Container(
+                          height: 40,
+                          width: width/3*2,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(1000),
+                            gradient: LinearGradient(
+                              colors: [Colors.yellow.withAlpha(200) ,Colors.white],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              stops: [0.0, 1.0],
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.2), // màu của shadow
+                                spreadRadius: 2, // bán kính của shadow
+                                blurRadius: 7, // độ mờ của shadow
+                                offset: Offset(0, 3), // vị trí của shadow
+                              ),
+                            ],
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+                            child: Row(
+                              children: <Widget>[
+                                Container(
+                                  width: 25,
+                                  child: Icon(
+                                    Icons.add_location_alt_outlined,
+                                    color: Colors.black,
+                                    size: 25,
+                                  ),
+                                ),
+
+                                Container(width: 5,),
+
+                                Padding(
+                                  padding: EdgeInsets.only(top: 7, bottom: 7),
+                                  child: Container(
+                                    width: width/3*2 - 50,
+                                    child: AutoSizeText(
+                                      'Vị trí hiện tại của bạn',
+                                      style: TextStyle(
+                                        fontFamily: 'muli',
+                                        color: Colors.black,
+                                        fontSize: 100,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
 
@@ -487,7 +651,7 @@ class _type_three_bike_step_2State extends State<type_three_bike_step_2> {
                   ),
                   onTap: () {
                     if (check_fill_all_location(customerLocations) && check_fill_all_location(bikeLocations)) {
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => type_three_bike_step_3(customerLocations: customerLocations, bikeLocations: bikeLocations, startLocation: widget.startLocation)));
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => type_three_bike_step_3(customerLocations: customerLocations, bikeLocations: bikeLocations, startLocation: widget.start_location)));
                     } else {
                       toastMessage('Bạn cần điền đủ các điểm trả');
                     }

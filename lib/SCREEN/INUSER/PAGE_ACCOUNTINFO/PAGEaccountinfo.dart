@@ -46,6 +46,7 @@ class _PAGEaccountinfoState extends State<PAGEaccountinfo> {
       });
     });
   }
+
   void getData1() {
     final reference = FirebaseDatabase.instance.reference();
     reference.child("Area/" + currentAccount.Area).onValue.listen((event) {
@@ -57,6 +58,7 @@ class _PAGEaccountinfoState extends State<PAGEaccountinfo> {
       });
     });
   }
+
   Future<void> pushData1(String id) async{
     try {
       DatabaseReference databaseRef = FirebaseDatabase.instance.reference();

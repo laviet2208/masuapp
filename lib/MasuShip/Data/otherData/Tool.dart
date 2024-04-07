@@ -3,8 +3,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
 import '../accountData/shopData/cartProduct.dart';
+import '../locationData/Location.dart';
 import '../voucherData/Voucher.dart';
 import 'Time.dart';
+import 'package:flutter/material.dart';
 
 //Tool khởi tạo 1 chuỗi id ngẫu nhiên gồm count ký tự
 String generateID(int count) {
@@ -47,6 +49,37 @@ double getVoucherSale(Voucher voucher, double cost) {
 
   return money;
 }
+
+double getCosOfBike(double distance) {
+  double cost = 0;
+  if (distance >= finalData.bikeCost.departKM) {
+    cost += finalData.bikeCost.departKM.toInt() * finalData.bikeCost.departCost.toInt(); // Giá cước cho 2km đầu tiên (10.000 VND/km * 2km)
+    distance -= finalData.bikeCost.departKM; // Trừ đi 2km đã tính giá cước
+    cost = cost + ((distance - finalData.bikeCost.departKM) * finalData.bikeCost.perKMcost);
+  } else {
+    cost += (distance * finalData.bikeCost.departCost); // Giá cước cho khoảng cách dưới 2km
+  }
+  return cost;
+}
+
+double getDistanceOfBike(double cost) {
+  double distance = 0;
+
+  if (cost >= finalData.bikeCost.departKM.toInt() * finalData.bikeCost.departCost.toInt()) {
+    // Tính khoảng cách cho 2km đầu tiên
+    distance += finalData.bikeCost.departKM;
+
+    // Tính khoảng cách cho phần còn lại của giá cước
+    double remainingCost = cost - (finalData.bikeCost.departKM.toInt() * finalData.bikeCost.departCost.toInt());
+    distance += remainingCost / finalData.bikeCost.perKMcost;
+  } else {
+    // Tính khoảng cách cho giá cước dưới 2km
+    distance = cost / finalData.bikeCost.departCost;
+  }
+
+  return distance;
+}
+
 
 //chuyển 1 biến double qua string , phân tách hàng nghìn
 String getStringNumber(double number) {
@@ -166,5 +199,98 @@ double get_total_cart_money() {
     money = money + (finalData.cartList[i].number * finalData.cartList[i].product.cost);
   }
   return money;
+}
+
+int get_number_restaurant(List<cartProduct> list) {
+  Set<String> uniqueNames = Set<String>();
+
+  for (cartProduct product in list) {
+    uniqueNames.add(product.product.owner);
+  }
+
+  return uniqueNames.length;
+}
+
+Future<String> fetchLocationName(Location location) async {
+  double latitude = location.latitude;
+  double longitude = location.longitude;
+  final Uri uri = Uri.parse('https://rsapi.goong.io/Geocode?latlng=$latitude,$longitude&api_key=npcYThxwWdlxPTuGGZ8Tu4QAF7IyO3u2vYyWlV5Z');
+
+  try {
+    final response = await http.get(uri);
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      location.mainText = data['results'][0]['formatted_address'];
+      return data['results'][0]['formatted_address'];
+    } else {
+      throw Exception('Failed to load location');
+    }
+  } catch (e) {
+    throw Exception('Lỗi khi xử lý dữ liệu: $e');
+  }
+}
+
+Future<double> getCost(Location start, Location end, double ordercost) async {
+  double cost = 0;
+  double distance = await getDistance(start, end);
+  if (distance >= finalData.bikeCost.departKM) {
+    cost += finalData.bikeCost.departKM.toInt() * finalData.bikeCost.departCost.toInt(); // Giá cước cho 2km đầu tiên (10.000 VND/km * 2km)
+    distance -= finalData.bikeCost.departKM; // Trừ đi 2km đã tính giá cước
+    cost = cost + ((distance - finalData.bikeCost.departKM) * finalData.bikeCost.perKMcost);
+  } else {
+    cost += (distance * finalData.bikeCost.departCost); // Giá cước cho khoảng cách dưới 2km
+  }
+  ordercost = cost;
+  return cost;
+}
+
+
+Future<double> getDistance(Location start, Location end) async {
+  double startLatitude = start.latitude;
+  double startLongitude = start.longitude;
+  double endLatitude = end.latitude;
+  double endLongitude = end.longitude;
+  final url = Uri.parse("https://rsapi.goong.io/DistanceMatrix?origins=$startLatitude,$startLongitude&destinations=$endLatitude,$endLongitude&vehicle=bike&api_key=npcYThxwWdlxPTuGGZ8Tu4QAF7IyO3u2vYyWlV5Z");
+
+
+  try {
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final distance = data['rows'][0]['elements'][0]['distance']['value'];
+      return distance.toDouble()/1000;
+    } else {
+      throw Exception('Lỗi khi gửi yêu cầu tới Goong API: ${response.statusCode}');
+    }
+  } catch (e) {
+    throw Exception('Lỗi khi xử lý dữ liệu: $e');
+  }
+}
+
+BoxDecoration get_usually_decoration() {
+  return BoxDecoration(
+    borderRadius: BorderRadius.circular(25),
+    color: Colors.white,
+    boxShadow: [
+      BoxShadow(
+        color: Colors.grey.withOpacity(0.4), // màu của shadow
+        spreadRadius: 2, // bán kính của shadow
+        blurRadius: 7, // độ mờ của shadow
+        offset: Offset(0, 3), // vị trí của shadow
+      ),
+    ],
+  );
+}
+
+BoxDecoration get_usually_decoration_gradient() {
+  return BoxDecoration(
+    gradient: LinearGradient(
+      colors: [Colors.yellow.shade700 , Colors.white],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      stops: [0.0, 1.0],
+    ),
+  );
 }
 

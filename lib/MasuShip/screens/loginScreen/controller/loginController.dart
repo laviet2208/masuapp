@@ -60,6 +60,7 @@ class loginController {
           } else {
             finalData.account = shipperAccount.fromJson(value);
             finalData.shipper_account = shipperAccount.fromJson(value);
+            getCost();
             if (finalData.account.lockStatus == 1) {
               Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => shipper_main_screen()));
             }

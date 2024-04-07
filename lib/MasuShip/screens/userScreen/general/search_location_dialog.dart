@@ -152,11 +152,8 @@ class _search_location_dialogState extends State<search_location_dialog> {
                       widget.location.longitude = long!;
                       widget.location.latitude = la!;
                       widget.location.placeId = suggestion.placeId.toString();
-                      //widget.event();
+                      widget.event();
                       Navigator.of(context).pop();
-                      setState(() {
-
-                      });
                     }, loading: false,
                   );
                 },

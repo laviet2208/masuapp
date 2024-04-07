@@ -271,7 +271,17 @@ class _restaurant_main_screenState extends State<restaurant_main_screen> {
                           children: [
                             Container(
                               height: width/2,
-                              child: PageView.builder(
+                              alignment: Alignment.center,
+                              child: dataList.length == 0 ? Container(
+                                child: Text(
+                                  'Chưa có quảng cáo',
+                                  style: TextStyle(
+                                    fontFamily: 'muli',
+                                    fontSize: 13,
+                                    color: Colors.grey
+                                  ),
+                                ),
+                              ) : PageView.builder(
                                 scrollDirection: Axis.horizontal,
                                 controller: _pageController,
                                 itemCount: dataList.length,

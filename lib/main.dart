@@ -28,10 +28,22 @@ Future<void> main() async
   ));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    print('Bạn đã tắt app');
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -45,3 +57,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+

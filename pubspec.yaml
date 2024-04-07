@@ -62,6 +62,7 @@ dependencies:
   geolocator: ^10.1.0
   audioplayers: ^4.1.0
   flutter_dialogs: ^3.0.0
+  table_calendar: ^3.0.9
 
 dev_dependencies:
   flutter_test:
@@ -86,63 +87,11 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/image/notice.png
-    - assets/image/bginfo.png
-    - assets/image/phoneicon.png
-    - assets/image/mainLogo.png
-    - assets/image/iconbag.png
-    - assets/image/icondelivery.png
-    - assets/image/iconfood.png
-    - assets/image/icongift.png
-    - assets/image/iconmart.png
-    - assets/image/iconoffer.png
-    - assets/image/icontransport.png
-    - assets/image/iconbike.png
-    - assets/image/iconlocation.png
-    - assets/image/linhtinh1.png
-    - assets/image/linhtinh2.png
-    - assets/image/linhtinh3.png
-    - assets/image/linhtinh4.png
-    - assets/image/linhtinh5.png
-    - assets/image/linhtinh6.png
-    - assets/image/pickicon.png
-    - assets/image/backicon.png
-    - assets/image/backicon1.png
-    - assets/image/bluecircle.png
-    - assets/image/locationRounditem.png
-    - assets/image/tickicon.png
-    - assets/image/fire.png
-    - assets/image/rightarrow.png
-    - assets/image/bikeLogo1.png
-    - assets/image/carLogo1.png
-    - assets/image/realmoneyicon.png
-    - assets/image/parcel.png
-    - assets/image/iconorder.png
-    - assets/image/carticon.png
-    - assets/image/stick.png
-    - assets/image/bgfood1.png
-    - assets/image/bgfood2.png
-    - assets/image/bgfood3.png
-    - assets/image/garbageicon.png
-    - assets/image/righticon.png
     - assets/image/icontrang1/
     - assets/image/iconhoatdong/
     - assets/image/iconaccinfo/
     - assets/volume/ting.mp3
-    - assets/image/minibike.png
-    - assets/image/minicar.png
-    - assets/image/ghichu.png
-    - assets/image/clock.png
-    - assets/image/khuyenmai.png
-    - assets/image/pen.png
-    - assets/image/redcircle.png
-    - assets/image/greycircle.png
-    - assets/image/redlocation.png
-    - assets/image/orangecircle.png
-    - assets/image/catchtype1.png
-    - assets/image/catchtype2.png
-    - assets/image/catchtype3.png
-    - assets/image/catchtype4.png
+    - assets/image/
 
   fonts:
     - family: logo_font_1

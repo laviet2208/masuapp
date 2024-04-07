@@ -11,6 +11,7 @@ import 'package:masuapp/MasuShip/screens/shipperScreen/divide_order_for_driver/o
 import '../../../../Data/historyData/historyTransactionData.dart';
 import '../../../../Data/voucherData/Voucher.dart';
 import '../order_have/catch_order_have_dialog.dart';
+import '../order_have/catch_order_have_type_2_dialog.dart';
 
 class order_have_dialog_controller {
   //Hiển thị dialog nhận đơn bắt xe
@@ -29,6 +30,31 @@ class order_have_dialog_controller {
         context: context,
         builder: (BuildContext context) {
           return catch_order_have_dialog(order: order,);
+        },
+      );
+    } else {
+      print('thất bại ở lần 3');
+      finalData.shipper_account.orderHaveStatus = 0;
+      await change_Have_Order_Status(0);
+    }
+  }
+
+  //Hiển thị dialog nhận đơn bắt xe
+  static Future<void> show_catch_order_type_2_have_dialog(BuildContext context, CatchOrder order) async {
+    if (await check_get_order_success(order.id)) {
+      print('5. check thành công lần 3');
+      double money = get_commission(order.toJson());
+      finalData.shipper_account.money = finalData.shipper_account.money - money;
+      await change_shipper_money();
+      await change_order_time('S2time', order.id);
+      await push_history_data(historyTransactionData(id: generateID(15), senderId: '', receiverId: finalData.shipper_account.id, transactionTime: getCurrentTime(), type: 5, content: 'Chiết khấu đơn xe ôm' + order.id, money: money, area: finalData.shipper_account.area));
+      print('Trừ tiền tài khoản, đẩy lịch sử lên');
+      final player = AudioPlayer();
+      await player.play(AssetSource('volume/ting.mp3'), volume: 200);
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return catch_order_have_type_2_dialog(order: order,);
         },
       );
     } else {
@@ -184,7 +210,9 @@ class order_have_dialog_controller {
                 await change_Order_Shipper(value['id'].toString());
                 if (await check_get_order_success(value['id'].toString())) {
                   print('3.check thành công, nhận đơn');
+
                   if (value['productList'] != null) {
+                    //Nhận đơn mua hộ
                     requestBuyOrder order = requestBuyOrder.fromJson(value);
                     if (await check_get_order_success(value['id'].toString())) {
                       print('4. check thành công lần 2');
@@ -195,10 +223,15 @@ class order_have_dialog_controller {
                       await change_Have_Order_Status(0);
                     }
                   } else {
+                    //Nhận đơn đặt xe đã và chưa biết điểm đến
                     CatchOrder order = CatchOrder.fromJson(value);
                     if (await check_get_order_success(value['id'].toString())) {
                       print('4. check thành công lần 2');
-                      await show_catch_order_have_dialog(context, order);
+                      if (order.locationGet.longitude != 0) {
+                        await show_catch_order_have_dialog(context, order);
+                      } else {
+                        await show_catch_order_type_2_have_dialog(context, order);
+                      }
                     } else {
                       print('4. thất bại ở lần check 2');
                       finalData.shipper_account.orderHaveStatus = 0;

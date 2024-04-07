@@ -70,12 +70,13 @@ class _catch_order_have_dialogState extends State<catch_order_have_dialog> {
             Container(height: 20,),
 
             Container(
-              height: 20,
               alignment: Alignment.center,
-              child: AutoSizeText(
-                'Đơn xe ôm ' + widget.order.id,
+              child: Text(
+                'Đơn xe ôm\n' + widget.order.id,
+                textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontSize: 100,
+                    fontSize: 15,
+                    fontFamily: 'muli',
                     color: Colors.black,
                     fontWeight: FontWeight.bold
                 ),

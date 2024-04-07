@@ -1,7 +1,10 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
 import 'package:masuapp/MasuShip/Data/locationData/Location.dart';
+import 'package:masuapp/MasuShip/Data/otherData/Tool.dart';
+import 'package:masuapp/MasuShip/Data/otherData/utils.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_one_bike_screen/type_one_bike_step_2.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/general/search_location_dialog.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/main_screen/user_main_screen.dart';
@@ -18,10 +21,12 @@ class type_one_bike_step_1 extends StatefulWidget {
 class _type_one_bike_step_1State extends State<type_one_bike_step_1> {
   bool loading = false;
   String locationName = '';
-  Location location_set = Location(placeId: '', description: '', longitude: 0, latitude: 0, mainText: '', secondaryText: '');
-  Location location_get = Location(placeId: '', description: '', longitude: 0, latitude: 0, mainText: '', secondaryText: '');
+  Location start_location = Location(placeId: '', description: '', longitude: 0, latitude: 0, mainText: '', secondaryText: '');
+  Location end_location = Location(placeId: '', description: '', longitude: 0, latitude: 0, mainText: '', secondaryText: '');
 
-  Future<String> fetchLocationName(double latitude, double longitude) async {
+  Future<String> fetchLocationName(Location location) async {
+    double latitude = location.latitude;
+    double longitude = location.longitude;
     final Uri uri = Uri.parse('https://rsapi.goong.io/Geocode?latlng=$latitude,$longitude&api_key=npcYThxwWdlxPTuGGZ8Tu4QAF7IyO3u2vYyWlV5Z');
 
     try {
@@ -29,7 +34,7 @@ class _type_one_bike_step_1State extends State<type_one_bike_step_1> {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         locationName = data['results'][0]['formatted_address'];
-        location_set.mainText = locationName;
+        start_location.mainText = locationName;
         return data['results'][0]['formatted_address'];
       } else {
         throw Exception('Failed to load location');
@@ -43,7 +48,7 @@ class _type_one_bike_step_1State extends State<type_one_bike_step_1> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    location_set = finalData.user_account.location;
+    start_location = finalData.user_account.location;
   }
 
   @override
@@ -250,6 +255,24 @@ class _type_one_bike_step_1State extends State<type_one_bike_step_1> {
                                         ),
                                       ),
                                     ),
+
+                                    GestureDetector(
+                                      child: Container(
+                                        child: Icon(Icons.mode_edit_outline_outlined, color: Colors.grey,size: 20,),
+                                      ),
+                                      onTap: () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return search_location_dialog(location: start_location, title: 'Chọn điểm đón', event: () {
+                                                setState(() {
+
+                                                });
+                                              });
+                                            }
+                                        );
+                                      },
+                                    ),
                                   ],
                                 ),
                               ),
@@ -257,7 +280,7 @@ class _type_one_bike_step_1State extends State<type_one_bike_step_1> {
                               Padding(
                                 padding: EdgeInsets.only(left: 50, right: 10),
                                 child: FutureBuilder(
-                                  future: fetchLocationName(finalData.user_account.location.latitude, finalData.user_account.location.longitude),
+                                  future: fetchLocationName(start_location),
                                   builder: (context, snapshot) {
                                     if (snapshot.connectionState == ConnectionState.waiting) {
                                       return Container(
@@ -378,7 +401,7 @@ class _type_one_bike_step_1State extends State<type_one_bike_step_1> {
                                         showDialog(
                                           context: context,
                                           builder: (context) {
-                                            return search_location_dialog(location: location_get, title: 'Chọn điểm đến', event: () {
+                                            return search_location_dialog(location: end_location, title: 'Chọn điểm đến', event: () {
                                               setState(() {
 
                                               });
@@ -397,10 +420,10 @@ class _type_one_bike_step_1State extends State<type_one_bike_step_1> {
                                   child: Container(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                      location_get.latitude == 0 ? 'Hãy chọn điểm đến nhé !' : (location_get.mainText + ' ' + location_get.secondaryText),
+                                      end_location.latitude == 0 ? 'Hãy chọn điểm đến nhé !' : (end_location.mainText + ' ' + end_location.secondaryText),
                                       style: TextStyle(
                                           fontFamily: 'muli',
-                                          color: location_get.latitude == 0 ? Colors.red :Colors.black,
+                                          color: end_location.latitude == 0 ? Colors.red :Colors.black,
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold
                                       ),
@@ -424,24 +447,7 @@ class _type_one_bike_step_1State extends State<type_one_bike_step_1> {
                         child: Container(
                           height: 40,
                           width: width/3*2,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(1000),
-                            gradient: LinearGradient(
-                              colors: [Colors.yellow.withAlpha(200) ,Colors.white],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              stops: [0.0, 1.0],
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.2), // màu của shadow
-                                spreadRadius: 2, // bán kính của shadow
-                                blurRadius: 7, // độ mờ của shadow
-                                offset: Offset(0, 3), // vị trí của shadow
-                              ),
-                            ],
-                          ),
+                          decoration: get_usually_decoration(),
                           child: Padding(
                             padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
                             child: Row(
@@ -488,8 +494,8 @@ class _type_one_bike_step_1State extends State<type_one_bike_step_1> {
                 padding: EdgeInsets.only(left: 10, right: 10),
                 child: GestureDetector(
                   child: Container(
-                    height: location_get.longitude != 0 ? 45 : 0,
-                    decoration: location_get.longitude != 0 ?  BoxDecoration(
+                    height: end_location.longitude != 0 ? 45 : 0,
+                    decoration: end_location.longitude != 0 ?  BoxDecoration(
                       borderRadius: BorderRadius.circular(1000),
                       gradient: LinearGradient(
                         colors: [Colors.white, Colors.yellow],
@@ -518,9 +524,11 @@ class _type_one_bike_step_1State extends State<type_one_bike_step_1> {
                     ),
                   ),
                   onTap: () {
-                    location_set.longitude = finalData.user_account.location.longitude;
-                    location_set.latitude = finalData.user_account.location.latitude;
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => type_one_bike_step_2(start_location: location_set, end_location: location_get),),);
+                    if (start_location.latitude != 0 && start_location.longitude != 0 && end_location.latitude != 0 && end_location.longitude != 0) {
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => type_one_bike_step_2(start_location: start_location, end_location: end_location),),);
+                    } else {
+                      toastMessage('Cần chọn điểm đón, trả');
+                    }
                   },
                 ),
               ),

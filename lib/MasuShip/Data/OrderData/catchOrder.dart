@@ -11,6 +11,7 @@ class CatchOrder extends Order {
   Time S2time;
   Time S3time;
   Time S4time;
+  double subFee;
   Cost costFee;
 
   CatchOrder({
@@ -27,6 +28,7 @@ class CatchOrder extends Order {
     required this.S3time,
     required this.S4time,
     required this.costFee,
+    required this.subFee,
   }) : super(
     id: id,
     locationSet: locationSet,
@@ -47,6 +49,7 @@ class CatchOrder extends Order {
     superJson['S3time'] = S3time.toJson();
     superJson['S4time'] = S4time.toJson();
     superJson['costFee'] = costFee.toJson();
+    superJson['subFee'] = subFee;
     return superJson;
   }
 
@@ -68,6 +71,7 @@ class CatchOrder extends Order {
       S3time: Time.fromJson(json['S3time']),
       S4time: Time.fromJson(json['S4time']),
       costFee: Cost.fromJson(json['costFee']),
+      subFee: double.parse(json['subFee'].toString()),
     );
   }
 }

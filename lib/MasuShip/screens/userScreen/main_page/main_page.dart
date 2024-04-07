@@ -5,6 +5,9 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/express_screen/express_step_1.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/main_page/ingredient/buy_request_order_ingredient/buy_request_order_ingredient_dialog.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/main_page/ingredient/catch_order_ingredient/catch_order_button.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/main_page/ingredient/catch_order_ingredient/catch_order_ingredient_dialog.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/restaurant_screen/restaurant_main_screen/restaurant_main_screen.dart';
 
@@ -30,6 +33,7 @@ class _main_pageState extends State<main_page> {
       final dynamic ads = event.snapshot.value;
 
       ads.forEach((key, value) {
+        dataList.clear();
         if (value['area'].toString() == finalData.user_account.area) {
           if (int.parse(value['status'].toString()) == 1) {
             restaurantAdsData data = restaurantAdsData.fromJson(value);
@@ -61,7 +65,6 @@ class _main_pageState extends State<main_page> {
   Future<String> _getImageURL(String imagePath) async {
     final ref = FirebaseStorage.instance.ref().child('Ads').child(imagePath);
     final url = await ref.getDownloadURL();
-    print(url);
     return url;
   }
 
@@ -221,70 +224,7 @@ class _main_pageState extends State<main_page> {
             Positioned(
               top: height/3 + 55,
               left: 30,
-              child: GestureDetector(
-                child: Container(
-                  width: (width - 90)/2,
-                  height: (width - 90)/2,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(width: 1, color: Colors.black),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2), // màu của shadow
-                        spreadRadius: 5, // bán kính của shadow
-                        blurRadius: 7, // độ mờ của shadow
-                        offset: Offset(0, 3), // vị trí của shadow
-                      ),
-                    ],
-                  ),
-                  child: Stack(
-                    children: <Widget>[
-                      Positioned(
-                        top: 20,
-                        left: 0,
-                        right: 0,
-                        bottom: (width - 90)/6,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              fit: BoxFit.fitHeight,
-                              image: AssetImage('assets/image/iconbike.png')
-                            )
-                          ),
-                        ),
-                      ),
-
-                      Positioned(
-                        bottom: 10,
-                        left: 10,
-                        right: 10,
-                        child: Container(
-                          height: (width - 90)/8 - 20,
-                          alignment: Alignment.center,
-                          child: AutoSizeText(
-                            'Gọi xe ôm',
-                            style: TextStyle(
-                              fontFamily: 'muli',
-                              fontSize: 100,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return catch_order_ingredient_dialog();
-                    },
-                  );
-                },
-              ),
+              child: catch_order_button(),
             ),
 
             Positioned(
@@ -314,12 +254,15 @@ class _main_pageState extends State<main_page> {
                         left: 0,
                         right: 0,
                         bottom: (width - 90)/6,
-                        child: Container(
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  fit: BoxFit.fitHeight,
-                                  image: AssetImage('assets/image/iconfood.png')
-                              )
+                        child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    fit: BoxFit.fitHeight,
+                                    image: AssetImage('assets/image/iconfood.png')
+                                )
+                            ),
                           ),
                         ),
                       ),
@@ -378,12 +321,15 @@ class _main_pageState extends State<main_page> {
                         left: 0,
                         right: 0,
                         bottom: (width - 90)/6,
-                        child: Container(
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  fit: BoxFit.fitHeight,
-                                  image: AssetImage('assets/image/iconbag.png')
-                              )
+                        child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    fit: BoxFit.fitHeight,
+                                    image: AssetImage('assets/image/iconbag.png')
+                                )
+                            ),
                           ),
                         ),
                       ),
@@ -396,7 +342,7 @@ class _main_pageState extends State<main_page> {
                           height: (width - 90)/8 - 20,
                           alignment: Alignment.center,
                           child: AutoSizeText(
-                            'Mua hộ',
+                            'Mua hàng hộ',
                             style: TextStyle(
                                 fontFamily: 'muli',
                                 fontSize: 100,
@@ -410,7 +356,12 @@ class _main_pageState extends State<main_page> {
                   ),
                 ),
                 onTap: () {
-
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return buy_request_order_ingredient_dialog();
+                    },
+                  );
                 },
               ),
             ),
@@ -442,12 +393,15 @@ class _main_pageState extends State<main_page> {
                         left: 0,
                         right: 0,
                         bottom: (width - 90)/6,
-                        child: Container(
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  fit: BoxFit.fitHeight,
-                                  image: AssetImage('assets/image/iconmart.png')
-                              )
+                        child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    fit: BoxFit.fitHeight,
+                                    image: AssetImage('assets/image/iconmart.png')
+                                )
+                            ),
                           ),
                         ),
                       ),
@@ -474,7 +428,7 @@ class _main_pageState extends State<main_page> {
                   ),
                 ),
                 onTap: () {
-
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => express_step_1(),),);
                 },
               ),
             ),

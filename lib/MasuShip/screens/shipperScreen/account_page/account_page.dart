@@ -8,9 +8,11 @@ import 'package:masuapp/MasuShip/screens/loginScreen/loading_screen.dart';
 import 'package:masuapp/MasuShip/screens/shipperScreen/account_page/change_account_shipper_info.dart';
 import 'package:masuapp/MasuShip/screens/shipperScreen/account_page/policy_and_services_page/policy_and_services_page.dart';
 import 'package:masuapp/MasuShip/screens/shipperScreen/account_page/wallet_page/wallet_page.dart';
+import 'package:masuapp/MasuShip/screens/shipperScreen/main_screen/shipper_main_screen.dart';
 
 import '../../../Data/otherData/Tool.dart';
 import '../../../Data/otherData/utils.dart';
+import '../time_keeping_screen/time_keeping_screen.dart';
 
 class account_page extends StatefulWidget {
   const account_page({Key? key}) : super(key: key);
@@ -94,7 +96,7 @@ class _account_pageState extends State<account_page> {
                             style: TextStyle(
                                 fontSize: 160,
                                 fontWeight: FontWeight.normal,
-                                fontFamily: 'roboto',
+                                fontFamily: 'muli',
                                 color: finalData.shipper_account.onlineStatus == 1 ? Colors.black : Colors.white
                             ),
                           ),
@@ -113,7 +115,7 @@ class _account_pageState extends State<account_page> {
                             style: TextStyle(
                                 fontSize: 160,
                                 fontWeight: FontWeight.bold,
-                                fontFamily: 'roboto',
+                                fontFamily: 'muli',
                                 color: finalData.shipper_account.onlineStatus == 1 ? Colors.black : Colors.white
                             ),
                           ),
@@ -150,7 +152,7 @@ class _account_pageState extends State<account_page> {
                                       style: TextStyle(
                                         fontSize: 160,
                                         fontWeight: FontWeight.normal,
-                                        fontFamily: 'roboto',
+                                        fontFamily: 'muli',
                                         color: finalData.shipper_account.onlineStatus == 1 ? Colors.black : Colors.white,
                                       ),
                                     ),
@@ -188,7 +190,7 @@ class _account_pageState extends State<account_page> {
                                       style: TextStyle(
                                         fontSize: 160,
                                         fontWeight: FontWeight.normal,
-                                        fontFamily: 'roboto',
+                                        fontFamily: 'muli',
                                         color: finalData.shipper_account.onlineStatus == 1 ? Colors.black : Colors.white,
                                       ),
                                     ),
@@ -233,15 +235,16 @@ class _account_pageState extends State<account_page> {
                           child: Stack(
                             children: <Widget>[
                               Positioned(
-                                top: 10,
+                                top: 15,
                                 left: 0,
                                 child: Container(
-                                  height: 40,
-                                  width: 40,
-                                  child: Icon(
-                                    Icons.manage_accounts_outlined,
-                                    color: Colors.redAccent,
-                                    size: 25,
+                                  height: 33,
+                                  width: 33,
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: AssetImage('assets/image/iconaccinfo/1.png')
+                                      )
                                   ),
                                 ),
                               ),
@@ -256,7 +259,7 @@ class _account_pageState extends State<account_page> {
                                     child: Text(
                                       'Thông tin tài khoản',
                                       style: TextStyle(
-                                          fontFamily: 'arial',
+                                          fontFamily: 'muli',
                                           fontSize: 15,
                                           color: Color.fromARGB(255, 32, 32, 32),
                                           fontWeight: FontWeight.bold
@@ -312,15 +315,16 @@ class _account_pageState extends State<account_page> {
                           child: Stack(
                             children: <Widget>[
                               Positioned(
-                                top: 10,
+                                top: 15,
                                 left: 0,
                                 child: Container(
-                                  height: 40,
-                                  width: 40,
-                                  child: Icon(
-                                    Icons.location_on_outlined,
-                                    color: Colors.redAccent,
-                                    size: 25,
+                                  height: 29,
+                                  width: 29,
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: AssetImage('assets/image/iconaccinfo/2.png')
+                                      )
                                   ),
                                 ),
                               ),
@@ -335,7 +339,7 @@ class _account_pageState extends State<account_page> {
                                     child: Text(
                                       'Khu vực hiện tại',
                                       style: TextStyle(
-                                          fontFamily: 'arial',
+                                          fontFamily: 'muli',
                                           fontSize: 15,
                                           color: Color.fromARGB(255, 32, 32, 32),
                                           fontWeight: FontWeight.bold
@@ -356,7 +360,7 @@ class _account_pageState extends State<account_page> {
                                     maxLines: 2,
                                     textAlign: TextAlign.right,
                                     style: TextStyle(
-                                      fontFamily: 'arial',
+                                      fontFamily: 'muli',
                                       fontSize: 15,
                                       color: Color.fromARGB(255, 32, 32, 32),
                                       fontWeight: FontWeight.normal,
@@ -392,14 +396,18 @@ class _account_pageState extends State<account_page> {
                           child: Stack(
                             children: <Widget>[
                               Positioned(
-                                  top: 15,
-                                  left: 5,
-                                  child: Icon(
-                                    Icons.wallet_travel_rounded,
-                                    size: 25,
-                                    color: Colors.redAccent,
-
-                                  )
+                                top: 15,
+                                left: 0,
+                                child: Container(
+                                  height: 29,
+                                  width: 29,
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: AssetImage('assets/image/iconaccinfo/1.png')
+                                      )
+                                  ),
+                                ),
                               ),
 
                               Positioned(
@@ -412,7 +420,7 @@ class _account_pageState extends State<account_page> {
                                     child: Text(
                                       'Ví tiền của tôi',
                                       style: TextStyle(
-                                          fontFamily: 'arial',
+                                          fontFamily: 'muli',
                                           fontSize: 15,
                                           color: Color.fromARGB(255, 32, 32, 32),
                                           fontWeight: FontWeight.bold
@@ -455,6 +463,83 @@ class _account_pageState extends State<account_page> {
                       ),
                     ),
 
+                    Container(height: 10,),
+
+                    Padding(
+                      padding: EdgeInsets.only(left: 10, right: 10),
+                      child: GestureDetector(
+                        child: Container(
+                          height: 60,
+                          child: Stack(
+                            children: <Widget>[
+                              Positioned(
+                                top: 15,
+                                left: 0,
+                                child: Container(
+                                  height: 29,
+                                  width: 29,
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: AssetImage('assets/image/iconaccinfo/3.png')
+                                      )
+                                  ),
+                                ),
+                              ),
+
+                              Positioned(
+                                top: 0,
+                                left: 60,
+                                child: Container(
+                                    width: (screenWidth-30)/3*2,
+                                    height: 60,
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      'Chi tiết chấm công',
+                                      style: TextStyle(
+                                          fontFamily: 'muli',
+                                          fontSize: 15,
+                                          color: Color.fromARGB(255, 32, 32, 32),
+                                          fontWeight: FontWeight.bold
+                                      ),
+                                    )
+                                ),
+                              ),
+
+                              Positioned(
+                                top: 20,
+                                right: 0,
+                                child: Container(
+                                  height: 20,
+                                  width: 20,
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: AssetImage('assets/image/righticon.png')
+                                      )
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => time_keeping_screen()), (route) => false,);
+                        },
+                      ),
+                    ),
+
+                    Padding(
+                      padding: EdgeInsets.only(left: 10, right: 10),
+                      child: Container(
+                        height: 1,
+                        decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(20)
+                        ),
+                      ),
+                    ),
+
                     Padding(
                       padding: EdgeInsets.only(left: 10, right: 10),
                       child: GestureDetector(
@@ -467,15 +552,16 @@ class _account_pageState extends State<account_page> {
                           child: Stack(
                             children: <Widget>[
                               Positioned(
-                                top: 10,
+                                top: 15,
                                 left: 0,
                                 child: Container(
-                                  height: 40,
-                                  width: 40,
-                                  child: Icon(
-                                    Icons.login_outlined,
-                                    color: Colors.redAccent,
-                                    size: 25,
+                                  height: 26,
+                                  width: 26,
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: AssetImage('assets/image/iconaccinfo/4.png')
+                                      )
                                   ),
                                 ),
                               ),
@@ -490,7 +576,7 @@ class _account_pageState extends State<account_page> {
                                     child: Text(
                                       'Đăng xuất',
                                       style: TextStyle(
-                                          fontFamily: 'arial',
+                                          fontFamily: 'muli',
                                           fontSize: 15,
                                           color: Color.fromARGB(255, 32, 32, 32),
                                           fontWeight: FontWeight.bold
@@ -556,11 +642,11 @@ class _account_pageState extends State<account_page> {
                           child: Stack(
                             children: <Widget>[
                               Positioned(
-                                top: 10,
+                                top: 14,
                                 left: 0,
                                 child: Container(
-                                  height: 40,
-                                  width: 40,
+                                  height: 30,
+                                  width: 30,
                                   decoration: BoxDecoration(
                                       image: DecorationImage(
                                           fit: BoxFit.cover,
@@ -580,7 +666,7 @@ class _account_pageState extends State<account_page> {
                                     child: Text(
                                       'Trung tâm trợ giúp',
                                       style: TextStyle(
-                                          fontFamily: 'arial',
+                                          fontFamily: 'muli',
                                           fontSize: 15,
                                           color: Color.fromARGB(255, 32, 32, 32),
                                           fontWeight: FontWeight.bold
@@ -630,13 +716,18 @@ class _account_pageState extends State<account_page> {
                           child: Stack(
                             children: <Widget>[
                               Positioned(
-                                  top: 15,
-                                  left: 5,
-                                  child: Icon(
-                                    Icons.policy_outlined,
-                                    size: 25,
-                                    color: Colors.redAccent,
-                                  )
+                                top: 14,
+                                left: 0,
+                                child: Container(
+                                  height: 30,
+                                  width: 30,
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: AssetImage('assets/image/iconaccinfo/8.png')
+                                      )
+                                  ),
+                                ),
                               ),
 
                               Positioned(
@@ -650,7 +741,7 @@ class _account_pageState extends State<account_page> {
                                       child: Text(
                                         'Điều khoản và phiên bản',
                                         style: TextStyle(
-                                            fontFamily: 'arial',
+                                            fontFamily: 'muli',
                                             fontSize: 15,
                                             color: Color.fromARGB(255, 32, 32, 32),
                                             fontWeight: FontWeight.bold
@@ -709,11 +800,11 @@ class _account_pageState extends State<account_page> {
                           child: Stack(
                             children: <Widget>[
                               Positioned(
-                                top: 10,
+                                top: 14,
                                 left: 0,
                                 child: Container(
-                                  height: 40,
-                                  width: 40,
+                                  height: 30,
+                                  width: 30,
                                   decoration: BoxDecoration(
                                       image: DecorationImage(
                                           fit: BoxFit.cover,
@@ -733,7 +824,7 @@ class _account_pageState extends State<account_page> {
                                     child: Text(
                                       'Yêu cầu xóa tài khoản',
                                       style: TextStyle(
-                                          fontFamily: 'arial',
+                                          fontFamily: 'muli',
                                           fontSize: 15,
                                           color: Color.fromARGB(255, 32, 32, 32),
                                           fontWeight: FontWeight.bold

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:http/http.dart' as http;
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:masuapp/MasuShip/Data/locationData/Location.dart';
 import 'package:masuapp/MasuShip/Data/otherData/Tool.dart';
 import 'package:masuapp/MasuShip/Data/voucherData/Voucher.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_one_bike_screen/type_one_bike_step_1.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_one_bike_screen/type_one_bike_wait.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/general/voucher_select.dart';
 
 import '../../../../Data/otherData/Time.dart';
@@ -26,25 +28,24 @@ class _type_one_bike_step_2State extends State<type_one_bike_step_2> {
   double mainCost = 0;
 
   CatchOrder order = CatchOrder(
-      id: generateID(25),
-      locationSet: Location(placeId: '', description: '', longitude: 0, latitude: 0, mainText: '', secondaryText: ''),
-      locationGet: Location(placeId: '', description: '', longitude: 0, latitude: 0, mainText: '', secondaryText: ''),
-      cost: 0,
-      owner: finalData.user_account,
-      shipper: finalData.shipper_account,
-      status: 'A',
-      voucher: Voucher(id: '', Money: 0, mincost: 0, startTime: getCurrentTime(), endTime: getCurrentTime(), useCount: 0, maxCount: 0, eventName: '', LocationId: '', type: 1, Otype: '', perCustom: 0, CustomList: [], maxSale: 0, area: ''),
-      S1time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
-      S2time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
-      S3time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
-      S4time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
-      costFee: finalData.bikeCost
+    id: generateID(25),
+    locationSet: Location(placeId: '', description: '', longitude: 0, latitude: 0, mainText: '', secondaryText: ''),
+    locationGet: Location(placeId: '', description: '', longitude: 0, latitude: 0, mainText: '', secondaryText: ''),
+    cost: 0,
+    owner: finalData.user_account,
+    shipper: finalData.shipper_account,
+    status: 'A',
+    voucher: Voucher(id: '', Money: 0, mincost: 0, startTime: getCurrentTime(), endTime: getCurrentTime(), useCount: 0, maxCount: 0, eventName: '', LocationId: '', type: 1, Otype: '', perCustom: 0, CustomList: [], maxSale: 0, area: ''),
+    S1time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
+    S2time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
+    S3time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
+    S4time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
+    costFee: finalData.bikeCost,
+    subFee: 0,
   );
 
   Future<double> getDistance(double startLatitude, double startLongitude, double endLatitude, double endLongitude) async {
     final url = Uri.parse("https://rsapi.goong.io/DistanceMatrix?origins=$startLatitude,$startLongitude&destinations=$endLatitude,$endLongitude&vehicle=bike&api_key=npcYThxwWdlxPTuGGZ8Tu4QAF7IyO3u2vYyWlV5Z");
-
-
     try {
       final response = await http.get(url);
 
@@ -72,6 +73,11 @@ class _type_one_bike_step_2State extends State<type_one_bike_step_2> {
     }
     order.cost = cost;
     return cost;
+  }
+
+  Future<void> push_new_catch_type_one_order(CatchOrder order) async {
+    final reference = FirebaseDatabase.instance.reference();
+    await reference.child('Order').child(order.id).set(order.toJson());
   }
 
   @override
@@ -200,7 +206,7 @@ class _type_one_bike_step_2State extends State<type_one_bike_step_2> {
                                 padding: EdgeInsets.only(left: 50, right: 10),
                                 child: Container(
                                   child: Text(
-                                    widget.start_location.mainText + " " + widget.start_location.secondaryText,
+                                    widget.start_location.mainText,
                                     style: TextStyle(
                                         fontFamily: 'muli',
                                         color: Colors.black,
@@ -348,6 +354,8 @@ class _type_one_bike_step_2State extends State<type_one_bike_step_2> {
                   ),
                 ),
               ),
+
+              Container(height: 10,),
 
               Padding(
                 padding: EdgeInsets.only(left: 10, right: 10),
@@ -550,7 +558,7 @@ class _type_one_bike_step_2State extends State<type_one_bike_step_2> {
                                           text: TextSpan(
                                             children: [
                                               TextSpan(
-                                                text: "0.đ",
+                                                text: getStringNumber(order.subFee) + ".đ",
                                                 style: TextStyle(
                                                   fontFamily: 'muli',
                                                   color: Colors.black,
@@ -851,21 +859,26 @@ class _type_one_bike_step_2State extends State<type_one_bike_step_2> {
                       ],
                     ),
                     child: Center(
-                      child: Text(
+                      child: !loading ? Text(
                         'Xác nhận đặt xe',
                         style: TextStyle(
                             fontFamily: 'muli',
                             color: Colors.black,
                             fontWeight: FontWeight.bold
                         ),
-                      ),
+                      ) : CircularProgressIndicator(color: Colors.white,),
                     ),
                   ),
                   onTap: () async {
                     setState(() {
                       loading = true;
                     });
-
+                    order.S1time = getCurrentTime();
+                    await push_new_catch_type_one_order(order);
+                    setState(() {
+                      loading = false;
+                    });
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => type_one_bike_wait(orderId: order.id)));
                   },
                 ),
               )

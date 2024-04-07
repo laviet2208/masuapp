@@ -45,12 +45,15 @@ class _catch_order_ingredient_dialogState extends State<catch_order_ingredient_d
                         bottom: (width - 90)/7,
                         left: 0,
                         right: 0,
-                        child: Container(
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  fit: BoxFit.fitHeight,
-                                  image: AssetImage('assets/image/catchtype2.png')
-                              )
+                        child: Padding(
+                          padding: EdgeInsets.all(20),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    fit: BoxFit.fitHeight,
+                                    image: AssetImage('assets/image/catchtype1.png')
+                                )
+                            ),
                           ),
                         ),
                       ),
@@ -95,12 +98,15 @@ class _catch_order_ingredient_dialogState extends State<catch_order_ingredient_d
                         bottom: (width - 90)/7,
                         left: 0,
                         right: 0,
-                        child: Container(
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  fit: BoxFit.fitHeight,
-                                  image: AssetImage('assets/image/catchtype1.png')
-                              )
+                        child: Padding(
+                          padding: EdgeInsets.all(20),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    fit: BoxFit.fitHeight,
+                                    image: AssetImage('assets/image/catchtype2.png')
+                                )
+                            ),
                           ),
                         ),
                       ),
@@ -145,12 +151,15 @@ class _catch_order_ingredient_dialogState extends State<catch_order_ingredient_d
                         bottom: (width - 90)/7,
                         left: 0,
                         right: 0,
-                        child: Container(
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  fit: BoxFit.fitHeight,
-                                  image: AssetImage('assets/image/catchtype3.png')
-                              )
+                        child: Padding(
+                          padding: EdgeInsets.all(20),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    fit: BoxFit.fitHeight,
+                                    image: AssetImage('assets/image/catchtype3.png')
+                                )
+                            ),
                           ),
                         ),
                       ),
@@ -195,12 +204,15 @@ class _catch_order_ingredient_dialogState extends State<catch_order_ingredient_d
                         bottom: (width - 90)/7,
                         left: 0,
                         right: 0,
-                        child: Container(
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  fit: BoxFit.fitHeight,
-                                  image: AssetImage('assets/image/catchtype4.png')
-                              )
+                        child: Padding(
+                          padding: EdgeInsets.all(20),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    fit: BoxFit.fitHeight,
+                                    image: AssetImage('assets/image/catchtype4.png')
+                                )
+                            ),
                           ),
                         ),
                       ),

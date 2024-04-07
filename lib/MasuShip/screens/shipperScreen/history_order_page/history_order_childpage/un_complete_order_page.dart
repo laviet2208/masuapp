@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/Data/OrderData/catchOrder.dart';
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
 import 'package:masuapp/MasuShip/screens/shipperScreen/history_order_page/history_order_item/uncomplete_item/un_catch_order_item.dart';
+import 'package:masuapp/MasuShip/screens/shipperScreen/history_order_page/history_order_item/uncomplete_item/un_catch_order_type_2_item.dart';
 import 'package:masuapp/MasuShip/screens/shipperScreen/history_order_page/history_order_item/uncomplete_item/un_request_buy_order_item.dart';
 
 import '../../../../Data/OrderData/requestBuyOrderData/requestBuyOrder.dart';
@@ -35,7 +36,12 @@ class _un_complete_order_pageState extends State<un_complete_order_page> {
 
   Widget getItem(int index) {
     if (un_complete_order_list[index]['productList'] == null) {
-      return un_catch_order_item(order: CatchOrder.fromJson(un_complete_order_list[index]));
+      if (double.parse(un_complete_order_list[index]['locationGet']['longitude'].toString()) == 0) {
+        return un_catch_order_type_2_item(order: CatchOrder.fromJson(un_complete_order_list[index]));
+      } else {
+        return un_catch_order_item(order: CatchOrder.fromJson(un_complete_order_list[index]));
+      }
+
     } else {
       return un_request_buy_order_item(order: requestBuyOrder.fromJson(un_complete_order_list[index]));
     }
