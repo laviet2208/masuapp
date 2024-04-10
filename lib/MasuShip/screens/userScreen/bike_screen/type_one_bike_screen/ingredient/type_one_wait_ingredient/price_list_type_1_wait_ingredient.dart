@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_one_bike_screen/controller/type_one_wait_controller.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_one_bike_screen/ingredient/general/general_ingredient.dart';
 import '../../../../../../Data/OrderData/catchOrder.dart';
@@ -127,7 +128,7 @@ class _price_list_type_1_wait_ingredientState extends State<price_list_type_1_wa
                 width: 10,
               ),
 
-              get_left_title_text('Phí phụ thu', width),
+              get_left_title_text(order.subFee == 0 ? 'Phụ thu' : ('Phụ thu ' + finalData.weathercost.weatherTitle), width),
 
               Padding(
                 padding: EdgeInsets.only(top: 7, bottom: 7),
@@ -219,7 +220,7 @@ class _price_list_type_1_wait_ingredientState extends State<price_list_type_1_wa
                   width: (width - 40 - 20)/2,
                   alignment: Alignment.centerRight,
                   child: AutoSizeText(
-                    getStringNumber(order.cost - getVoucherSale(order.voucher, order.cost)) + '.đ',
+                    getStringNumber(order.cost + order.subFee) + '.đ',
                     style: TextStyle(
                         fontFamily: 'muli',
                         color: Colors.black,

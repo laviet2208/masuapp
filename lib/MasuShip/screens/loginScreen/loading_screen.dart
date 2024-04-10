@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/Data/costData/Cost.dart';
+import 'package:masuapp/MasuShip/Data/costData/restaurantCost.dart';
+import 'package:masuapp/MasuShip/Data/costData/weatherCost.dart';
 import '../../Data/accountData/shipperAccount.dart';
 import '../../Data/accountData/userAccount.dart';
 import '../../Data/finalData/finalData.dart';
@@ -20,6 +22,7 @@ class loading_screen extends StatefulWidget {
 }
 
 class _loading_screenState extends State<loading_screen> {
+
   Future<void> getData(String phoneNumber) async {
     final reference = FirebaseDatabase.instance.reference();
     await reference.child('Account').onValue.listen((event) {
@@ -56,6 +59,8 @@ class _loading_screenState extends State<loading_screen> {
     await reference.child('CostFee').child(finalData.user_account.area).onValue.listen((event) {
       final dynamic data = event.snapshot.value;
       finalData.bikeCost = Cost.fromJson(data['Bike']);
+      finalData.weathercost = weatherCost.fromJson(data['weatherCost']);
+      finalData.restaurantcost = restaurantCost.fromJson(data['restaurantCost']);
     });
   }
 

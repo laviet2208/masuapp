@@ -47,7 +47,6 @@ class order_have_dialog_controller {
       finalData.shipper_account.money = finalData.shipper_account.money - money;
       await change_shipper_money();
       await change_order_time('S2time', order.id);
-      await push_history_data(historyTransactionData(id: generateID(15), senderId: '', receiverId: finalData.shipper_account.id, transactionTime: getCurrentTime(), type: 5, content: 'Chiết khấu đơn xe ôm' + order.id, money: money, area: finalData.shipper_account.area));
       print('Trừ tiền tài khoản, đẩy lịch sử lên');
       final player = AudioPlayer();
       await player.play(AssetSource('volume/ting.mp3'), volume: 200);

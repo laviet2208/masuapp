@@ -9,7 +9,6 @@ import 'package:masuapp/MasuShip/screens/shipperScreen/history_order_page/histor
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../../../../../GENERAL/utils/utils.dart';
 import '../../../../../../../Data/OrderData/requestBuyOrderData/requestBuyOrder.dart';
-import '../../../../../../../Data/accountData/shopData/shopAccount.dart';
 import '../../../../../../../Data/costData/Cost.dart';
 import '../../../../../../../Data/historyData/historyTransactionData.dart';
 import '../../../../../../../Data/locationData/Location.dart';
@@ -57,9 +56,7 @@ class _view_un_buy_request_order_detail_screenState extends State<view_un_buy_re
     markers[markerId] = marker;
   }
 
-  requestBuyOrder order = requestBuyOrder(id: '', locationSet: Location(placeId: '', description: '', longitude:  0, latitude: 0, mainText: '', secondaryText: ''), locationGet: Location(placeId: '', description: '', longitude:  0, latitude: 0, mainText: '', secondaryText: ''), cost: 0, owner: finalData.user_account, shipper: finalData.shipper_account, status: '', voucher: Voucher(id: '', Money: 0, mincost: 0, startTime: getCurrentTime(), endTime: getCurrentTime(), useCount: 0, maxCount: 0, eventName: '', LocationId: '', type: 0, Otype: '', perCustom: 0, CustomList: [], maxSale: 0, area: ''), S1time: getCurrentTime(), S2time: getCurrentTime(), S3time: getCurrentTime(), S4time: getCurrentTime(), costFee: Cost(departKM: 0, departCost: 0, perKMcost: 0, discount: 0), productList: [],
-      shop: ShopAccount(id: '', createTime: getCurrentTime(), lockStatus: 0, name: '', phone: '', type: 0, password: '', closeTime: getCurrentTime(), openTime: getCurrentTime(), openStatus: 1, area: '',
-          location: Location(placeId: '', description: '', longitude:  0, latitude: 0, mainText: '', secondaryText: ''), listDirectory: [], money: 0, discount_type: 0));
+  requestBuyOrder order = requestBuyOrder(id: '', locationSet: Location(placeId: '', description: '', longitude:  0, latitude: 0, mainText: '', secondaryText: ''), locationGet: Location(placeId: '', description: '', longitude:  0, latitude: 0, mainText: '', secondaryText: ''), cost: 0, owner: finalData.user_account, shipper: finalData.shipper_account, status: '', voucher: Voucher(id: '', Money: 0, mincost: 0, startTime: getCurrentTime(), endTime: getCurrentTime(), useCount: 0, maxCount: 0, eventName: '', LocationId: '', type: 0, Otype: '', perCustom: 0, CustomList: [], maxSale: 0, area: ''), S1time: getCurrentTime(), S2time: getCurrentTime(), S3time: getCurrentTime(), S4time: getCurrentTime(), costFee: Cost(departKM: 0, departCost: 0, perKMcost: 0, discount: 0), productList: [], buyLocation: []);
 
   void getData() {
     final reference = FirebaseDatabase.instance.reference();
@@ -626,7 +623,7 @@ class _view_un_buy_request_order_detail_screenState extends State<view_un_buy_re
                                   height: 30,
                                   width: width - 40 - 30 - 30,
                                   child: AutoSizeText(
-                                    'Điểm mua: ' + order.shop.name,
+                                    'Điểm mua: ' + order.buyLocation.length.toString() + ' Điểm',
                                     style: TextStyle(
                                         fontFamily: 'arial',
                                         color: Colors.black,

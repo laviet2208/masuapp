@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/main_page/ingredient/catch_order_ingredient/catch_order_ingredient_controller.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/request_buy_screen/request_buy_step_1.dart';
 
 class buy_request_order_ingredient_dialog extends StatefulWidget {
@@ -72,7 +73,7 @@ class _buy_request_order_ingredient_dialogState extends State<buy_request_order_
                     ],
                   ),
                 ),
-                onTap: () {
+                onTap: () async {
                   Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => request_buy_step_1(),),);
                 },
               ),
@@ -112,7 +113,7 @@ class _buy_request_order_ingredient_dialogState extends State<buy_request_order_
                         child: Container(
                           height: (width - 90)/7 - 10,
                           child: Text(
-                            'Gọi hotline đặt xe',
+                            'Gọi hotline mua hộ',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontFamily: 'muli',

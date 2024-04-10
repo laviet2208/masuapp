@@ -1,30 +1,19 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/Data/OrderData/expressOrder/expressOrder.dart';
-import 'package:masuapp/MasuShip/Data/OrderData/expressOrder/personInfo.dart';
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/express_screen/express_step_1.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import '../../../Data/locationData/Location.dart';
-import '../../../Data/otherData/Temporary.dart';
-import '../../../Data/otherData/Time.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/express_screen/ingredient/general_ingredient.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/express_screen/ingredient/location_title_custom_express.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/express_screen/ingredient/start_express_order_button.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/general/back_button.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/general/title_gradient_container.dart';
 import '../../../Data/otherData/Tool.dart';
-import '../../../Data/voucherData/Voucher.dart';
 import '../general/voucher_select.dart';
 
 class express_step_2 extends StatefulWidget {
-  final Temporary sendName;
-  final Temporary sendPhone;
-  final Temporary receiverName;
-  final Temporary receiverPhone;
-  final Location start_location;
-  final Location end_location;
-  final int weightType;
-  final String item;
-  final double money;
-  final String note;
-  const express_step_2({super.key, required this.sendName, required this.sendPhone, required this.receiverName, required this.receiverPhone, required this.start_location, required this.end_location, required this.weightType,required this.item,required this.money,required this.note});
+  final expressOrder order;
+  const express_step_2({super.key, required this.order,});
 
   @override
   State<express_step_2> createState() => _express_step_2State();
@@ -34,55 +23,9 @@ class _express_step_2State extends State<express_step_2> {
   double weightFee = 0;
   String weightType = 'Dưới 10kg';
 
-  expressOrder order = expressOrder(
-      id: '',
-      locationSet: Location(placeId: '', description: '', longitude: 0, latitude: 0, mainText: '', secondaryText: ''),
-      locationGet: Location(placeId: '', description: '', longitude: 0, latitude: 0, mainText: '', secondaryText: ''),
-      cost: 0,
-      owner: finalData.user_account,
-      shipper: finalData.shipper_account,
-      status: 'A',
-      voucher: Voucher(id: '', Money: 0, mincost: 0, startTime: getCurrentTime(), endTime: getCurrentTime(), useCount: 0, maxCount: 0, eventName: '', LocationId: '', type: 1, Otype: '', perCustom: 0, CustomList: [], maxSale: 0, area: ''),
-      S1time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
-      S2time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
-      S3time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
-      S4time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
-      costFee: finalData.bikeCost,
-      subFee: 0,
-      codMoney: 0,
-      sender: personInfo(name: '', phone: ''),
-      receiver: personInfo(name: '', phone: ''),
-      item: '',
-      weightType: 1,
-      note: '',
-  );
-
-  Future<double> getDistance(Location start, Location end) async {
-    double startLatitude = start.latitude;
-    double startLongitude = start.longitude;
-    double endLatitude = end.latitude;
-    double endLongitude = end.longitude;
-    final url = Uri.parse("https://rsapi.goong.io/DistanceMatrix?origins=$startLatitude,$startLongitude&destinations=$endLatitude,$endLongitude&vehicle=bike&api_key=npcYThxwWdlxPTuGGZ8Tu4QAF7IyO3u2vYyWlV5Z");
-
-
-    try {
-      final response = await http.get(url);
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        final distance = data['rows'][0]['elements'][0]['distance']['value'];
-        return distance.toDouble()/1000;
-      } else {
-        throw Exception('Lỗi khi gửi yêu cầu tới Goong API: ${response.statusCode}');
-      }
-    } catch (e) {
-      throw Exception('Lỗi khi xử lý dữ liệu: $e');
-    }
-  }
-
   Future<double> getCost() async {
     double cost = 0;
-    double distance = await getDistance(widget.start_location, widget.end_location);
+    double distance = await getDistance(widget.order.locationSet, widget.order.locationGet);
     if (distance >= finalData.bikeCost.departKM) {
       cost += finalData.bikeCost.departKM.toInt() * finalData.bikeCost.departCost.toInt(); // Giá cước cho 2km đầu tiên (10.000 VND/km * 2km)
       distance -= finalData.bikeCost.departKM; // Trừ đi 2km đã tính giá cước
@@ -90,7 +33,7 @@ class _express_step_2State extends State<express_step_2> {
     } else {
       cost += (distance * finalData.bikeCost.departCost); // Giá cước cho khoảng cách dưới 2km
     }
-    order.cost = cost;
+    widget.order.cost = cost;
     return cost;
   }
 
@@ -98,19 +41,12 @@ class _express_step_2State extends State<express_step_2> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    order.locationSet = widget.start_location;
-    order.locationGet = widget.end_location;
-    order.codMoney = widget.money;
-    order.item = widget.item;
-    order.note = widget.note;
-    order.sender = personInfo(name: widget.sendName.stringData, phone: widget.sendPhone.stringData,);
-    order.receiver = personInfo(name: widget.receiverName.stringData, phone: widget.receiverPhone.stringData,);
-    if (widget.weightType == 1) {
+    if (widget.order.weightType == 1) {
       weightFee = 10000;
       weightType = 'Từ 10 -> 20kg';
     }
 
-    if (widget.weightType == 2) {
+    if (widget.order.weightType == 2) {
       weightFee = 20000;
       weightType = 'Trên 20kg';
     }
@@ -123,193 +59,49 @@ class _express_step_2State extends State<express_step_2> {
     return WillPopScope(
       child: Scaffold(
         body: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.yellow.shade700 , Colors.white],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              stops: [0.0, 1.0],
-            ),
-          ),
+          decoration: get_usually_decoration_gradient(),
           child: ListView(
             children: [
               Container(height: 20,),
 
-              Container(
-                height: 30,
-                child: Row(
-                  children: [
-                    Container(width: 10,),
-
-                    GestureDetector(
-                      child: Container(
-                        child: Icon(
-                          Icons.arrow_back_ios_new_rounded,
-                          color: Colors.black,
-                        ),
-                      ),
-                      onTap: () {
-                        Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => express_step_1()));
-                      },
-                    )
-                  ],
-                ),
-              ),
+              back_button(beforeWidget: express_step_1()),
 
               Container(height: 10,),
 
               Padding(
                 padding: EdgeInsets.only(left: 10, right: 10),
                 child: Container(
-                  height: width/3*2,
+                  height: 220,
                   child: Stack(
                     children: <Widget>[
                       Positioned(
                         top: 20,
                         left: 0,
                         right: 0,
+                        bottom: 0,
                         child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.4), // màu của shadow
-                                spreadRadius: 2, // bán kính của shadow
-                                blurRadius: 7, // độ mờ của shadow
-                                offset: Offset(0, 3), // vị trí của shadow
-                              ),
-                            ],
-                          ),
+                          decoration: get_usually_decoration(),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Container(height: 30,),
 
-                              Container(
-                                height: 30,
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      width: 10,
-                                    ),
-
-                                    Container(
-                                      width: 30,
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                              fit: BoxFit.cover,
-                                              image: AssetImage('assets/image/orangecircle.png')
-                                          )
-                                      ),
-                                    ),
-
-                                    Container(
-                                      width: 10,
-                                    ),
-
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 7, bottom: 7),
-                                      child: Container(
-                                        height: 30,
-                                        width: width - 40 - 30 - 30 - 10,
-                                        child: AutoSizeText(
-                                          'Lấy hàng tại',
-                                          style: TextStyle(
-                                              fontFamily: 'muli',
-                                              color: Colors.black,
-                                              fontSize: 200,
-                                              fontWeight: FontWeight.normal
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                              location_title_custom_express(type: 'start', title: 'Điểm lấy hàng',),
 
                               Padding(
                                 padding: EdgeInsets.only(left: 50, right: 10),
-                                child: Container(
-                                  child: Text(
-                                    (widget.start_location.mainText + ' ' + widget.start_location.secondaryText).length >= 95 ? widget.start_location.mainText : widget.start_location.mainText + ' ' + widget.start_location.secondaryText,
-                                    style: TextStyle(
-                                        fontFamily: 'muli',
-                                        color: Colors.black,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold
-                                    ),
-                                  ),
-                                ),
+                                child: general_ingredient.get_location_text(widget.order.locationSet.mainText + ' ' + widget.order.locationSet.secondaryText, Colors.black),
                               ),
 
                               Container(
-                                width: 30,
+                                width: 40,
                               ),
 
-                              Container(
-                                height: 30,
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      width: 10,
-                                    ),
-
-                                    Container(
-                                      width: 30,
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                              fit: BoxFit.cover,
-                                              image: AssetImage('assets/image/redcircle.png')
-                                          )
-                                      ),
-                                    ),
-
-                                    Container(
-                                      width: 10,
-                                    ),
-
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 7, bottom: 7),
-                                      child: Container(
-                                        height: 30,
-                                        width: width - 40 - 30 - 30 - 10,
-                                        child: AutoSizeText(
-                                          'Điểm giao hàng',
-                                          style: TextStyle(
-                                              fontFamily: 'muli',
-                                              color: Colors.black,
-                                              fontSize: 200,
-                                              fontWeight: FontWeight.normal
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                              location_title_custom_express(type: 'end', title: 'Điểm giao hàng',),
 
                               Padding(
                                 padding: EdgeInsets.only(left: 50, right: 10),
-                                child: GestureDetector(
-                                  child: Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      (widget.end_location.mainText + ' ' + widget.end_location.secondaryText).length >= 95 ? widget.end_location.mainText : widget.end_location.mainText + ' ' + widget.end_location.secondaryText,
-                                      style: TextStyle(
-                                          fontFamily: 'muli',
-                                          color: Colors.black,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold
-                                      ),
-                                    ),
-                                  ),
-                                  onTap: () {
-
-                                  },
-                                ),
+                                child: general_ingredient.get_location_text(widget.order.locationGet.mainText + ' ' + widget.order.locationGet.secondaryText, Colors.black),
                               ),
 
                               Container(height: 30,),
@@ -321,68 +113,14 @@ class _express_step_2State extends State<express_step_2> {
                       Positioned(
                         top: 0,
                         left: 30,
-                        child: Container(
-                          height: 40,
-                          width: width/3*2,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(1000),
-                            gradient: LinearGradient(
-                              colors: [Colors.yellow.withAlpha(200) ,Colors.white],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              stops: [0.0, 1.0],
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.2), // màu của shadow
-                                spreadRadius: 2, // bán kính của shadow
-                                blurRadius: 7, // độ mờ của shadow
-                                offset: Offset(0, 3), // vị trí của shadow
-                              ),
-                            ],
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-                            child: Row(
-                              children: <Widget>[
-                                Container(
-                                  width: 25,
-                                  child: Icon(
-                                    Icons.not_listed_location_outlined,
-                                    color: Colors.black,
-                                    size: 25,
-                                  ),
-                                ),
-
-                                Container(width: 5,),
-
-                                Padding(
-                                  padding: EdgeInsets.only(top: 7, bottom: 7),
-                                  child: Container(
-                                    width: width/3*2 - 50,
-                                    child: AutoSizeText(
-                                      'Thông tin điểm lấy, trả hàng',
-                                      style: TextStyle(
-                                        fontFamily: 'muli',
-                                        color: Colors.black,
-                                        fontSize: 100,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
+                        child: title_gradient_container(icon: Icons.not_listed_location_outlined, title: 'Thông tin điểm lấy, giao hàng'),
                       ),
                     ],
                   ),
                 ),
               ),
 
-              Container(height: 10,),
+              Container(height: 20,),
 
               Padding(
                 padding: EdgeInsets.only(left: 10, right: 10),
@@ -396,18 +134,7 @@ class _express_step_2State extends State<express_step_2> {
                         right: 0,
                         bottom: 0,
                         child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.4), // màu của shadow
-                                spreadRadius: 2, // bán kính của shadow
-                                blurRadius: 7, // độ mờ của shadow
-                                offset: Offset(0, 3), // vị trí của shadow
-                              ),
-                            ],
-                          ),
+                          decoration: get_usually_decoration(),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -423,43 +150,12 @@ class _express_step_2State extends State<express_step_2> {
 
                                     Padding(
                                       padding: EdgeInsets.only(top: 7, bottom: 7),
-                                      child: Container(
-                                        height: 30,
-                                        width: (width - 40 - 20)/2,
-                                        child: AutoSizeText(
-                                          'Phí thu hộ',
-                                          style: TextStyle(
-                                              fontFamily: 'muli',
-                                              color: Colors.black,
-                                              fontSize: 200,
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        ),
-                                      ),
+                                      child: general_ingredient.get_cost_title('Phí thu hộ', Colors.black, FontWeight.bold, width),
                                     ),
 
                                     Padding(
                                       padding: EdgeInsets.only(top: 7, bottom: 7),
-                                      child: Container(
-                                        height: 30,
-                                        width: (width - 40 - 20)/2,
-                                        alignment: Alignment.centerRight,
-                                        child: RichText(
-                                          text: TextSpan(
-                                            children: [
-                                              TextSpan(
-                                                text: getStringNumber(order.codMoney) + ".đ",
-                                                style: TextStyle(
-                                                  fontFamily: 'muli',
-                                                  color: Colors.black,
-                                                  fontWeight: order.codMoney == 0 ? FontWeight.normal : FontWeight.bold,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
+                                      child: general_ingredient.get_cost_content(getStringNumber(widget.order.codMoney) + ".đ", Colors.black, FontWeight.normal, width),
                                     ),
                                   ],
                                 ),
@@ -477,43 +173,12 @@ class _express_step_2State extends State<express_step_2> {
 
                                     Padding(
                                       padding: EdgeInsets.only(top: 7, bottom: 7),
-                                      child: Container(
-                                        height: 30,
-                                        width: (width - 40 - 20)/2,
-                                        child: AutoSizeText(
-                                          'Tên hàng hóa',
-                                          style: TextStyle(
-                                              fontFamily: 'muli',
-                                              color: Colors.black,
-                                              fontSize: 200,
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        ),
-                                      ),
+                                      child: general_ingredient.get_cost_title('Tên hàng hóa', Colors.black, FontWeight.bold, width),
                                     ),
 
                                     Padding(
                                       padding: EdgeInsets.only(top: 7, bottom: 7),
-                                      child: Container(
-                                        height: 30,
-                                        width: (width - 40 - 20)/2,
-                                        alignment: Alignment.centerRight,
-                                        child: RichText(
-                                          text: TextSpan(
-                                            children: [
-                                              TextSpan(
-                                                text: order.item,
-                                                style: TextStyle(
-                                                  fontFamily: 'muli',
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.normal,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
+                                      child: general_ingredient.get_cost_content(widget.order.item, Colors.black, FontWeight.normal, width),
                                     ),
                                   ],
                                 ),
@@ -531,43 +196,12 @@ class _express_step_2State extends State<express_step_2> {
 
                                     Padding(
                                       padding: EdgeInsets.only(top: 7, bottom: 7),
-                                      child: Container(
-                                        height: 30,
-                                        width: (width - 40 - 20)/2,
-                                        child: AutoSizeText(
-                                          'Người gửi',
-                                          style: TextStyle(
-                                              fontFamily: 'muli',
-                                              color: Colors.black,
-                                              fontSize: 200,
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        ),
-                                      ),
+                                      child: general_ingredient.get_cost_title('Sđt người gửi', Colors.black, FontWeight.bold, width),
                                     ),
 
                                     Padding(
                                       padding: EdgeInsets.only(top: 7, bottom: 7),
-                                      child: Container(
-                                        height: 30,
-                                        width: (width - 40 - 20)/2,
-                                        alignment: Alignment.centerRight,
-                                        child: RichText(
-                                          text: TextSpan(
-                                            children: [
-                                              TextSpan(
-                                                text: order.sender.phone,
-                                                style: TextStyle(
-                                                  fontFamily: 'muli',
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.normal,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
+                                      child: general_ingredient.get_cost_content(widget.order.sender.phone, Colors.black, FontWeight.normal, width),
                                     ),
                                   ],
                                 ),
@@ -585,43 +219,12 @@ class _express_step_2State extends State<express_step_2> {
 
                                     Padding(
                                       padding: EdgeInsets.only(top: 7, bottom: 7),
-                                      child: Container(
-                                        height: 30,
-                                        width: (width - 40 - 20)/2,
-                                        child: AutoSizeText(
-                                          'Người nhận',
-                                          style: TextStyle(
-                                              fontFamily: 'muli',
-                                              color: Colors.black,
-                                              fontSize: 200,
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        ),
-                                      ),
+                                      child: general_ingredient.get_cost_title('Sđt người nhận', Colors.black, FontWeight.bold, width),
                                     ),
 
                                     Padding(
                                       padding: EdgeInsets.only(top: 7, bottom: 7),
-                                      child: Container(
-                                        height: 30,
-                                        width: (width - 40 - 20)/2,
-                                        alignment: Alignment.centerRight,
-                                        child: RichText(
-                                          text: TextSpan(
-                                            children: [
-                                              TextSpan(
-                                                text: order.receiver.phone,
-                                                style: TextStyle(
-                                                  fontFamily: 'muli',
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.normal,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
+                                      child: general_ingredient.get_cost_content(widget.order.receiver.phone, Colors.black, FontWeight.normal, width),
                                     ),
                                   ],
                                 ),
@@ -639,43 +242,12 @@ class _express_step_2State extends State<express_step_2> {
 
                                     Padding(
                                       padding: EdgeInsets.only(top: 7, bottom: 7),
-                                      child: Container(
-                                        height: 30,
-                                        width: (width - 40 - 20)/2,
-                                        child: AutoSizeText(
-                                          'Trọng lượng',
-                                          style: TextStyle(
-                                              fontFamily: 'muli',
-                                              color: Colors.black,
-                                              fontSize: 200,
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        ),
-                                      ),
+                                      child: general_ingredient.get_cost_title('Trọng lượng', Colors.black, FontWeight.bold, width),
                                     ),
 
                                     Padding(
-                                      padding: EdgeInsets.only(top: 7, bottom: 5),
-                                      child: Container(
-                                        height: 30,
-                                        width: (width - 40 - 20)/2,
-                                        alignment: Alignment.centerRight,
-                                        child: RichText(
-                                          text: TextSpan(
-                                            children: [
-                                              TextSpan(
-                                                text: weightType,
-                                                style: TextStyle(
-                                                  fontFamily: 'muli',
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.normal,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
+                                      padding: EdgeInsets.only(top: 7, bottom: 7),
+                                      child: general_ingredient.get_cost_content(weightType, Colors.black, FontWeight.normal, width),
                                     ),
                                   ],
                                 ),
@@ -751,7 +323,7 @@ class _express_step_2State extends State<express_step_2> {
                 ),
               ),
 
-              Container(height: 30,),
+              Container(height: 20,),
 
               Padding(
                 padding: EdgeInsets.only(left: 10, right: 10),
@@ -796,34 +368,21 @@ class _express_step_2State extends State<express_step_2> {
                                         height: 30,
                                         width: (width - 40 - 20)/2,
                                         child: FutureBuilder(
-                                          future: getDistance(widget.start_location, widget.end_location),
+                                          future: getDistance(widget.order.locationSet, widget.order.locationGet),
                                           builder: (context, snapshot) {
                                             if (snapshot.connectionState == ConnectionState.waiting) {
-                                              return Text('Chi phí di chuyển(...km)', style: TextStyle(color: Colors.black, fontSize: 15),);
+                                              return general_ingredient.get_cost_title('Chi phí di chuyển(...km)', Colors.black, FontWeight.bold, width);
                                             }
 
                                             if (snapshot.hasError) {
-                                              print(snapshot.error.toString());
-                                              return Text('Lỗi vị trí, vui lòng thử lại', style: TextStyle(color: Colors.black, fontSize: 15),);
+                                              return general_ingredient.get_cost_title('Lỗi khoảng cách', Colors.black, FontWeight.bold, width);
                                             }
 
                                             if (!snapshot.hasData) {
-                                              return Text('Lỗi vị trí, vui lòng thử lại', style: TextStyle(color: Colors.black, fontSize: 15),);
+                                              return general_ingredient.get_cost_title('Lỗi khoảng cách', Colors.black, FontWeight.bold, width);
                                             }
 
-                                            return Container(
-                                              height: 30,
-                                              width: (width - 40 - 20)/2,
-                                              child: AutoSizeText(
-                                                'Chi phí di chuyển(' + snapshot.data!.toStringAsFixed(1) + ' Km)',
-                                                style: TextStyle(
-                                                    fontFamily: 'muli',
-                                                    color: Colors.black,
-                                                    fontSize: 200,
-                                                    fontWeight: FontWeight.bold
-                                                ),
-                                              ),
-                                            );
+                                            return general_ingredient.get_cost_title('Chi phí di chuyển(' + snapshot.data!.toStringAsFixed(1) + ' Km)', Colors.black, FontWeight.bold, width);
                                           },
                                         ),
                                       ),
@@ -839,77 +398,18 @@ class _express_step_2State extends State<express_step_2> {
                                           future: getCost(),
                                           builder: (context, snapshot) {
                                             if (snapshot.connectionState == ConnectionState.waiting) {
-                                              return RichText(
-                                                textAlign: TextAlign.end,
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: "Đang tính toán giá tiền",
-                                                      style: TextStyle(
-                                                        fontFamily: 'muli',
-                                                        color: Colors.black,
-                                                        fontWeight: FontWeight.normal,
-                                                        fontSize: 14,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
+                                              return general_ingredient.get_cost_content('Đang tính toán giá tiền', Colors.black, FontWeight.bold, width);
                                             }
 
                                             if (snapshot.hasError) {
-                                              print(snapshot.error.toString());
-                                              return RichText(
-                                                textAlign: TextAlign.end,
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: "Lỗi khi tính toán",
-                                                      style: TextStyle(
-                                                        fontFamily: 'muli',
-                                                        color: Colors.black,
-                                                        fontWeight: FontWeight.normal,
-                                                        fontSize: 14,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
+                                              return general_ingredient.get_cost_content('Lỗi tính toán', Colors.black, FontWeight.bold, width);
                                             }
 
                                             if (!snapshot.hasData) {
-                                              return RichText(
-                                                textAlign: TextAlign.end,
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: "Lỗi khi tính toán",
-                                                      style: TextStyle(
-                                                        fontFamily: 'muli',
-                                                        color: Colors.black,
-                                                        fontWeight: FontWeight.normal,
-                                                        fontSize: 14,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
+                                              return general_ingredient.get_cost_content('Lỗi tính toán', Colors.black, FontWeight.bold, width);
                                             }
 
-                                            return Container(
-                                              height: 30,
-                                              width: (width - 40 - 20)/2,
-                                              child: AutoSizeText(
-                                                getStringNumber(double.parse(snapshot.data.toString())) + '.đ',
-                                                textAlign: TextAlign.end,
-                                                style: TextStyle(
-                                                    fontFamily: 'muli',
-                                                    color: Colors.black,
-                                                    fontSize: 200,
-                                                    fontWeight: FontWeight.bold
-                                                ),
-                                              ),
-                                            );
+                                            return general_ingredient.get_cost_content(getStringNumber(double.parse(snapshot.data.toString())) + '.đ', Colors.black, FontWeight.bold, width);
                                           },
                                         ),
                                       ),
@@ -930,43 +430,12 @@ class _express_step_2State extends State<express_step_2> {
 
                                     Padding(
                                       padding: EdgeInsets.only(top: 7, bottom: 7),
-                                      child: Container(
-                                        height: 30,
-                                        width: (width - 40 - 20)/2,
-                                        child: AutoSizeText(
-                                          'Phụ thu thời tiết',
-                                          style: TextStyle(
-                                              fontFamily: 'muli',
-                                              color: Colors.black,
-                                              fontSize: 200,
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        ),
-                                      ),
+                                      child: general_ingredient.get_cost_title('Phụ phí thời tiết', Colors.black, FontWeight.bold, width),
                                     ),
 
                                     Padding(
                                       padding: EdgeInsets.only(top: 7, bottom: 7),
-                                      child: Container(
-                                        height: 30,
-                                        width: (width - 40 - 20)/2,
-                                        alignment: Alignment.centerRight,
-                                        child: RichText(
-                                          text: TextSpan(
-                                            children: [
-                                              TextSpan(
-                                                text: getStringNumber(order.subFee) + ".đ",
-                                                style: TextStyle(
-                                                  fontFamily: 'muli',
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.normal,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
+                                      child: general_ingredient.get_cost_content('Chưa có', Colors.black, FontWeight.bold, width),
                                     ),
                                   ],
                                 ),
@@ -984,43 +453,12 @@ class _express_step_2State extends State<express_step_2> {
 
                                     Padding(
                                       padding: EdgeInsets.only(top: 7, bottom: 7),
-                                      child: Container(
-                                        height: 30,
-                                        width: (width - 40 - 20)/2,
-                                        child: AutoSizeText(
-                                          'Phụ thu cân nặng',
-                                          style: TextStyle(
-                                              fontFamily: 'muli',
-                                              color: Colors.black,
-                                              fontSize: 200,
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        ),
-                                      ),
+                                      child: general_ingredient.get_cost_title('Phụ phí cân nặng', Colors.black, FontWeight.bold, width),
                                     ),
 
                                     Padding(
                                       padding: EdgeInsets.only(top: 7, bottom: 7),
-                                      child: Container(
-                                        height: 30,
-                                        width: (width - 40 - 20)/2,
-                                        alignment: Alignment.centerRight,
-                                        child: RichText(
-                                          text: TextSpan(
-                                            children: [
-                                              TextSpan(
-                                                text: getStringNumber(weightFee) + ".đ",
-                                                style: TextStyle(
-                                                  fontFamily: 'muli',
-                                                  color: Colors.black,
-                                                  fontWeight: weightFee == 0 ? FontWeight.normal : FontWeight.bold,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
+                                      child: general_ingredient.get_cost_content(getStringNumber(weightFee) + ".đ", Colors.black, FontWeight.bold, width),
                                     ),
                                   ],
                                 ),
@@ -1038,58 +476,23 @@ class _express_step_2State extends State<express_step_2> {
 
                                     Padding(
                                       padding: EdgeInsets.only(top: 7, bottom: 7),
-                                      child: Container(
-                                        height: 30,
-                                        width: (width - 40 - 20)/2,
-                                        child: AutoSizeText(
-                                          'Mã giảm giá',
-                                          style: TextStyle(
-                                              fontFamily: 'muli',
-                                              color: Colors.black,
-                                              fontSize: 200,
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        ),
-                                      ),
+                                      child: general_ingredient.get_cost_title('Mã giảm giá', Colors.black, FontWeight.bold, width),
                                     ),
 
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 7, bottom: 7),
-                                      child: GestureDetector(
-                                        child: Container(
-                                          height: 30,
-                                          width: (width - 40 - 20)/2,
-                                          alignment: Alignment.centerRight,
-                                          child: RichText(
-                                            text: TextSpan(
-                                              children: [
-                                                TextSpan(
-                                                  text: order.voucher.id == '' ? "Chọn mã giảm giá" : ('- ' + getStringNumber(getVoucherSale(order.voucher, order.cost)) + '.đ'),
-                                                  style: TextStyle(
-                                                    fontFamily: 'muli',
-                                                    color: Colors.redAccent,
-                                                    fontWeight: FontWeight.normal,
-                                                    fontSize: order.voucher.id == '' ? 12 : 14,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        onTap: () {
-                                          showModalBottomSheet(
-                                            context: context,
-                                            builder: (context) {
-                                              return voucher_select(voucher: order.voucher, ontap: () {
-                                                setState(() {
-
-                                                });
-                                              }, cost: order.cost + weightFee);
-                                            },
-                                          );
-                                        },
+                                    GestureDetector(
+                                      child: Padding(
+                                        padding: EdgeInsets.only(top: 7, bottom: 7),
+                                        child: general_ingredient.get_cost_content(widget.order.voucher.id == '' ? "Chọn mã giảm giá" : ('- ' + getStringNumber(getVoucherSale(widget.order.voucher, widget.order.cost)) + '.đ'), Colors.redAccent, FontWeight.bold, width),
                                       ),
-                                    ),
+                                      onTap: () {
+                                        showModalBottomSheet(
+                                          context: context,
+                                          builder: (context) {
+                                            return voucher_select(voucher: widget.order.voucher, ontap: () {setState(() {});}, cost: widget.order.cost);
+                                          },
+                                        );
+                                      },
+                                    )
                                   ],
                                 ),
                               ),
@@ -1099,9 +502,9 @@ class _express_step_2State extends State<express_step_2> {
                               Padding(
                                 padding: EdgeInsets.only(left: 10, right: 10),
                                 child: Container(
-                                  height: 1,
+                                  height: 0.5,
                                   decoration: BoxDecoration(
-                                      color: Colors.deepOrange
+                                      color: Colors.red
                                   ),
                                 ),
                               ),
@@ -1118,19 +521,7 @@ class _express_step_2State extends State<express_step_2> {
 
                                     Padding(
                                       padding: EdgeInsets.only(top: 4, bottom: 4),
-                                      child: Container(
-                                        height: 30,
-                                        width: (width - 40 - 20)/2,
-                                        child: AutoSizeText(
-                                          'Tổng thanh toán',
-                                          style: TextStyle(
-                                              fontFamily: 'muli',
-                                              color: Colors.black,
-                                              fontSize: 200,
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        ),
-                                      ),
+                                      child: general_ingredient.get_cost_title('Tổng thanh toán', Colors.black, FontWeight.bold, width),
                                     ),
 
                                     Padding(
@@ -1143,73 +534,19 @@ class _express_step_2State extends State<express_step_2> {
                                           future: getCost(),
                                           builder: (context, snapshot) {
                                             if (snapshot.connectionState == ConnectionState.waiting) {
-                                              return RichText(
-                                                textAlign: TextAlign.end,
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: "Đang tính toán giá tiền",
-                                                      style: TextStyle(
-                                                        fontFamily: 'muli',
-                                                        color: Colors.black,
-                                                        fontWeight: FontWeight.normal,
-                                                        fontSize: 14,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
+                                              return general_ingredient.get_cost_content('Đang tính toán', Colors.black, FontWeight.bold, width);
                                             }
 
                                             if (snapshot.hasError) {
-                                              print(snapshot.error.toString());
-                                              return RichText(
-                                                textAlign: TextAlign.end,
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: "Lỗi khi tính toán",
-                                                      style: TextStyle(
-                                                        fontFamily: 'muli',
-                                                        color: Colors.black,
-                                                        fontWeight: FontWeight.normal,
-                                                        fontSize: 14,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
+                                              return general_ingredient.get_cost_content('Lỗi tính toán', Colors.black, FontWeight.bold, width);
                                             }
 
                                             if (!snapshot.hasData) {
-                                              return RichText(
-                                                textAlign: TextAlign.end,
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: "Lỗi khi tính toán",
-                                                      style: TextStyle(
-                                                        fontFamily: 'muli',
-                                                        color: Colors.black,
-                                                        fontWeight: FontWeight.normal,
-                                                        fontSize: 14,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
+                                              return general_ingredient.get_cost_content('Lỗi tính toán', Colors.black, FontWeight.bold, width);
                                             }
 
-                                            return AutoSizeText(
-                                              getStringNumber(double.parse(snapshot.data.toString()) - getVoucherSale(order.voucher, order.cost) + weightFee) + '.đ',
-                                              style: TextStyle(
-                                                  fontFamily: 'muli',
-                                                  color: Colors.black,
-                                                  fontSize: 200,
-                                                  fontWeight: FontWeight.normal
-                                              ),
-                                            );
-                                          },
+                                            return general_ingredient.get_cost_content(getStringNumber(double.parse(snapshot.data.toString()) - getVoucherSale(widget.order.voucher, widget.order.cost) + weightFee) + '.đ', Colors.black, FontWeight.bold, width);
+                                            },
                                         ),
                                       ),
                                     ),
@@ -1226,61 +563,7 @@ class _express_step_2State extends State<express_step_2> {
                       Positioned(
                         top: 0,
                         left: 30,
-                        child: Container(
-                          height: 40,
-                          width: width/3*2,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(1000),
-                            gradient: LinearGradient(
-                              colors: [Colors.yellow.withAlpha(200) ,Colors.white],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              stops: [0.0, 1.0],
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.2), // màu của shadow
-                                spreadRadius: 2, // bán kính của shadow
-                                blurRadius: 7, // độ mờ của shadow
-                                offset: Offset(0, 3), // vị trí của shadow
-                              ),
-                            ],
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-                            child: Row(
-                              children: <Widget>[
-                                Container(
-                                  width: 25,
-                                  child: Icon(
-                                    Icons.monetization_on_outlined,
-                                    color: Colors.black,
-                                    size: 25,
-                                  ),
-                                ),
-
-                                Container(width: 5,),
-
-                                Padding(
-                                  padding: EdgeInsets.only(top: 7, bottom: 7),
-                                  child: Container(
-                                    width: width/3*2 - 50,
-                                    child: AutoSizeText(
-                                      'Thông tin thanh toán',
-                                      style: TextStyle(
-                                        fontFamily: 'muli',
-                                        color: Colors.black,
-                                        fontSize: 100,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
+                        child: title_gradient_container(icon: Icons.monetization_on_outlined, title: 'Thông tin thanh toán'),
                       ),
                     ],
                   ),
@@ -1289,44 +572,7 @@ class _express_step_2State extends State<express_step_2> {
 
               Container(height: 20,),
 
-              Padding(
-                padding: EdgeInsets.only(left: 10, right: 10),
-                child: GestureDetector(
-                  child: Container(
-                    height: 45,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(1000),
-                      gradient: LinearGradient(
-                        colors: [Colors.white, Colors.yellow],
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                        stops: [0.0, 1.0],
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.4), // màu của shadow
-                          spreadRadius: 2, // bán kính của shadow
-                          blurRadius: 7, // độ mờ của shadow
-                          offset: Offset(0, 3), // vị trí của shadow
-                        ),
-                      ],
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Xác nhận và đặt đơn',
-                        style: TextStyle(
-                            fontFamily: 'muli',
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold
-                        ),
-                      ),
-                    ),
-                  ),
-                  onTap: () {
-
-                  },
-                ),
-              ),
+              start_express_order_button(order: widget.order),
 
               Container(height: 20,),
             ],

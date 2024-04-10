@@ -1,20 +1,21 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
-import 'package:masuapp/MasuShip/screens/shipperScreen/divide_order_for_driver/controller/order_have_dialog_controller.dart';
-import 'package:masuapp/MasuShip/screens/shipperScreen/history_order_page/history_order_item/view_order_detail/controller/view_catch_order_controller.dart';
+import 'package:masuapp/MasuShip/screens/shipperScreen/history_order_page/history_order_item/view_order_detail/un_order_detail/ingredient/catch_type_1_ingredient/price_list_order_type_1.dart';
+import 'package:masuapp/MasuShip/screens/shipperScreen/history_order_page/history_order_item/view_order_detail/un_order_detail/ingredient/catch_type_1_ingredient/receive_button.dart';
+import 'package:masuapp/MasuShip/screens/shipperScreen/history_order_page/history_order_item/view_order_detail/un_order_detail/ingredient/catch_type_1_ingredient/request_sub_fee_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../../../Data/OrderData/catchOrder.dart';
 import '../../../../../../Data/costData/Cost.dart';
 import '../../../../../../Data/historyData/historyTransactionData.dart';
 import '../../../../../../Data/locationData/Location.dart';
 import '../../../../../../Data/otherData/Tool.dart';
-import '../../../../../../Data/otherData/utils.dart';
 import '../../../../../../Data/voucherData/Voucher.dart';
 import '../../../../main_screen/shipper_main_screen.dart';
+import 'ingredient/catch_type_2_ingredient/general_info_order_type_2.dart';
+import 'ingredient/catch_type_2_ingredient/location_order_type_2.dart';
 
 class view_catch_order_detail_screen extends StatefulWidget {
   final String id;
@@ -61,28 +62,8 @@ class _view_catch_order_detail_screenState extends State<view_catch_order_detail
     reference.child('Order').child(widget.id).onValue.listen((event) {
       final dynamic data = event.snapshot.value;
       order = CatchOrder.fromJson(data);
-
       setState(() {
-        _originLatitude = order.locationSet.latitude;
-        _originLongitude = order.locationSet.longitude;
-        _destLatitude = order.locationGet.latitude;
-        _destLongitude = order.locationGet.longitude;
-        _addMarker(LatLng(_originLatitude, _originLongitude), "origin", BitmapDescriptor.defaultMarker);
 
-        _addMarker(LatLng(_destLatitude, _destLongitude), "destination", BitmapDescriptor.defaultMarkerWithHue(90));
-
-        startTime = getAllTimeString(order.S1time);
-        
-        Tmoney = getStringNumber(order.cost) + "đ";
-        
-        if (order.status == 'B') {
-          status_text_button = 'Đã đón khách';
-          status = 'Bạn hãy mau chóng tới đón khách';
-        }
-        if (order.status == 'C') {
-          status_text_button = 'Đã hoàn thành';
-          status = 'Hãy đưa khách đến điểm yêu cầu';
-        }
       });
     });
   }
@@ -155,24 +136,22 @@ class _view_catch_order_detail_screenState extends State<view_catch_order_detail
       child: SafeArea(
         child: Scaffold(
           body: Container(
-            decoration: BoxDecoration(
-                color: Color.fromARGB(255, 245, 245, 245)
-            ),
+            decoration: get_usually_decoration_type_2_gradient(),
             child: ListView(
               children: [
                 Container(
                   width: width,
                   height: 50,
                   decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.2), // màu của shadow
-                          spreadRadius: 5, // bán kính của shadow
-                          blurRadius: 7, // độ mờ của shadow
-                          offset: Offset(0, 3), // vị trí của shadow
-                        ),
-                      ],
-                      color: Colors.white
+                      // boxShadow: [
+                      //   BoxShadow(
+                      //     color: Colors.grey.withOpacity(0.4), // màu của shadow
+                      //     spreadRadius: 5, // bán kính của shadow
+                      //     blurRadius: 7, // độ mờ của shadow
+                      //     offset: Offset(0, 3), // vị trí của shadow
+                      //   ),
+                      // ],
+                      // color: Colors.white
                   ),
                   child: Stack(
                     children: <Widget>[
@@ -186,110 +165,31 @@ class _view_catch_order_detail_screenState extends State<view_catch_order_detail
                           child: Container(
                             width: 40,
                             height: 40,
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: AssetImage('assets/image/backicon1.png')
-                                )
+                            child: Icon(
+                              Icons.arrow_back_ios_new,
+                              color: Colors.black,
                             ),
                           ),
                         ),
                       ),
 
                       Positioned(
-                          bottom: 14,
-                          left: 60,
+                        bottom: 0,
+                        left: 60,
+                        right: 60,
+                        top: 0,
+                        child: Container(
+                          alignment: Alignment.centerLeft,
                           child: Text(
-                            widget.id,
+                            'Quay về menu chính',
+                            overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                                 fontWeight: FontWeight.normal,
-                                fontSize: 20,
-                                fontFamily: 'arial',
+                                fontSize: 16,
+                                fontFamily: 'muli',
                                 color: Colors.black
                             ),
-                          )
-                      ),
-                    ],
-                  ),
-                ),
-
-                Container(
-                  height: height/2.5,
-                  width: width,
-                  child: Stack(
-                    children: <Widget>[
-                      Positioned(
-                        top: 0,
-                        left: 0,
-                        child: Container(
-                          height: height/2.5,
-                          width: width,
-                          child: GoogleMap(
-                            initialCameraPosition: CameraPosition(
-                                target: LatLng(_originLatitude, _originLongitude), zoom: 10),
-                            myLocationEnabled: false,
-                            tiltGesturesEnabled: true,
-                            compassEnabled: true,
-                            scrollGesturesEnabled: true,
-                            zoomGesturesEnabled: true,
-                            zoomControlsEnabled: false,
-                            onMapCreated: _onMapCreated,
-                            markers: Set<Marker>.of(markers.values),
                           ),
-                        ),
-                      ),
-
-                      Positioned(
-                        bottom: 10,
-                        left: 10,
-                        child: GestureDetector(
-                          child: Container(
-                            height: 40,
-                            width: 100,
-                            decoration: BoxDecoration(
-                                color: Colors.orange,
-                                borderRadius: BorderRadius.circular(20)
-                            ),
-                            alignment: Alignment.center,
-                            child: Text(
-                              'Điểm đón',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontFamily: 'roboto'
-                              ),
-                            ),
-                          ),
-                          onTap: () {
-                            openMaps(order.locationSet.latitude, order.locationSet.longitude);
-                          },
-                        ),
-                      ),
-
-                      Positioned(
-                        bottom: 10,
-                        left: 120,
-                        child: GestureDetector(
-                          child: Container(
-                            height: 40,
-                            width: 100,
-                            decoration: BoxDecoration(
-                                color: Colors.redAccent,
-                                borderRadius: BorderRadius.circular(20)
-                            ),
-                            alignment: Alignment.center,
-                            child: Text(
-                              'Điểm trả',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontFamily: 'roboto'
-                              ),
-                            ),
-                          ),
-                          onTap: () {
-                            openMaps(order.locationGet.latitude, order.locationGet.longitude);
-                          },
                         ),
                       ),
                     ],
@@ -298,803 +198,23 @@ class _view_catch_order_detail_screenState extends State<view_catch_order_detail
 
                 Container(height: 20,),
 
-                Padding(
-                  padding: EdgeInsets.only(left: 20, right: 20),
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20)
-                    ),
-
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(height: 10,),
-
-                        Container(
-                          height: 30,
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 10,
-                              ),
-
-                              Container(
-                                width: 30,
-                                height: 30,
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        fit: BoxFit.cover,
-                                        image: AssetImage('assets/image/ghichu.png')
-                                    )
-                                ),
-                              ),
-
-                              Container(
-                                width: 10,
-                              ),
-
-                              Padding(
-                                padding: EdgeInsets.only(top: 7, bottom: 7),
-                                child: Container(
-                                  height: 30,
-                                  width: width - 40 - 30 - 30,
-                                  child: AutoSizeText(
-                                    'Đơn ' + widget.id,
-                                    style: TextStyle(
-                                        fontFamily: 'arial',
-                                        color: Color.fromARGB(255, 255, 123, 64),
-                                        fontSize: 200,
-                                        fontWeight: FontWeight.bold
-                                    ),
-                                  ),
-                                ),
-                              ),
-
-                              Container(
-                                width: 10,
-                              ),
-
-
-                            ],
-                          ),
-                        ),
-
-                        Container(height: 10,),
-
-                        Container(
-                          height: 30,
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 10,
-                              ),
-
-                              Container(
-                                width: 30,
-                                height: 30,
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        fit: BoxFit.cover,
-                                        image: AssetImage('assets/image/clock.png')
-                                    )
-                                ),
-                              ),
-
-                              Container(
-                                width: 10,
-                              ),
-
-                              Padding(
-                                padding: EdgeInsets.only(top: 7, bottom: 7),
-                                child: Container(
-                                  height: 30,
-                                  width: width - 40 - 30 - 30,
-                                  child: AutoSizeText(
-                                    'Đặt lúc : ' + getAllTimeString(order.S1time),
-                                    style: TextStyle(
-                                        fontFamily: 'arial',
-                                        color: Colors.black,
-                                        fontSize: 200,
-                                        fontWeight: FontWeight.normal
-                                    ),
-                                  ),
-                                ),
-                              ),
-
-                              Container(
-                                width: 10,
-                              ),
-
-
-                            ],
-                          ),
-                        ),
-
-                        Container(height: 10,),
-
-                        Container(
-                          height: 30,
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 10,
-                              ),
-
-                              Icon(
-                                Icons.motorcycle_sharp,
-                                color: Color.fromARGB(255, 255, 123, 64),
-                                size: 30,
-                              ),
-
-                              Container(
-                                width: 10,
-                              ),
-
-                              Padding(
-                                padding: EdgeInsets.only(top: 7, bottom: 7),
-                                child: Container(
-                                  height: 30,
-                                  width: width - 40 - 30 - 30,
-                                  child: AutoSizeText(
-                                    'Xe ôm Masu',
-                                    style: TextStyle(
-                                        fontFamily: 'arial',
-                                        color: Color.fromARGB(255, 255, 123, 64),
-                                        fontSize: 200,
-                                        fontWeight: FontWeight.bold
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        Container(height: 10,),
-
-                        Padding(
-                          padding: EdgeInsets.only(left: 10, right: 10),
-                          child: Container(
-                            height: 1,
-                            decoration: BoxDecoration(
-                                color: Colors.grey
-                            ),
-                          ),
-                        ),
-
-                        Container(height: 10,),
-
-                        Container(
-                          height: 30,
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 10,
-                              ),
-
-                              Padding(
-                                padding: EdgeInsets.only(top: 7, bottom: 7),
-                                child: Container(
-                                  height: 30,
-                                  width: (width - 40 - 20)/2,
-                                  child: AutoSizeText(
-                                    'TỔNG CỘNG',
-                                    style: TextStyle(
-                                        fontFamily: 'arial',
-                                        color: Colors.grey,
-                                        fontSize: 200,
-                                        fontWeight: FontWeight.bold
-                                    ),
-                                  ),
-                                ),
-                              ),
-
-                              Padding(
-                                padding: EdgeInsets.only(top: 7, bottom: 7),
-                                child: Container(
-                                  height: 30,
-                                  width: (width - 40 - 20)/2,
-                                  alignment: Alignment.centerRight,
-                                  child: AutoSizeText(
-                                    getStringNumber(order.cost + getVoucherSale(order.voucher, order.cost)) + 'đ',
-                                    style: TextStyle(
-                                        fontFamily: 'arial',
-                                        color: Colors.black,
-                                        fontSize: 200,
-                                        fontWeight: FontWeight.normal
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        Container(height: 10,),
-
-                        Padding(
-                          padding: EdgeInsets.only(left: 10, right: 10),
-                          child: Container(
-                            height: 1,
-                            decoration: BoxDecoration(
-                                color: Colors.deepOrange
-                            ),
-                          ),
-                        ),
-
-                        Container(height: 10,),
-
-                        Container(
-                          height: 30,
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 10,
-                              ),
-
-                              Padding(
-                                padding: EdgeInsets.only(top: 7, bottom: 7),
-                                child: Container(
-                                  height: 30,
-                                  width: (width - 40 - 20)/2,
-                                  child: AutoSizeText(
-                                    'Chi phí vận chuyển',
-                                    style: TextStyle(
-                                        fontFamily: 'arial',
-                                        color: Colors.grey,
-                                        fontSize: 200,
-                                        fontWeight: FontWeight.bold
-                                    ),
-                                  ),
-                                ),
-                              ),
-
-                              Padding(
-                                padding: EdgeInsets.only(top: 7, bottom: 7),
-                                child: Container(
-                                  height: 30,
-                                  width: (width - 40 - 20)/2,
-                                  alignment: Alignment.centerRight,
-                                  child: RichText(
-                                    text: TextSpan(
-                                      children: [
-                                        TextSpan(
-                                          text: getStringNumber(order.cost + getVoucherSale(order.voucher, order.cost)) + "đ",
-                                          style: TextStyle(
-                                            fontFamily: 'arial',
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.normal,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        Container(height: 10,),
-                      ],
-                    ),
-                  ),
-                ),
+                general_info_order_type_2(order: order,),
 
                 Container(height: 20,),
 
-                Padding(
-                  padding: EdgeInsets.only(left: 20, right: 20),
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20)
-                    ),
-
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(height: 10,),
-
-                        Container(
-                          height: 30,
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 10,
-                              ),
-
-                              Container(
-                                width: 30,
-                                height: 30,
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        fit: BoxFit.cover,
-                                        image: AssetImage('assets/image/orangecircle.png')
-                                    )
-                                ),
-                              ),
-
-                              Container(
-                                width: 10,
-                              ),
-
-                              Padding(
-                                padding: EdgeInsets.only(top: 7, bottom: 7),
-                                child: Container(
-                                  height: 30,
-                                  width: width - 40 - 30 - 30,
-                                  child: AutoSizeText(
-                                    'Điểm đón',
-                                    style: TextStyle(
-                                        fontFamily: 'arial',
-                                        color: Colors.black,
-                                        fontSize: 200,
-                                        fontWeight: FontWeight.normal
-                                    ),
-                                  ),
-                                ),
-                              ),
-
-                              Container(
-                                width: 10,
-                              ),
-
-
-                            ],
-                          ),
-                        ),
-
-                        Padding(
-                          padding: EdgeInsets.only(left: 50, right: 10),
-                          child: Row(
-                            children: [
-                              Container(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  order.owner.phone[0] == '0' ? order.owner.phone : '0' + order.owner.phone,
-                                  style: TextStyle(
-                                      fontFamily: 'arial',
-                                      color: Colors.black,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.normal
-                                  ),
-                                ),
-                              ),
-
-                              Container(width: 5,),
-
-                              GestureDetector(
-                                child: Container(
-                                   child:Icon(
-                                     Icons.phone_enabled,
-                                     color: Colors.green,
-                                     size: 15,
-                                  )
-                                ),
-                                onTap: () => _launchPhone(order.owner.phone[0] == '0' ? order.owner.phone : '0' + order.owner.phone),
-                              )
-                            ],
-                          ),
-                        ),
-
-                        Container(height: 5,),
-
-                        Padding(
-                          padding: EdgeInsets.only(left: 50, right: 10),
-                          child: Container(
-                            child: Text(
-                              order.locationSet.mainText + ',' + order.locationSet.secondaryText,
-                              style: TextStyle(
-                                  fontFamily: 'arial',
-                                  color: Colors.black,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        Container(height: 15,),
-
-                        Container(
-                          height: 30,
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 10,
-                              ),
-
-                              Container(
-                                width: 30,
-                                height: 30,
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        fit: BoxFit.cover,
-                                        image: AssetImage('assets/image/redlocation.png')
-                                    )
-                                ),
-                              ),
-
-                              Container(
-                                width: 10,
-                              ),
-
-                              Padding(
-                                padding: EdgeInsets.only(top: 7, bottom: 7),
-                                child: Container(
-                                  height: 30,
-                                  width: width - 40 - 30 - 30,
-                                  child: AutoSizeText(
-                                    'Điểm đến',
-                                    style: TextStyle(
-                                        fontFamily: 'arial',
-                                        color: Colors.black,
-                                        fontSize: 200,
-                                        fontWeight: FontWeight.normal
-                                    ),
-                                  ),
-                                ),
-                              ),
-
-                              Container(
-                                width: 10,
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        Padding(
-                          padding: EdgeInsets.only(left: 50, right: 10),
-                          child: Container(
-                            child: Text(
-                              order.locationGet.mainText + ',' + order.locationGet.secondaryText,
-                              style: TextStyle(
-                                  fontFamily: 'arial',
-                                  color: Colors.black,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        Container(height: 20,),
-                      ],
-                    ),
-                  ),
-                ),
+                location_info_order_type_2(order: order),
 
                 Container(height: 20,),
 
-                Padding(
-                  padding: EdgeInsets.only(left: 20, right: 20),
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20)
-                    ),
-
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(height: 10,),
-
-                        Container(
-                          height: 30,
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 10,
-                              ),
-
-                              Icon(
-                                Icons.wallet,
-                                size: 30,
-                                color: Colors.orange,
-                              ),
-
-                              Container(
-                                width: 10,
-                              ),
-
-                              Padding(
-                                padding: EdgeInsets.only(top: 7, bottom: 7),
-                                child: Container(
-                                  height: 30,
-                                  width: width - 40 - 30 - 30,
-                                  child: AutoSizeText(
-                                    'Thông tin thu nhập',
-                                    style: TextStyle(
-                                        fontFamily: 'arial',
-                                        color: Colors.black,
-                                        fontSize: 200,
-                                        fontWeight: FontWeight.normal
-                                    ),
-                                  ),
-                                ),
-                              ),
-
-                              Container(
-                                width: 10,
-                              ),
-
-
-                            ],
-                          ),
-                        ),
-
-                        Container(height: 15,),
-
-                        Padding(
-                          padding: EdgeInsets.only(left: 15, right: 15),
-                          child: Container(
-                              alignment: Alignment.centerLeft,
-                              height: 15,
-                              child: Stack(
-                                children: <Widget>[
-                                  Positioned(
-                                    top: 0,
-                                    left: 0,
-                                    child: Text(
-                                      'Chi phí vận chuyển',
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.red,
-                                          fontFamily: 'arial',
-                                          fontWeight: FontWeight.bold
-                                      ),
-                                    ),
-                                  ),
-
-                                  Positioned(
-                                    top: 0,
-                                    right: 0,
-                                    child: Text(
-                                      getStringNumber(order.cost + getVoucherSale(order.voucher, order.cost)) + 'đ',
-                                      textAlign: TextAlign.end,
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.red,
-                                          fontFamily: 'arial',
-                                          fontWeight: FontWeight.bold
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )
-                          ),
-                        ),
-
-                        Container(height: 15,),
-
-                        Padding(
-                          padding: EdgeInsets.only(left: 15, right: 15),
-                          child: Container(
-                              alignment: Alignment.centerLeft,
-                              height: 16,
-                              child: Stack(
-                                children: <Widget>[
-                                  Positioned(
-                                    top: 0,
-                                    left: 0,
-                                    child: Text(
-                                      'Tổng thu của khách',
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.orange,
-                                          fontFamily: 'arial',
-                                          fontWeight: FontWeight.bold
-                                      ),
-                                    ),
-                                  ),
-
-                                  Positioned(
-                                    top: 0,
-                                    right: 0,
-                                    child: Text(
-                                      getStringNumber(order.cost) + 'đ',
-                                      textAlign: TextAlign.end,
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.orange,
-                                          fontFamily: 'arial',
-                                          fontWeight: FontWeight.bold
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )
-                          ),
-                        ),
-
-                        Container(height: 15,),
-
-                        Padding(
-                          padding: EdgeInsets.only(left: 15, right: 15),
-                          child: Container(
-                              alignment: Alignment.centerLeft,
-                              height: 15,
-                              child: Stack(
-                                children: <Widget>[
-                                  Positioned(
-                                    top: 0,
-                                    left: 0,
-                                    child: Text(
-                                      'Chiết khấu',
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.grey,
-                                          fontFamily: 'arial',
-                                          fontWeight: FontWeight.normal
-                                      ),
-                                    ),
-                                  ),
-
-                                  Positioned(
-                                    top: 0,
-                                    right: 0,
-                                    child: Text(
-                                      getStringNumber((order.cost+getVoucherSale(order.voucher, order.cost)) * (order.costFee.discount/100)) + 'đ',
-                                      textAlign: TextAlign.end,
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.black,
-                                          fontFamily: 'arial',
-                                          fontWeight: FontWeight.normal
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )
-                          ),
-                        ),
-
-                        Container(height: 15,),
-
-                        Padding(
-                          padding: EdgeInsets.only(left: 15, right: 15),
-                          child: Container(
-                              alignment: Alignment.centerLeft,
-                              height: 15,
-                              child: Stack(
-                                children: <Widget>[
-                                  Positioned(
-                                    top: 0,
-                                    left: 0,
-                                    child: Text(
-                                      'Mã khuyễn mãi',
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.grey,
-                                          fontFamily: 'arial',
-                                          fontWeight: FontWeight.normal
-                                      ),
-                                    ),
-                                  ),
-
-                                  Positioned(
-                                    top: 0,
-                                    right: 0,
-                                    child: Text(
-                                      getStringNumber(getVoucherSale(order.voucher, order.cost)) + 'đ',
-                                      textAlign: TextAlign.end,
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.black,
-                                          fontFamily: 'arial',
-                                          fontWeight: FontWeight.normal
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )
-                          ),
-                        ),
-
-                        Container(height: 15,),
-
-                        Padding(
-                          padding: EdgeInsets.only(left: 15, right: 15),
-                          child: Container(
-                              alignment: Alignment.centerLeft,
-                              height: 15,
-                              child: Stack(
-                                children: <Widget>[
-                                  Positioned(
-                                    top: 0,
-                                    left: 0,
-                                    child: Text(
-                                      'Tài xế thực nhận',
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.grey,
-                                          fontFamily: 'arial',
-                                          fontWeight: FontWeight.normal
-                                      ),
-                                    ),
-                                  ),
-
-                                  Positioned(
-                                    top: 0,
-                                    right: 0,
-                                    child: Text(
-                                      getStringNumber(order.cost + getVoucherSale(order.voucher, order.cost) - ((order.cost + getVoucherSale(order.voucher, order.cost)) * (order.costFee.discount/100))) + 'đ',
-                                      textAlign: TextAlign.end,
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.black,
-                                          fontFamily: 'arial',
-                                          fontWeight: FontWeight.normal
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )
-                          ),
-                        ),
-
-                        Container(height: 15,),
-                      ],
-                    ),
-                  ),
-                ),
+                price_list_order_type_1(order: order),
 
                 Container(height: 20,),
 
-                GestureDetector(
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 20, right: 20),
-                    child: Container(
-                      height: 45,
-                      decoration: BoxDecoration(
-                        color: Colors.yellow.shade600,
-                        borderRadius: BorderRadius.circular(5)
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        status_text_button,
-                        style: TextStyle(
-                          fontFamily: 'roboto',
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold
-                        ),
-                      ),
-                    ),
-                  ),
-                  onTap: () async {
-                    if (order.status == 'B') {
-                      await change_order_status('C');
-                      await change_order_time('S3time');
-                      view_catch_order_controller.show_B_dialog(context, width-30);
-                    } else if (order.status == 'C') {
-                      if (order.voucher.id != '') {
-                        double money = 0;
-                        if (order.voucher.Money <= 100) {
-                          money = (order.cost/(100-order.voucher.Money))*order.voucher.Money;
-                          if (money > order.voucher.maxSale) {
-                            money = order.voucher.maxSale;
-                          }
-                        } else {
-                          money = order.voucher.Money;
-                        }
-                        historyTransactionData his = historyTransactionData(id: generateID(15), senderId: '', receiverId: finalData.shipper_account.id, transactionTime: getCurrentTime(), type: 7, content: order.id, money: getVoucherSale(order.voucher, order.cost), area: order.owner.area);
-                        finalData.shipper_account.money = finalData.shipper_account.money + getVoucherSale(order.voucher, order.cost);
-                        await change_shipper_money();
-                        await push_history_data(his);
-                      }
-                      await change_order_status('D');
-                      await change_order_time('S4time');
-                      finalData.lastOrderTime = DateTime.now().add(Duration(seconds: 50));
-                      finalData.shipper_account.orderHaveStatus = 0;
-                      await order_have_dialog_controller.change_Have_Order_Status(0);
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => shipper_main_screen()));
-                      toastMessage('Đã hoàn thành đơn');
-                    }
-                  },
-                ),
+                receive_button(order: order),
+
+                Container(height: 10,),
+
+                request_sub_fee_button(order: order),
 
                 Container(height: 20,),
               ],

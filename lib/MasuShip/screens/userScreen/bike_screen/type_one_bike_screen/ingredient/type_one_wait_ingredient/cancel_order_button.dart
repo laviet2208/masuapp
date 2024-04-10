@@ -36,8 +36,8 @@ class _cancel_order_buttonState extends State<cancel_order_button> {
           padding: EdgeInsets.only(left: 10, right: 10),
           child: GestureDetector(
             child: Container(
-              height: type_one_wait_controller.check_if_can_cancal(snapshot.data!.status) ? 45 : 0,
-              decoration: type_one_wait_controller.check_if_can_cancal(snapshot.data!.status) != 0 ?  BoxDecoration(
+              height: type_one_wait_controller.check_if_can_cancel(snapshot.data!.status) ? 45 : 0,
+              decoration: type_one_wait_controller.check_if_can_cancel(snapshot.data!.status) != 0 ?  BoxDecoration(
                 borderRadius: BorderRadius.circular(1000),
                 gradient: LinearGradient(
                   colors: [Colors.white, Colors.yellow],

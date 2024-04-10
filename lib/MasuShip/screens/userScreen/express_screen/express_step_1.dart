@@ -2,15 +2,21 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import 'package:masuapp/GENERAL/utils/utils.dart';
 import 'dart:convert';
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
 import 'package:masuapp/MasuShip/Data/locationData/Location.dart';
-import 'package:masuapp/MasuShip/Data/otherData/Temporary.dart';
+import 'package:masuapp/MasuShip/Data/otherData/Tool.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_one_bike_screen/ingredient/type_one_wait_ingredient/back_button_in_wait.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/express_screen/action/change_name_and_phone.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/express_screen/express_step_2.dart';
-import 'package:masuapp/MasuShip/screens/userScreen/main_screen/user_main_screen.dart';
-
+import 'package:masuapp/MasuShip/screens/userScreen/express_screen/ingredient/general_ingredient.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/express_screen/ingredient/location_title_custom_express.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/general/title_gradient_container.dart';
+import '../../../Data/OrderData/expressOrder/expressOrder.dart';
+import '../../../Data/OrderData/expressOrder/personInfo.dart';
+import '../../../Data/otherData/Time.dart';
+import '../../../Data/otherData/utils.dart';
+import '../../../Data/voucherData/Voucher.dart';
 import '../general/search_location_dialog.dart';
 
 class express_step_1 extends StatefulWidget {
@@ -21,18 +27,36 @@ class express_step_1 extends StatefulWidget {
 }
 
 class _express_step_1State extends State<express_step_1> {
+  bool loading = false;
   int weightType = 0;
   final itemController = TextEditingController();
   final moneyController = TextEditingController();
   final noteController = TextEditingController();
-  Temporary sendName = Temporary(stringData: '', intData: 0, doubleData: 0);
-  Temporary sendPhone = Temporary(stringData: '', intData: 0, doubleData: 0);
-  Temporary receiverName = Temporary(stringData: '', intData: 0, doubleData: 0);
-  Temporary receiverPhone = Temporary(stringData: '', intData: 0, doubleData: 0);
-  Location start_location = Location(placeId: '', description: '', longitude: 0, latitude: 0, mainText: '', secondaryText: '');
-  Location end_location = Location(placeId: '', description: '', longitude: 0, latitude: 0, mainText: '', secondaryText: '');
   String chosenWeight = '';
   List<String> weightList = ['Dưới 10kg', 'Từ 10 - 25kg', 'Trên 25kg'];
+
+  expressOrder order = expressOrder(
+    id: generateID(25),
+    locationSet: Location(placeId: '', description: '', longitude: 0, latitude: 0, mainText: '', secondaryText: ''),
+    locationGet: Location(placeId: '', description: '', longitude: 0, latitude: 0, mainText: '', secondaryText: ''),
+    cost: 0,
+    owner: finalData.user_account,
+    shipper: finalData.shipper_account,
+    status: 'A',
+    voucher: Voucher(id: '', Money: 0, mincost: 0, startTime: getCurrentTime(), endTime: getCurrentTime(), useCount: 0, maxCount: 0, eventName: '', LocationId: '', type: 1, Otype: '', perCustom: 0, CustomList: [], maxSale: 0, area: ''),
+    S1time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
+    S2time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
+    S3time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
+    S4time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
+    costFee: finalData.bikeCost,
+    subFee: 0,
+    codMoney: 0,
+    sender: personInfo(name: '', phone: ''),
+    receiver: personInfo(name: '', phone: ''),
+    item: '',
+    weightType: 1,
+    note: '',
+  );
 
   Future<String> fetchLocationName(Location location) async {
     double longitude = location.longitude;
@@ -75,8 +99,8 @@ class _express_step_1State extends State<express_step_1> {
 
   bool check_fill_data() {
     if (itemController.text.isNotEmpty) {
-      if (start_location.longitude != 0 && start_location.latitude != 0 && end_location.longitude != 0 && end_location.latitude != 0) {
-        if (sendName.stringData != '' && sendPhone.stringData != '' && receiverName.stringData != '' && receiverPhone.stringData != '') {
+      if (order.locationSet.longitude != 0 && order.locationSet.latitude != 0 && order.locationGet.longitude != 0 && order.locationGet.latitude != 0) {
+        if (order.sender.name != '' && order.sender.phone != '' && order.receiver.name != '' && order.receiver.name != '') {
           return true;
         }
       }
@@ -90,10 +114,10 @@ class _express_step_1State extends State<express_step_1> {
     // TODO: implement initState
     super.initState();
     chosenWeight = weightList.first;
-    sendName.stringData = finalData.user_account.name;
-    sendPhone.stringData = finalData.user_account.phone;
-    start_location.longitude = finalData.user_account.location.longitude;
-    start_location.latitude = finalData.user_account.location.latitude;
+    order.sender.name = finalData.user_account.name;
+    order.sender.phone = finalData.user_account.phone;
+    order.locationSet.longitude = finalData.user_account.location.longitude;
+    order.locationSet.latitude = finalData.user_account.location.latitude;
   }
 
   @override
@@ -120,26 +144,7 @@ class _express_step_1State extends State<express_step_1> {
             children: [
               Container(height: 20,),
 
-              Container(
-                height: 30,
-                child: Row(
-                  children: [
-                    Container(width: 10,),
-
-                    GestureDetector(
-                      child: Container(
-                        child: Icon(
-                          Icons.arrow_back_ios_new_rounded,
-                          color: Colors.black,
-                        ),
-                      ),
-                      onTap: () {
-                        Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => user_main_screen()));
-                      },
-                    )
-                  ],
-                ),
-              ),
+              back_button_in_wait(),
 
               Container(height: 20,),
 
@@ -155,18 +160,7 @@ class _express_step_1State extends State<express_step_1> {
                         right: 0,
                         bottom: 0,
                         child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.4), // màu của shadow
-                                spreadRadius: 2, // bán kính của shadow
-                                blurRadius: 7, // độ mờ của shadow
-                                offset: Offset(0, 3), // vị trí của shadow
-                              ),
-                            ],
-                          ),
+                          decoration: get_usually_decoration(),
                           child: ListView(
                             physics: NeverScrollableScrollPhysics(),
                             padding: EdgeInsets.only(top: 20),
@@ -286,61 +280,7 @@ class _express_step_1State extends State<express_step_1> {
                       Positioned(
                         top: 0,
                         left: 30,
-                        child: Container(
-                          height: 40,
-                          width: width/3*2,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(1000),
-                            gradient: LinearGradient(
-                              colors: [Colors.yellow.withAlpha(200) ,Colors.white],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              stops: [0.0, 1.0],
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.2), // màu của shadow
-                                spreadRadius: 2, // bán kính của shadow
-                                blurRadius: 7, // độ mờ của shadow
-                                offset: Offset(0, 3), // vị trí của shadow
-                              ),
-                            ],
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-                            child: Row(
-                              children: <Widget>[
-                                Container(
-                                  width: 25,
-                                  child: Icon(
-                                    Icons.add_box_outlined,
-                                    color: Colors.black,
-                                    size: 25,
-                                  ),
-                                ),
-
-                                Container(width: 5,),
-
-                                Padding(
-                                  padding: EdgeInsets.only(top: 7, bottom: 7),
-                                  child: Container(
-                                    width: width/3*2 - 50,
-                                    child: AutoSizeText(
-                                      'Thông tin kiện hàng cần gửi',
-                                      style: TextStyle(
-                                        fontFamily: 'muli',
-                                        color: Colors.black,
-                                        fontSize: 100,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
+                        child: title_gradient_container(icon: Icons.add_shopping_cart, title: 'Thông tin hàng gửi'),
                       ),
                     ],
                   ),
@@ -352,26 +292,16 @@ class _express_step_1State extends State<express_step_1> {
               Padding(
                 padding: EdgeInsets.only(left: 10, right: 10),
                 child: Container(
-                  height: 240,
+                  height: 200,
                   child: Stack(
                     children: <Widget>[
                       Positioned(
                         top: 20,
                         left: 0,
                         right: 0,
+                        bottom: 0,
                         child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.4), // màu của shadow
-                                spreadRadius: 2, // bán kính của shadow
-                                blurRadius: 7, // độ mờ của shadow
-                                offset: Offset(0, 3), // vị trí của shadow
-                              ),
-                            ],
-                          ),
+                          decoration: get_usually_decoration(),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -430,7 +360,7 @@ class _express_step_1State extends State<express_step_1> {
                                         showDialog(
                                             context: context,
                                             builder: (context) {
-                                              return change_name_and_phone(Nametemporary: sendName, Phonetemporary: sendPhone, event: () {setState(() {});}, type: 1);
+                                              return change_name_and_phone(event: () {setState(() {});}, type: 1, info: order.sender,);
                                             }
                                         );
                                       },
@@ -441,19 +371,7 @@ class _express_step_1State extends State<express_step_1> {
 
                               Padding(
                                 padding: EdgeInsets.only(left: 50, right: 10),
-                                child: Container(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    sendName.stringData + ' - ' + (sendPhone.stringData[0] != '0' ? '0' + sendPhone.stringData : sendPhone.stringData),
-                                    textAlign: TextAlign.start,
-                                    style: TextStyle(
-                                        fontFamily: 'muli',
-                                        color: Colors.black,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold
-                                    ),
-                                  ),
-                                ),
+                                child: general_ingredient.get_location_text(order.sender.name + ' - ' + (order.sender.phone[0] != '0' ? '0' + order.sender.phone : order.sender.phone), Colors.black),
                               ),
 
                               Container(height: 10,),
@@ -462,41 +380,7 @@ class _express_step_1State extends State<express_step_1> {
                                 height: 30,
                                 child: Row(
                                   children: [
-                                    Container(
-                                      width: 10,
-                                    ),
-
-                                    Container(
-                                      width: 30,
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                              fit: BoxFit.cover,
-                                              image: AssetImage('assets/image/orangecircle.png')
-                                          )
-                                      ),
-                                    ),
-
-                                    Container(
-                                      width: 10,
-                                    ),
-
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 7, bottom: 7),
-                                      child: Container(
-                                        height: 30,
-                                        width: width - 40 - 30 - 30 - 10,
-                                        child: AutoSizeText(
-                                          'Điểm lấy hàng',
-                                          style: TextStyle(
-                                              fontFamily: 'muli',
-                                              color: Colors.black,
-                                              fontSize: 200,
-                                              fontWeight: FontWeight.normal
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                                    location_title_custom_express(type: 'start', title: 'Chọn điểm lấy hàng'),
 
                                     GestureDetector(
                                       child: Container(
@@ -506,7 +390,7 @@ class _express_step_1State extends State<express_step_1> {
                                         showDialog(
                                             context: context,
                                             builder: (context) {
-                                              return search_location_dialog(location: start_location, title: 'Chọn điểm lấy hàng', event: () {
+                                              return search_location_dialog(location: order.locationSet, title: 'Chọn điểm lấy hàng', event: () {
                                                 setState(() {
 
                                                 });
@@ -522,71 +406,21 @@ class _express_step_1State extends State<express_step_1> {
                               Padding(
                                 padding: EdgeInsets.only(left: 50, right: 10),
                                 child: FutureBuilder(
-                                  future: fetchLocationName(start_location),
+                                  future: fetchLocationName(order.locationSet),
                                   builder: (context, snapshot) {
                                     if (snapshot.connectionState == ConnectionState.waiting) {
-                                      return Container(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          'Đang tải vị trí...',
-                                          textAlign: TextAlign.start,
-                                          style: TextStyle(
-                                              fontFamily: 'muli',
-                                              color: Colors.black,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        ),
-                                      );
+                                      return general_ingredient.get_location_text('Đang tải vị trí ...',Colors.black);
                                     }
 
                                     if (snapshot.hasError) {
-                                      print(snapshot.error.toString());
-                                      return Container(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          'Lỗi dữ liệu vị trí, vui lòng thoát ra thử lại',
-                                          textAlign: TextAlign.start,
-                                          style: TextStyle(
-                                              fontFamily: 'muli',
-                                              color: Colors.black,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        ),
-                                      );
+                                      return general_ingredient.get_location_text('Lỗi vị trí vui lòng thử lại',Colors.black);
                                     }
 
                                     if (!snapshot.hasData) {
-                                      print(snapshot.hasData.toString());
-                                      return Container(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          'Lỗi dữ liệu vị trí, vui lòng thoát ra thử lại',
-                                          textAlign: TextAlign.start,
-                                          style: TextStyle(
-                                              fontFamily: 'muli',
-                                              color: Colors.black,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        ),
-                                      );
+                                      return general_ingredient.get_location_text('Lỗi vị trí vui lòng thử lại', Colors.black);
                                     }
 
-                                    return Container(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        snapshot.data.toString(),
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                            fontFamily: 'muli',
-                                            color: Colors.black,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold
-                                        ),
-                                      ),
-                                    );
+                                    return general_ingredient.get_location_text(snapshot.data!.toString(), Colors.black);
                                   },
                                 ),
                               ),
@@ -600,92 +434,28 @@ class _express_step_1State extends State<express_step_1> {
                       Positioned(
                         top: 0,
                         left: 30,
-                        child: Container(
-                          height: 40,
-                          width: width/3*2,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(1000),
-                            gradient: LinearGradient(
-                              colors: [Colors.yellow.withAlpha(200) ,Colors.white],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              stops: [0.0, 1.0],
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.2), // màu của shadow
-                                spreadRadius: 2, // bán kính của shadow
-                                blurRadius: 7, // độ mờ của shadow
-                                offset: Offset(0, 3), // vị trí của shadow
-                              ),
-                            ],
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-                            child: Row(
-                              children: <Widget>[
-                                Container(
-                                  width: 25,
-                                  child: Icon(
-                                    Icons.send_and_archive_outlined,
-                                    color: Colors.black,
-                                    size: 25,
-                                  ),
-                                ),
-
-                                Container(width: 5,),
-
-                                Padding(
-                                  padding: EdgeInsets.only(top: 7, bottom: 7),
-                                  child: Container(
-                                    width: width/3*2 - 50,
-                                    child: AutoSizeText(
-                                      'Thông tin người gửi',
-                                      style: TextStyle(
-                                        fontFamily: 'muli',
-                                        color: Colors.black,
-                                        fontSize: 100,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
+                        child: title_gradient_container(icon: Icons.send_and_archive_outlined, title: 'Thông tin người gửi'),
                       ),
                     ],
                   ),
                 ),
               ),
 
-              Container(height: 0,),
+              Container(height: 20,),
 
               Padding(
                 padding: EdgeInsets.only(left: 10, right: 10),
                 child: Container(
-                  height: 240,
+                  height: 200,
                   child: Stack(
                     children: <Widget>[
                       Positioned(
                         top: 20,
                         left: 0,
                         right: 0,
+                        bottom: 0,
                         child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.4), // màu của shadow
-                                spreadRadius: 2, // bán kính của shadow
-                                blurRadius: 7, // độ mờ của shadow
-                                offset: Offset(0, 3), // vị trí của shadow
-                              ),
-                            ],
-                          ),
+                          decoration: get_usually_decoration(),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -744,7 +514,7 @@ class _express_step_1State extends State<express_step_1> {
                                         showDialog(
                                             context: context,
                                             builder: (context) {
-                                              return change_name_and_phone(Nametemporary: receiverName, Phonetemporary: receiverPhone, event: () {setState(() {});}, type: 2);
+                                              return change_name_and_phone(info: order.receiver, event: () {setState(() {});}, type: 2);
                                             }
                                         );
                                       },
@@ -755,19 +525,7 @@ class _express_step_1State extends State<express_step_1> {
 
                               Padding(
                                 padding: EdgeInsets.only(left: 50, right: 10),
-                                child: Container(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    receiverName.stringData == '' ? 'Thêm thông tin người nhận' : (receiverName.stringData + ' - ' + (receiverPhone.stringData[0] != '0' ? '0' + receiverPhone.stringData : receiverPhone.stringData)),
-                                    textAlign: TextAlign.start,
-                                    style: TextStyle(
-                                        fontFamily: 'muli',
-                                        color: receiverName.stringData == '' ? Colors.red :Colors.black,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold
-                                    ),
-                                  ),
-                                ),
+                                child: general_ingredient.get_location_text(order.receiver.name == '' ? 'Thêm thông tin người nhận' : (order.receiver.name + ' - ' + (order.receiver.phone[0] != '0' ? '0' + order.receiver.phone : order.receiver.phone)), order.receiver.name == '' ? Colors.redAccent : Colors.black),
                               ),
 
                               Container(height: 10,),
@@ -776,41 +534,7 @@ class _express_step_1State extends State<express_step_1> {
                                 height: 30,
                                 child: Row(
                                   children: [
-                                    Container(
-                                      width: 10,
-                                    ),
-
-                                    Container(
-                                      width: 30,
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                              fit: BoxFit.cover,
-                                              image: AssetImage('assets/image/redcircle.png')
-                                          )
-                                      ),
-                                    ),
-
-                                    Container(
-                                      width: 10,
-                                    ),
-
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 7, bottom: 7),
-                                      child: Container(
-                                        height: 30,
-                                        width: width - 40 - 30 - 30 - 10,
-                                        child: AutoSizeText(
-                                          'Điểm giao hàng',
-                                          style: TextStyle(
-                                              fontFamily: 'muli',
-                                              color: Colors.black,
-                                              fontSize: 200,
-                                              fontWeight: FontWeight.normal
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                                    location_title_custom_express(type: 'end', title: 'Chọn điểm giao hàng'),
 
                                     GestureDetector(
                                       child: Container(
@@ -820,7 +544,7 @@ class _express_step_1State extends State<express_step_1> {
                                         showDialog(
                                             context: context,
                                             builder: (context) {
-                                              return search_location_dialog(location: end_location, title: 'Chọn điểm giao', event: () {
+                                              return search_location_dialog(location: order.locationGet, title: 'Chọn điểm giao', event: () {
                                                 setState(() {
 
                                                 });
@@ -836,71 +560,21 @@ class _express_step_1State extends State<express_step_1> {
                               Padding(
                                 padding: EdgeInsets.only(left: 50, right: 10),
                                 child: FutureBuilder(
-                                  future: fetchLocationName(end_location),
+                                  future: fetchLocationName(order.locationGet),
                                   builder: (context, snapshot) {
                                     if (snapshot.connectionState == ConnectionState.waiting) {
-                                      return Container(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          'Đang tải vị trí...',
-                                          textAlign: TextAlign.start,
-                                          style: TextStyle(
-                                              fontFamily: 'muli',
-                                              color: Colors.black,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        ),
-                                      );
+                                      return general_ingredient.get_location_text('Đang tải vị trí...', Colors.black);
                                     }
 
                                     if (snapshot.hasError) {
-                                      print(snapshot.error.toString());
-                                      return Container(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          'Hãy chọn vị trí giao hàng',
-                                          textAlign: TextAlign.start,
-                                          style: TextStyle(
-                                              fontFamily: 'muli',
-                                              color: Colors.redAccent,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        ),
-                                      );
+                                      return general_ingredient.get_location_text('Hãy chọn vị trí giao hàng', Colors.redAccent);
                                     }
 
                                     if (!snapshot.hasData) {
-                                      print(snapshot.hasData.toString());
-                                      return Container(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          'Hãy chọn vị trí giao hàng',
-                                          textAlign: TextAlign.start,
-                                          style: TextStyle(
-                                              fontFamily: 'muli',
-                                              color: Colors.redAccent,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        ),
-                                      );
+                                      return general_ingredient.get_location_text('Hãy chọn vị trí giao hàng', Colors.redAccent);
                                     }
 
-                                    return Container(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        snapshot.data.toString(),
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                            fontFamily: 'muli',
-                                            color: Colors.black,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold
-                                        ),
-                                      ),
-                                    );
+                                    return general_ingredient.get_location_text(snapshot.data!.toString(), Colors.black);
                                   },
                                 ),
                               ),
@@ -914,68 +588,14 @@ class _express_step_1State extends State<express_step_1> {
                       Positioned(
                         top: 0,
                         left: 30,
-                        child: Container(
-                          height: 40,
-                          width: width/3*2,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(1000),
-                            gradient: LinearGradient(
-                              colors: [Colors.yellow.withAlpha(200) ,Colors.white],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              stops: [0.0, 1.0],
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.2), // màu của shadow
-                                spreadRadius: 2, // bán kính của shadow
-                                blurRadius: 7, // độ mờ của shadow
-                                offset: Offset(0, 3), // vị trí của shadow
-                              ),
-                            ],
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-                            child: Row(
-                              children: <Widget>[
-                                Container(
-                                  width: 25,
-                                  child: Icon(
-                                    Icons.emoji_people_sharp,
-                                    color: Colors.black,
-                                    size: 25,
-                                  ),
-                                ),
-
-                                Container(width: 5,),
-
-                                Padding(
-                                  padding: EdgeInsets.only(top: 7, bottom: 7),
-                                  child: Container(
-                                    width: width/3*2 - 50,
-                                    child: AutoSizeText(
-                                      'Thông tin người nhận',
-                                      style: TextStyle(
-                                        fontFamily: 'muli',
-                                        color: Colors.black,
-                                        fontSize: 100,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
+                        child: title_gradient_container(icon: Icons.emoji_people, title: 'Thông tin người nhận'),
                       ),
                     ],
                   ),
                 ),
               ),
 
-              Container(height: 0,),
+              Container(height: 20,),
 
               Padding(
                 padding: EdgeInsets.only(left: 10, right: 10),
@@ -989,18 +609,7 @@ class _express_step_1State extends State<express_step_1> {
                         right: 0,
                         bottom: 0,
                         child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.4), // màu của shadow
-                                spreadRadius: 2, // bán kính của shadow
-                                blurRadius: 7, // độ mờ của shadow
-                                offset: Offset(0, 3), // vị trí của shadow
-                              ),
-                            ],
-                          ),
+                          decoration: get_usually_decoration(),
                           child: Stack(
                             children: <Widget>[
                               Positioned(
@@ -1071,61 +680,7 @@ class _express_step_1State extends State<express_step_1> {
                       Positioned(
                         top: 0,
                         left: 30,
-                        child: Container(
-                          height: 40,
-                          width: width/3*2,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(1000),
-                            gradient: LinearGradient(
-                              colors: [Colors.yellow.withAlpha(200) ,Colors.white],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              stops: [0.0, 1.0],
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.2), // màu của shadow
-                                spreadRadius: 2, // bán kính của shadow
-                                blurRadius: 7, // độ mờ của shadow
-                                offset: Offset(0, 3), // vị trí của shadow
-                              ),
-                            ],
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-                            child: Row(
-                              children: <Widget>[
-                                Container(
-                                  width: 25,
-                                  child: Icon(
-                                    Icons.monetization_on_outlined,
-                                    color: Colors.black,
-                                    size: 25,
-                                  ),
-                                ),
-
-                                Container(width: 5,),
-
-                                Padding(
-                                  padding: EdgeInsets.only(top: 7, bottom: 7),
-                                  child: Container(
-                                    width: width/3*2 - 50,
-                                    child: AutoSizeText(
-                                      'Thu hộ',
-                                      style: TextStyle(
-                                        fontFamily: 'muli',
-                                        color: Colors.black,
-                                        fontSize: 100,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
+                        child: title_gradient_container(icon: Icons.money, title: 'Phí thu hộ'),
                       ),
                     ],
                   ),
@@ -1146,18 +701,7 @@ class _express_step_1State extends State<express_step_1> {
                         right: 0,
                         bottom: 0,
                         child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.4), // màu của shadow
-                                spreadRadius: 2, // bán kính của shadow
-                                blurRadius: 7, // độ mờ của shadow
-                                offset: Offset(0, 3), // vị trí của shadow
-                              ),
-                            ],
-                          ),
+                          decoration: get_usually_decoration(),
                           child: Padding(
                             padding: EdgeInsets.only(top: 30, left: 20, right: 20, bottom: 20),
                             child: Container(
@@ -1199,61 +743,7 @@ class _express_step_1State extends State<express_step_1> {
                       Positioned(
                         top: 0,
                         left: 30,
-                        child: Container(
-                          height: 40,
-                          width: width/3*2,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(1000),
-                            gradient: LinearGradient(
-                              colors: [Colors.yellow.withAlpha(200) ,Colors.white],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              stops: [0.0, 1.0],
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.2), // màu của shadow
-                                spreadRadius: 2, // bán kính của shadow
-                                blurRadius: 7, // độ mờ của shadow
-                                offset: Offset(0, 3), // vị trí của shadow
-                              ),
-                            ],
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-                            child: Row(
-                              children: <Widget>[
-                                Container(
-                                  width: 25,
-                                  child: Icon(
-                                    Icons.note_alt_outlined,
-                                    color: Colors.black,
-                                    size: 25,
-                                  ),
-                                ),
-
-                                Container(width: 5,),
-
-                                Padding(
-                                  padding: EdgeInsets.only(top: 7, bottom: 7),
-                                  child: Container(
-                                    width: width/3*2 - 50,
-                                    child: AutoSizeText(
-                                      'Ghi chú đơn hàng',
-                                      style: TextStyle(
-                                        fontFamily: 'muli',
-                                        color: Colors.black,
-                                        fontSize: 100,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
+                        child: title_gradient_container(icon: Icons.note_alt_outlined, title: 'Ghi chú đơn hàng'),
                       ),
                     ],
                   ),
@@ -1285,23 +775,33 @@ class _express_step_1State extends State<express_step_1> {
                       ],
                     ),
                     child: Center(
-                      child: Text(
+                      child: !loading ? Text(
                         'Bước tiếp theo',
                         style: TextStyle(
                             fontFamily: 'muli',
                             color: Colors.black,
                             fontWeight: FontWeight.bold
                         ),
-                      ),
+                      ) : CircularProgressIndicator(color: Colors.black,),
                     ),
                   ),
-                  onTap: () {
+                  onTap: () async {
                     if (check_fill_data()) {
-                      Navigator.pushReplacement(
-                        context, MaterialPageRoute(
-                        builder: (BuildContext context) => express_step_2(sendName: sendName, sendPhone: sendPhone, receiverName: receiverName, receiverPhone: receiverPhone, start_location: start_location, end_location: end_location, weightType: weightType, item: itemController.text.toString(), money: double.parse(moneyController.text.toString()), note: noteController.text.toString()),
-                      ),
-                      );
+                      setState(() {
+                        loading = true;
+                      });
+                      order.note = noteController.text.isNotEmpty ? noteController.text.toString() : 'Không có ghi chú';
+                      order.item = itemController.text.toString();
+                      order.locationSet.mainText = await fetchLocationName(order.locationSet);
+                      order.locationGet.mainText = await fetchLocationName(order.locationGet);
+                      order.weightType = weightType;
+                      if (moneyController.text.isNotEmpty) {
+                        order.codMoney = double.parse(moneyController.text.toString());
+                      }
+                      setState(() {
+                        loading = false;
+                      });
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => express_step_2(order: order),),);
                     } else {
                       toastMessage('Bạn cần điền đủ thông tin');
                     }

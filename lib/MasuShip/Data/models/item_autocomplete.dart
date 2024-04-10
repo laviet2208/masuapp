@@ -26,6 +26,9 @@ class _item_autocompleteState extends State<item_autocomplete> {
       child: Container(
         width: widget.width,
         height: 80,
+        decoration: BoxDecoration(
+          color: Colors.white
+        ),
         child: Stack(
           children: <Widget>[
             Positioned(

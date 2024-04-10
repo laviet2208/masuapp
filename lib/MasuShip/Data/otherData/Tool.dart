@@ -64,21 +64,21 @@ double getCosOfBike(double distance) {
 
 double getDistanceOfBike(double cost) {
   double distance = 0;
+  double remainingCost = cost;
 
-  if (cost >= finalData.bikeCost.departKM.toInt() * finalData.bikeCost.departCost.toInt()) {
-    // Tính khoảng cách cho 2km đầu tiên
+  // Tính khoảng cách cho phần giá cước ban đầu cho 2km đầu tiên
+  double initialCost = finalData.bikeCost.departKM * finalData.bikeCost.departCost;
+  if (remainingCost >= initialCost) {
     distance += finalData.bikeCost.departKM;
-
-    // Tính khoảng cách cho phần còn lại của giá cước
-    double remainingCost = cost - (finalData.bikeCost.departKM.toInt() * finalData.bikeCost.departCost.toInt());
+    remainingCost -= initialCost;
     distance += remainingCost / finalData.bikeCost.perKMcost;
   } else {
-    // Tính khoảng cách cho giá cước dưới 2km
-    distance = cost / finalData.bikeCost.departCost;
+    distance = remainingCost / finalData.bikeCost.departCost;
   }
 
   return distance;
 }
+
 
 
 //chuyển 1 biến double qua string , phân tách hàng nghìn
@@ -289,6 +289,17 @@ BoxDecoration get_usually_decoration_gradient() {
       colors: [Colors.yellow.shade700 , Colors.white],
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
+      stops: [0.0, 1.0],
+    ),
+  );
+}
+
+BoxDecoration get_usually_decoration_type_2_gradient() {
+  return BoxDecoration(
+    gradient: LinearGradient(
+      colors: [Colors.yellow , Colors.white],
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
       stops: [0.0, 1.0],
     ),
   );

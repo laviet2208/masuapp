@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/Data/otherData/Temporary.dart';
 import 'package:masuapp/MasuShip/Data/otherData/utils.dart';
 
+import '../../../../Data/OrderData/expressOrder/personInfo.dart';
+
 class change_name_and_phone extends StatefulWidget {
-  final Temporary Nametemporary;
-  final Temporary Phonetemporary;
+  final personInfo info;
   final int type; // 1: thông tin người gửi, 2: thông tin người nhận
   final VoidCallback event;
-  const change_name_and_phone({super.key, required this.Nametemporary, required this.Phonetemporary, required this.event, required this.type,});
+  const change_name_and_phone({super.key, required this.info, required this.event, required this.type,});
 
   @override
   State<change_name_and_phone> createState() => _change_name_and_phoneState();
@@ -21,8 +22,8 @@ class _change_name_and_phoneState extends State<change_name_and_phone> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    nameController.text = widget.Nametemporary.stringData;
-    phoneController.text = widget.Phonetemporary.stringData;
+    nameController.text = widget.info.name;
+    phoneController.text = widget.info.phone;
   }
 
   @override
@@ -171,8 +172,8 @@ class _change_name_and_phoneState extends State<change_name_and_phone> {
         TextButton(
           onPressed: () {
             if (nameController.text.isNotEmpty && phoneController.text.isNotEmpty) {
-              widget.Nametemporary.stringData = nameController.text.toString();
-              widget.Phonetemporary.stringData = phoneController.text.toString();
+              widget.info.name = nameController.text.toString();
+              widget.info.phone = phoneController.text.toString();
               widget.event();
               Navigator.of(context).pop();
             } else {
@@ -190,8 +191,8 @@ class _change_name_and_phoneState extends State<change_name_and_phone> {
 
         TextButton(
           onPressed: () {
-            widget.Nametemporary.stringData = nameController.text.toString();
-            widget.Phonetemporary.stringData = phoneController.text.toString();
+            widget.info.name = nameController.text.toString();
+            widget.info.name = phoneController.text.toString();
             widget.event();
             Navigator.of(context).pop();
           },

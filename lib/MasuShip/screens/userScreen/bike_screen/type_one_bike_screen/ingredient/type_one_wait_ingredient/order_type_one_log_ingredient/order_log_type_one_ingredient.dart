@@ -61,7 +61,7 @@ class _order_log_type_one_ingredientState extends State<order_log_type_one_ingre
                   ),
                 ),
 
-                order_type_one_log_line(currentStatus: snapshot.data!.status, lineStatus: 'B', title: 'Tài xế' + snapshot.data!.shipper.name + ' đang đến', time: snapshot.data!.S2time,),
+                order_type_one_log_line(currentStatus: snapshot.data!.status, lineStatus: 'B', title: 'Tài xế ' + snapshot.data!.shipper.name + ' đang đến', time: snapshot.data!.S2time,),
 
                 Container(
                   height: 20,

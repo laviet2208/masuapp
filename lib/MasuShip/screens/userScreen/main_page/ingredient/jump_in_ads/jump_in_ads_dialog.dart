@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/Data/adsData/restaurantAdsData.dart';
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
 
+import '../../../main_screen/user_main_screen.dart';
+import '../../../restaurant_screen/restaurant_view_screen/restaurant_view_screen.dart';
+
 class jump_in_ads_dialog extends StatefulWidget {
   const jump_in_ads_dialog({super.key});
 
@@ -24,7 +27,7 @@ class _jump_in_ads_dialogState extends State<jump_in_ads_dialog> {
     final reference = FirebaseDatabase.instance.reference();
     reference.child("Ads").orderByChild('direction').equalTo(1).onValue.listen((event) {
       final dynamic ads = event.snapshot.value;
-
+      dataList.clear();
       ads.forEach((key, value) {
         if (value['area'].toString() == finalData.user_account.area) {
           if (int.parse(value['status'].toString()) == 1) {
@@ -63,7 +66,7 @@ class _jump_in_ads_dialogState extends State<jump_in_ads_dialog> {
     // TODO: implement initState
     super.initState();
     get_ads_jump_data();
-    _timer = Timer.periodic(Duration(seconds: 5), (timer) {
+    _timer = Timer.periodic(Duration(seconds: 2), (timer) {
       if (_currentPage < dataList.length - 1) {
         _currentPage++;
       } else {
@@ -72,12 +75,10 @@ class _jump_in_ads_dialogState extends State<jump_in_ads_dialog> {
       _pageController.animateToPage(
         _currentPage,
         duration: Duration(milliseconds: 2000),
-        curve: Curves.easeInSine,
+        curve: Curves.easeOutExpo,
       );
     });
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -108,6 +109,9 @@ class _jump_in_ads_dialogState extends State<jump_in_ads_dialog> {
                         width: width - 10,
                         height: height - 25,
                         alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                        ),
                         child: FutureBuilder(
                           future: _getImageURL(dataList[index].id + '.png'),
                           builder: (context, snapshot) {
@@ -135,7 +139,7 @@ class _jump_in_ads_dialogState extends State<jump_in_ads_dialog> {
                         ),
                       ),
                       onTap: () {
-
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => restaurant_view_screen(shopId: dataList[index].account.id, beforeWidget: user_main_screen())));
                       },
                     );
                   },

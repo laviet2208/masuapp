@@ -1,5 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:masuapp/MasuShip/Data/costData/restaurantCost.dart';
+import 'package:masuapp/MasuShip/Data/costData/weatherCost.dart';
 import '../../../Data/accountData/Account.dart';
 import '../../../Data/accountData/shipperAccount.dart';
 import '../../../Data/accountData/userAccount.dart';
@@ -61,6 +63,7 @@ class loginController {
             finalData.account = shipperAccount.fromJson(value);
             finalData.shipper_account = shipperAccount.fromJson(value);
             getCost();
+            print(finalData.bikeCost.toJson().toString());
             if (finalData.account.lockStatus == 1) {
               Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => shipper_main_screen()));
             }
@@ -75,9 +78,11 @@ class loginController {
 
   static void getCost() {
     final reference = FirebaseDatabase.instance.reference();
-    reference.child('CostFee').child(finalData.user_account.area).onValue.listen((event) {
+    reference.child('CostFee').child(finalData.account.area).onValue.listen((event) {
       final dynamic data = event.snapshot.value;
       finalData.bikeCost = Cost.fromJson(data['Bike']);
+      finalData.weathercost = weatherCost.fromJson(data['weatherCost']);
+      finalData.restaurantcost = restaurantCost.fromJson(data['restaurantCost']);
     });
   }
 }

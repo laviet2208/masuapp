@@ -1,15 +1,13 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
 import 'package:masuapp/MasuShip/Data/locationData/Location.dart';
 import 'package:masuapp/MasuShip/Data/otherData/Tool.dart';
 import 'package:masuapp/MasuShip/Data/otherData/utils.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_one_bike_screen/ingredient/type_one_wait_ingredient/location_title.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_one_bike_screen/type_one_bike_step_2.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/general/search_location_dialog.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/main_screen/user_main_screen.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import '../../general/title_gradient_container.dart';
 
 class type_one_bike_step_1 extends StatefulWidget {
   const type_one_bike_step_1({super.key});
@@ -24,24 +22,20 @@ class _type_one_bike_step_1State extends State<type_one_bike_step_1> {
   Location start_location = Location(placeId: '', description: '', longitude: 0, latitude: 0, mainText: '', secondaryText: '');
   Location end_location = Location(placeId: '', description: '', longitude: 0, latitude: 0, mainText: '', secondaryText: '');
 
-  Future<String> fetchLocationName(Location location) async {
-    double latitude = location.latitude;
-    double longitude = location.longitude;
-    final Uri uri = Uri.parse('https://rsapi.goong.io/Geocode?latlng=$latitude,$longitude&api_key=npcYThxwWdlxPTuGGZ8Tu4QAF7IyO3u2vYyWlV5Z');
-
-    try {
-      final response = await http.get(uri);
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        locationName = data['results'][0]['formatted_address'];
-        start_location.mainText = locationName;
-        return data['results'][0]['formatted_address'];
-      } else {
-        throw Exception('Failed to load location');
-      }
-    } catch (e) {
-      throw Exception('Lỗi khi xử lý dữ liệu: $e');
-    }
+  Container get_location_text(String title) {
+    return Container(
+      alignment: Alignment.centerLeft,
+      child: Text(
+        title,
+        textAlign: TextAlign.start,
+        style: TextStyle(
+            fontFamily: 'muli',
+            color: Colors.black,
+            fontSize: 16,
+            fontWeight: FontWeight.bold
+        ),
+      ),
+    );
   }
 
   @override
@@ -54,7 +48,6 @@ class _type_one_bike_step_1State extends State<type_one_bike_step_1> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
     return WillPopScope(
       child: Scaffold(
         body: Container(
@@ -220,41 +213,7 @@ class _type_one_bike_step_1State extends State<type_one_bike_step_1> {
                                 height: 30,
                                 child: Row(
                                   children: [
-                                    Container(
-                                      width: 10,
-                                    ),
-
-                                    Container(
-                                      width: 30,
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                              fit: BoxFit.cover,
-                                              image: AssetImage('assets/image/orangecircle.png')
-                                          )
-                                      ),
-                                    ),
-
-                                    Container(
-                                      width: 10,
-                                    ),
-
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 7, bottom: 7),
-                                      child: Container(
-                                        height: 30,
-                                        width: width - 40 - 30 - 30 - 10,
-                                        child: AutoSizeText(
-                                          'Điểm đón',
-                                          style: TextStyle(
-                                              fontFamily: 'muli',
-                                              color: Colors.black,
-                                              fontSize: 200,
-                                              fontWeight: FontWeight.normal
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                                    location_title(type: 'start'),
 
                                     GestureDetector(
                                       child: Container(
@@ -283,68 +242,18 @@ class _type_one_bike_step_1State extends State<type_one_bike_step_1> {
                                   future: fetchLocationName(start_location),
                                   builder: (context, snapshot) {
                                     if (snapshot.connectionState == ConnectionState.waiting) {
-                                      return Container(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          'Đang tải vị trí...',
-                                          textAlign: TextAlign.start,
-                                          style: TextStyle(
-                                              fontFamily: 'muli',
-                                              color: Colors.black,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        ),
-                                      );
+                                      return get_location_text('Đang tải vị trí...');
                                     }
 
                                     if (snapshot.hasError) {
-                                      print(snapshot.error.toString());
-                                      return Container(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          'Lỗi dữ liệu vị trí, vui lòng thoát ra thử lại',
-                                          textAlign: TextAlign.start,
-                                          style: TextStyle(
-                                              fontFamily: 'muli',
-                                              color: Colors.black,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        ),
-                                      );
+                                      return get_location_text('Lỗi vị trí, vui lòng thử lại');
                                     }
 
                                     if (!snapshot.hasData) {
-                                      print(snapshot.hasData.toString());
-                                      return Container(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          'Lỗi dữ liệu vị trí, vui lòng thoát ra thử lại',
-                                          textAlign: TextAlign.start,
-                                          style: TextStyle(
-                                              fontFamily: 'muli',
-                                              color: Colors.black,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        ),
-                                      );
+                                      return get_location_text('Lỗi vị trí, vui lòng thử lại');
                                     }
 
-                                    return Container(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        snapshot.data.toString(),
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                            fontFamily: 'muli',
-                                            color: Colors.black,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold
-                                        ),
-                                      ),
-                                    );
+                                    return get_location_text(snapshot.data!.toString());
                                   },
                                 ),
                               ),
@@ -357,41 +266,7 @@ class _type_one_bike_step_1State extends State<type_one_bike_step_1> {
                                 height: 30,
                                 child: Row(
                                   children: [
-                                    Container(
-                                      width: 10,
-                                    ),
-
-                                    Container(
-                                      width: 30,
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                              fit: BoxFit.cover,
-                                              image: AssetImage('assets/image/redcircle.png')
-                                          )
-                                      ),
-                                    ),
-
-                                    Container(
-                                      width: 10,
-                                    ),
-
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 7, bottom: 7),
-                                      child: Container(
-                                        height: 30,
-                                        width: width - 40 - 30 - 30 - 10,
-                                        child: AutoSizeText(
-                                          'Điểm đến',
-                                          style: TextStyle(
-                                              fontFamily: 'muli',
-                                              color: Colors.black,
-                                              fontSize: 200,
-                                              fontWeight: FontWeight.normal
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                                    location_title(type: 'end'),
 
                                     GestureDetector(
                                       child: Container(
@@ -416,22 +291,9 @@ class _type_one_bike_step_1State extends State<type_one_bike_step_1> {
 
                               Padding(
                                 padding: EdgeInsets.only(left: 50, right: 10),
-                                child: GestureDetector(
-                                  child: Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      end_location.latitude == 0 ? 'Hãy chọn điểm đến nhé !' : (end_location.mainText + ' ' + end_location.secondaryText),
-                                      style: TextStyle(
-                                          fontFamily: 'muli',
-                                          color: end_location.latitude == 0 ? Colors.red :Colors.black,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold
-                                      ),
-                                    ),
-                                  ),
-                                  onTap: () {
-
-                                  },
+                                child: Container(
+                                  alignment: Alignment.centerLeft,
+                                  child: get_location_text(end_location.latitude == 0 ? 'Hãy chọn điểm đến nhé !' : (end_location.mainText + ' ' + end_location.secondaryText),),
                                 ),
                               ),
 
@@ -444,44 +306,7 @@ class _type_one_bike_step_1State extends State<type_one_bike_step_1> {
                       Positioned(
                         top: 0,
                         left: 30,
-                        child: Container(
-                          height: 40,
-                          width: width/3*2,
-                          decoration: get_usually_decoration(),
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-                            child: Row(
-                              children: <Widget>[
-                                Container(
-                                  width: 25,
-                                  child: Icon(
-                                    Icons.add_location_alt_outlined,
-                                    color: Colors.black,
-                                    size: 25,
-                                  ),
-                                ),
-
-                                Container(width: 5,),
-
-                                Padding(
-                                  padding: EdgeInsets.only(top: 7, bottom: 7),
-                                  child: Container(
-                                    width: width/3*2 - 50,
-                                    child: AutoSizeText(
-                                      'Đặt xe chỉ với 2 bước',
-                                      style: TextStyle(
-                                        fontFamily: 'muli',
-                                        color: Colors.black,
-                                        fontSize: 100,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
+                        child: title_gradient_container(icon: Icons.add_location_alt_outlined, title: 'Đặt xe chỉ với 2 bước'),
                       ),
                     ],
                   ),

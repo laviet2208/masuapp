@@ -13,7 +13,7 @@ class requestBuyOrder extends Order {
   Time S2time;
   Time S3time;
   Time S4time;
-  ShopAccount shop;
+  List<Location> buyLocation;
   List<requestProduct> productList;
   Cost costFee;
 
@@ -32,7 +32,7 @@ class requestBuyOrder extends Order {
     required this.S4time,
     required this.productList,
     required this.costFee,
-    required this.shop,
+    required this.buyLocation,
   }) : super(
     id: id,
     locationSet: locationSet,
@@ -53,7 +53,7 @@ class requestBuyOrder extends Order {
     superJson['S4time'] = S4time.toJson();
     superJson['productList'] = productList.map((e) => e.toJson()).toList();
     superJson['costFee'] = costFee.toJson();
-    superJson['shop'] = shop.toJson();
+    superJson['buyLocation'] = buyLocation.map((e) => e.toJson()).toList();
     return superJson;
   }
 
@@ -61,10 +61,17 @@ class requestBuyOrder extends Order {
     Order order = Order.fromJson(json);
 
     List<requestProduct> products = [];
+    List<Location> locations = [];
 
     if (json["productList"] != null) {
       for (final result in json["productList"]) {
         products.add(requestProduct.fromJson(result));
+      }
+    }
+
+    if (json["buyLocation"] != null) {
+      for (final result in json["buyLocation"]) {
+        locations.add(Location.fromJson(result));
       }
     }
 
@@ -83,7 +90,7 @@ class requestBuyOrder extends Order {
       S4time: Time.fromJson(json['S4time']),
       costFee: Cost.fromJson(json['costFee']),
       productList: products,
-      shop: ShopAccount.fromJson(json['shop'])
+      buyLocation: locations
     );
   }
 }

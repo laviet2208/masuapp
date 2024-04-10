@@ -1,7 +1,6 @@
 import 'dart:async';
-
 import 'package:firebase_database/firebase_database.dart';
-
+import 'package:masuapp/MasuShip/Data/otherData/Tool.dart';
 import '../../../../../Data/OrderData/catchOrder.dart';
 
 class type_one_wait_controller {
@@ -25,11 +24,13 @@ class type_one_wait_controller {
   }
 
   static Future<void> cancel_order(String id) async {
-    final reference = FirebaseDatabase.instance.reference();
+    DatabaseReference reference = FirebaseDatabase.instance.reference();
     await reference.child('Order/' + id).child('status').set('E');
+    reference = FirebaseDatabase.instance.reference();
+    await reference.child('Order/' + id).child('S4time').set(getCurrentTime().toJson());
   }
 
-  static bool check_if_can_cancal(String status) {
+  static bool check_if_can_cancel(String status) {
     if (status == 'A' || status == 'B') {
       return true;
     }

@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/Data/otherData/utils.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_three_bike_screen/type_three_bike_wait.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_two_bike_screen/type_two_bike_wait.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/main_page/ingredient/catch_order_ingredient/catch_order_ingredient_controller.dart';
 
@@ -121,6 +122,9 @@ class _catch_order_buttonState extends State<catch_order_button> {
                       }
                       if (type == 2) {
                         Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => type_two_bike_wait(orderId: id)));
+                      }
+                      if (type == 3) {
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => type_three_bike_wait(id: id)));
                       }
                     },
                     child: Text(

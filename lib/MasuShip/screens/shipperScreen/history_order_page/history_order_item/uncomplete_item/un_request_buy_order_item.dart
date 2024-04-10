@@ -92,7 +92,7 @@ class _un_request_buy_order_itemState extends State<un_request_buy_order_item> {
               child: Container(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  widget.order.shop.name,
+                  widget.order.buyLocation.length.toString() + ' Điểm',
                   style: TextStyle(
                       fontSize: 14,
                       color: Colors.black,

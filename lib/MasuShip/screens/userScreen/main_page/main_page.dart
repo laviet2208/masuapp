@@ -6,12 +6,15 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/express_screen/express_step_1.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/main_page/ingredient/buy_request_order_ingredient/buy_request_button.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/main_page/ingredient/buy_request_order_ingredient/buy_request_order_ingredient_dialog.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/main_page/ingredient/catch_order_ingredient/catch_order_button.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/main_page/ingredient/catch_order_ingredient/catch_order_ingredient_dialog.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/main_screen/user_main_screen.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/restaurant_screen/restaurant_main_screen/restaurant_main_screen.dart';
 
 import '../../../Data/adsData/restaurantAdsData.dart';
+import '../restaurant_screen/restaurant_view_screen/restaurant_view_screen.dart';
 
 class main_page extends StatefulWidget {
   const main_page({super.key});
@@ -31,9 +34,8 @@ class _main_pageState extends State<main_page> {
     final reference = FirebaseDatabase.instance.reference();
     reference.child("Ads").orderByChild('direction').equalTo(2).onValue.listen((event) {
       final dynamic ads = event.snapshot.value;
-
+      dataList.clear();
       ads.forEach((key, value) {
-        dataList.clear();
         if (value['area'].toString() == finalData.user_account.area) {
           if (int.parse(value['status'].toString()) == 1) {
             restaurantAdsData data = restaurantAdsData.fromJson(value);
@@ -82,7 +84,7 @@ class _main_pageState extends State<main_page> {
       }
       _pageController.animateToPage(
         _currentPage,
-        duration: Duration(milliseconds: 2000),
+        duration: Duration(milliseconds: 3000),
         curve: Curves.fastOutSlowIn,
       );
     });
@@ -105,69 +107,68 @@ class _main_pageState extends State<main_page> {
         decoration: BoxDecoration(
           color: Colors.white,
           gradient: LinearGradient(
-            colors: [Colors.yellow.withOpacity(0.8) ,Colors.yellowAccent.withOpacity(0.3)],
+            colors: [Colors.white ,Colors.yellow],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             stops: [0.0, 1.0],
           ),
         ),
-        child: Stack(
-          children: <Widget>[
-            Positioned(
-              top: 50,
-              left: 0,
-              right: 0,
-              child: Container(
-                height: height/3 - 70,
-                alignment: Alignment.center,
-                child:dataList.length == 0 ? Container(alignment: Alignment.center, child: Text('Chưa có quảng cáo', style: TextStyle(fontFamily: 'muli'),),) : PageView.builder(
-                  scrollDirection: Axis.horizontal,
-                  controller: _pageController,
-                  itemCount: dataList.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      child: Container(
-                        width: width - 10,
-                        height: height - 25,
-                        alignment: Alignment.center,
-                        child: FutureBuilder(
-                          future: _getImageURL(dataList[index].id + '.png'),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
-                              return Container(
-                                width: 30,
-                                height: 30,
-                                child: CircularProgressIndicator(color: Colors.black,),
-                              );
-                            }
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            Container(height: 50,),
 
-                            if (snapshot.hasError) {
-                              return Container(
-                                alignment: Alignment.center,
-                                child: Icon(Icons.image_outlined, color: Colors.black, size: 30,),
-                              );
-                            }
+            Container(
+              height: width/2,
+              alignment: Alignment.center,
+              child:dataList.length == 0 ? Container(alignment: Alignment.center, child: Text('Chưa có quảng cáo', style: TextStyle(fontFamily: 'muli'),),) : PageView.builder(
+                scrollDirection: Axis.horizontal,
+                controller: _pageController,
+                itemCount: dataList.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    child: Container(
+                      width: width,
+                      height: width/2,
+                      alignment: Alignment.center,
+                      child: FutureBuilder(
+                        future: _getImageURL(dataList[index].id + '.png'),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return Container(
+                              width: 30,
+                              height: 30,
+                              child: CircularProgressIndicator(color: Colors.black,),
+                            );
+                          }
 
-                            if (!snapshot.hasData) {
-                              return Text('Image not found');
-                            }
+                          if (snapshot.hasError) {
+                            return Container(
+                              alignment: Alignment.center,
+                              child: Icon(Icons.image_outlined, color: Colors.black, size: 30,),
+                            );
+                          }
 
-                            return Image.network(snapshot.data.toString(),fit: BoxFit.fill,);
-                          },
-                        ),
+                          if (!snapshot.hasData) {
+                            return Text('Image not found');
+                          }
+
+                          return Image.network(snapshot.data.toString(),fit: BoxFit.contain,);
+                        },
                       ),
-                      onTap: () {
-
-                      },
-                    );
-                  },
-                ),
+                    ),
+                    onTap: () {
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => restaurant_view_screen(shopId: dataList[index].account.id, beforeWidget: user_main_screen())));
+                    },
+                  );
+                },
               ),
             ),
 
-            Positioned(
-              top: height/3,
-              right: 10,
+            Container(height: 30,),
+
+            Padding(
+              padding: EdgeInsets.only(right: 10, left: width/4),
               child: Container(
                 width: width/3*2,
                 height: 35,
@@ -175,7 +176,7 @@ class _main_pageState extends State<main_page> {
                   borderRadius: BorderRadius.circular(10),
                   color: Colors.yellow,
                   border: Border.all(
-                    width: 0.7
+                      width: 0.7
                   ),
                   boxShadow: [
                     BoxShadow(
@@ -195,9 +196,9 @@ class _main_pageState extends State<main_page> {
                           Icons.location_on,
                           color: Colors.redAccent,
                         ),
-                        
+
                         Container(width: 5,),
-                        
+
                         Padding(
                           padding: EdgeInsets.only(top: 5.5, bottom: 5.5),
                           child: Container(
@@ -221,217 +222,171 @@ class _main_pageState extends State<main_page> {
               ),
             ),
 
-            Positioned(
-              top: height/3 + 55,
-              left: 30,
-              child: catch_order_button(),
-            ),
+            Container(height: 30,),
 
-            Positioned(
-              top: height/3 + 55,
-              right: 30,
-              child: GestureDetector(
-                child: Container(
-                  width: (width - 90)/2,
-                  height: (width - 90)/2,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(width: 1),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2), // màu của shadow
-                        spreadRadius: 5, // bán kính của shadow
-                        blurRadius: 7, // độ mờ của shadow
-                        offset: Offset(0, 3), // vị trí của shadow
-                      ),
-                    ],
+            Container(
+              height: (width - 90)/2,
+              child: Stack(
+                children: <Widget>[
+                  Positioned(
+                    top: 0,
+                    left: 30,
+                    child: catch_order_button(),
                   ),
-                  child: Stack(
-                    children: <Widget>[
-                      Positioned(
-                        top: 20,
-                        left: 0,
-                        right: 0,
-                        bottom: (width - 90)/6,
-                        child: Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    fit: BoxFit.fitHeight,
-                                    image: AssetImage('assets/image/iconfood.png')
-                                )
-                            ),
-                          ),
-                        ),
-                      ),
 
-                      Positioned(
-                        bottom: 10,
-                        left: 10,
-                        right: 10,
-                        child: Container(
-                          height: (width - 90)/8 - 20,
-                          alignment: Alignment.center,
-                          child: AutoSizeText(
-                            'Mua đồ ăn',
-                            style: TextStyle(
-                                fontFamily: 'muli',
-                                fontSize: 100,
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                  Positioned(
+                    top: 0,
+                    right: 30,
+                    child: buy_request_button(),
                   ),
-                ),
-                onTap: () {
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => restaurant_main_screen(),),);
-                },
+                ],
               ),
             ),
 
-            Positioned(
-              bottom: height/10,
-              right: 30,
-              child: GestureDetector(
-                child: Container(
-                  width: (width - 90)/2,
-                  height: (width - 90)/2,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(width: 1),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2), // màu của shadow
-                        spreadRadius: 5, // bán kính của shadow
-                        blurRadius: 7, // độ mờ của shadow
-                        offset: Offset(0, 3), // vị trí của shadow
-                      ),
-                    ],
-                  ),
-                  child: Stack(
-                    children: <Widget>[
-                      Positioned(
-                        top: 20,
-                        left: 0,
-                        right: 0,
-                        bottom: (width - 90)/6,
-                        child: Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    fit: BoxFit.fitHeight,
-                                    image: AssetImage('assets/image/iconbag.png')
-                                )
-                            ),
-                          ),
-                        ),
-                      ),
+            Container(height: 30,),
 
-                      Positioned(
-                        bottom: 10,
-                        left: 10,
-                        right: 10,
-                        child: Container(
-                          height: (width - 90)/8 - 20,
-                          alignment: Alignment.center,
-                          child: AutoSizeText(
-                            'Mua hàng hộ',
-                            style: TextStyle(
-                                fontFamily: 'muli',
-                                fontSize: 100,
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold
+            Container(
+              height: (width - 90)/2,
+              child: Stack(
+                children: <Widget>[
+                  Positioned(
+                    top: 0,
+                    left: 30,
+                    child: GestureDetector(
+                      child: Container(
+                        width: (width - 90)/2,
+                        height: (width - 90)/2,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(width: 1),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.2), // màu của shadow
+                              spreadRadius: 5, // bán kính của shadow
+                              blurRadius: 7, // độ mờ của shadow
+                              offset: Offset(0, 3), // vị trí của shadow
                             ),
-                          ),
+                          ],
+                        ),
+                        child: Stack(
+                          children: <Widget>[
+                            Positioned(
+                              top: 20,
+                              left: 0,
+                              right: 0,
+                              bottom: (width - 90)/6,
+                              child: Padding(
+                                padding: EdgeInsets.all(10),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          fit: BoxFit.fitHeight,
+                                          image: AssetImage('assets/image/iconmart.png')
+                                      )
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                            Positioned(
+                              bottom: 10,
+                              left: 10,
+                              right: 10,
+                              child: Container(
+                                height: (width - 90)/8 - 20,
+                                alignment: Alignment.center,
+                                child: AutoSizeText(
+                                  'Giao hàng nhanh',
+                                  style: TextStyle(
+                                      fontFamily: 'muli',
+                                      fontSize: 100,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
+                      onTap: () {
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => express_step_1(),),);
+                      },
+                    ),
                   ),
-                ),
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return buy_request_order_ingredient_dialog();
-                    },
-                  );
-                },
+
+                  Positioned(
+                    top: 0,
+                    right: 30,
+                    child: GestureDetector(
+                      child: Container(
+                        width: (width - 90)/2,
+                        height: (width - 90)/2,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(width: 1),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.2), // màu của shadow
+                              spreadRadius: 5, // bán kính của shadow
+                              blurRadius: 7, // độ mờ của shadow
+                              offset: Offset(0, 3), // vị trí của shadow
+                            ),
+                          ],
+                        ),
+                        child: Stack(
+                          children: <Widget>[
+                            Positioned(
+                              top: 20,
+                              left: 0,
+                              right: 0,
+                              bottom: (width - 90)/6,
+                              child: Padding(
+                                padding: EdgeInsets.all(10),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          fit: BoxFit.fitHeight,
+                                          image: AssetImage('assets/image/iconfood.png')
+                                      )
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                            Positioned(
+                              bottom: 10,
+                              left: 10,
+                              right: 10,
+                              child: Container(
+                                height: (width - 90)/8 - 20,
+                                alignment: Alignment.center,
+                                child: AutoSizeText(
+                                  'Mua đồ ăn',
+                                  style: TextStyle(
+                                      fontFamily: 'muli',
+                                      fontSize: 100,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => restaurant_main_screen(),),);
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
 
-            Positioned(
-              bottom: height/10,
-              left: 30,
-              child: GestureDetector(
-                child: Container(
-                  width: (width - 90)/2,
-                  height: (width - 90)/2,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(width: 1),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2), // màu của shadow
-                        spreadRadius: 5, // bán kính của shadow
-                        blurRadius: 7, // độ mờ của shadow
-                        offset: Offset(0, 3), // vị trí của shadow
-                      ),
-                    ],
-                  ),
-                  child: Stack(
-                    children: <Widget>[
-                      Positioned(
-                        top: 20,
-                        left: 0,
-                        right: 0,
-                        bottom: (width - 90)/6,
-                        child: Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    fit: BoxFit.fitHeight,
-                                    image: AssetImage('assets/image/iconmart.png')
-                                )
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      Positioned(
-                        bottom: 10,
-                        left: 10,
-                        right: 10,
-                        child: Container(
-                          height: (width - 90)/8 - 20,
-                          alignment: Alignment.center,
-                          child: AutoSizeText(
-                            'Giao hàng nhanh',
-                            style: TextStyle(
-                                fontFamily: 'muli',
-                                fontSize: 100,
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                onTap: () {
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => express_step_1(),),);
-                },
-              ),
-            ),
+            Container(height: 30,),
           ],
         ),
       ),

@@ -31,7 +31,7 @@ class _main_pageState extends State<main_page> {
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [finalData.shipper_account.onlineStatus == 1 ? Colors.yellow.shade700 : Colors.black26,finalData.shipper_account.onlineStatus == 1 ? Colors.yellowAccent.withOpacity(0.5) : Colors.white],
+            colors: [finalData.shipper_account.onlineStatus == 1 ? Colors.yellow : Colors.black26,finalData.shipper_account.onlineStatus == 1 ? Colors.yellowAccent.withOpacity(0.5) : Colors.white],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             stops: [0.0, 1.0],

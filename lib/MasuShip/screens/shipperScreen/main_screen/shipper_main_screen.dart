@@ -44,6 +44,13 @@ class _shipper_main_screenState extends State<shipper_main_screen> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _timer.cancel();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return WillPopScope(
       child: Scaffold(
@@ -57,7 +64,7 @@ class _shipper_main_screenState extends State<shipper_main_screen> {
               backgroundColor: Colors.white,
               color: Colors.grey,
               activeColor: Colors.black,
-              tabBackgroundColor: Colors.yellow.withOpacity(0.8),
+              tabBackgroundColor: Colors.yellow,
               gap: 8,
               onTabChange: (index) {
                 setState(() {

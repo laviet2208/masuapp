@@ -468,8 +468,9 @@ class _restaurant_view_screenState extends State<restaurant_view_screen> {
           ),
         ),
       ),
-      onWillPop: () async {
-        return false;
+      onWillPop: () {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => widget.beforeWidget,),);
+        return Future.value(false);
       },
     );
   }

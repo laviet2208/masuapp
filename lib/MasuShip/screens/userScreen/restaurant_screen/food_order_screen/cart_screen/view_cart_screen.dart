@@ -1,9 +1,15 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:masuapp/MasuShip/Data/OrderData/foodOrder/foodOrder.dart';
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
+import 'package:masuapp/MasuShip/Data/voucherData/Voucher.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/restaurant_screen/food_order_screen/cart_screen/item_cart_product.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/restaurant_screen/food_order_screen/food_order_step_1/food_order_step_1.dart';
 
+import '../../../../../Data/accountData/shopData/cartProduct.dart';
+import '../../../../../Data/accountData/shopData/shopAccount.dart';
+import '../../../../../Data/otherData/Time.dart';
 import '../../../../../Data/otherData/Tool.dart';
 import '../../../../../Data/otherData/utils.dart';
 
@@ -16,6 +22,60 @@ class view_cart_screen extends StatefulWidget {
 }
 
 class _view_cart_screenState extends State<view_cart_screen> {
+  bool loading = false;
+
+  Future<void> add_restaurant_to_list(List<cartProduct> list, List<ShopAccount> shops) async {
+    shops.clear();
+    for (cartProduct cartproduct in list) {
+      if (shops.any((shop) => shop.id == cartproduct.product.owner)) {
+
+      } else {
+        ShopAccount account = await get_restaurant_info(cartproduct.product.owner);
+        shops.add(account);
+      }
+    }
+  }
+
+  Future<ShopAccount> get_restaurant_info(String id) async {
+    dynamic orders;
+    final reference = FirebaseDatabase.instance.reference();
+    await reference.child("Restaurant").child(id).once().then((DatabaseEvent event) {
+      orders = event.snapshot.value;
+    });
+    return ShopAccount.fromJson(orders);
+  }
+
+  void add_time_and_product(List<Time> times, List<cartProduct> products) {
+    for (int i = 0; i < 6; i++) {
+      times.add(Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0));
+    }
+
+    for (int i = 0; i < finalData.cartList.length; i++) {
+      cartProduct product = finalData.cartList[i];
+      products.add(product);
+    }
+  }
+
+  foodOrder order = foodOrder(
+    id: generateID(25),
+    locationSet: finalData.user_account.location,
+    locationGet: finalData.user_account.location,
+    cost: 0,
+    owner: finalData.user_account,
+    shipper: finalData.shipper_account,
+    status: 'A',
+    voucher: Voucher(id: '', Money: 0, mincost: 0, startTime: getCurrentTime(), endTime: getCurrentTime(), useCount: 0, maxCount: 0, eventName: '', LocationId: '', type: 0, Otype: '', perCustom: 0, CustomList: [], maxSale: 0, area: ''),
+    productList: [],
+    shopList: [],
+    timeList: [],
+    costFee: finalData.bikeCost,
+    note: '',
+    waitFee: 0,
+    weatherFee: 0,
+    pointFee: 0,
+    resCost: finalData.restaurantcost,
+  );
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -149,7 +209,7 @@ class _view_cart_screenState extends State<view_cart_screen> {
                                     child: Container(
                                       width: width - 20 - 40,
                                       height: 20,
-                                      child: RichText(
+                                      child: !loading ? RichText(
                                         text: TextSpan(
                                           style: TextStyle(
                                             fontFamily: 'muli',
@@ -169,7 +229,7 @@ class _view_cart_screenState extends State<view_cart_screen> {
                                             ),
                                           ],
                                         ),
-                                      ),
+                                      ) : Container(height: 20, width: 20, alignment: Alignment.center, child: CircularProgressIndicator(color: Colors.black,),),
                                     ),
                                   ),
 
@@ -199,11 +259,22 @@ class _view_cart_screenState extends State<view_cart_screen> {
                       ],
                     ),
                   ),
-                  onTap: () {
+                  onTap: () async {
                     if (finalData.cartList.length == 0) {
                       toastMessage('Giỏ hàng chưa có sản phẩm nào');
                     } else {
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => food_order_step_1(beforeWidget: widget.beforewidget),),);
+                      setState(() {
+                        loading = true;
+                      });
+                      await add_restaurant_to_list(finalData.cartList, order.shopList);
+                      order.locationSet = order.shopList.first.location;
+                      order.locationGet = finalData.user_account.location;
+                      order.pointFee = (order.shopList.length - 1).toDouble() * 5000;
+                      add_time_and_product(order.timeList, order.productList);
+                      setState(() {
+                        loading = false;
+                      });
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => food_order_step_1(beforeWidget: widget.beforewidget, order: order,),),);
                     }
                   },
                 ),

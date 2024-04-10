@@ -250,12 +250,12 @@ class _login_screenState extends State<login_screen> {
                       color: Colors.yellow,
                     ),
                     child: Center(
-                      child: Text(
+                      child: loading ? CircularProgressIndicator(color: Colors.black,) : Text(
                         'Nhận mã OTP-SMS',
                         style: TextStyle(
-                          fontFamily: 'roboto',
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold
+                            fontFamily: 'roboto',
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold
                         ),
                       ),
                     ),

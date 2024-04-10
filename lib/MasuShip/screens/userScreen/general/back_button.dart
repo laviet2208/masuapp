@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 class back_button extends StatefulWidget {
@@ -11,8 +12,12 @@ class back_button extends StatefulWidget {
 class _back_buttonState extends State<back_button> {
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     return Container(
       height: 30,
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+      ),
       child: Row(
         children: [
           Container(width: 10,),
@@ -27,6 +32,24 @@ class _back_buttonState extends State<back_button> {
             onTap: () {
               Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => widget.beforeWidget));
             },
+          ),
+
+          Container(width: 10,),
+
+          Padding(
+            padding: EdgeInsets.only(top: 7, bottom: 7),
+            child: Container(
+              width: width - 70,
+              child: AutoSizeText(
+                'Quay về trước',
+                style: TextStyle(
+                    fontFamily: 'muli',
+                    color: Colors.black,
+                    fontSize: 100,
+                    fontWeight: FontWeight.bold
+                ),
+              ),
+            ),
           ),
 
         ],

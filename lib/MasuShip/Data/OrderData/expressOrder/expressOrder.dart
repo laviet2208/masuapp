@@ -62,6 +62,7 @@ class expressOrder extends CatchOrder {
     superJson['item'] = item;
     superJson['subFee'] = subFee;
     superJson['weightType'] = weightType;
+    superJson['codMoney'] = codMoney;
     superJson['note'] = note;
     return superJson;
   }

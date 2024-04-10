@@ -1,10 +1,16 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:masuapp/MasuShip/Data/OrderData/requestBuyOrderData/requestProduct.dart';
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
+import 'package:masuapp/MasuShip/Data/otherData/Time.dart';
+import 'package:masuapp/MasuShip/Data/voucherData/Voucher.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_one_bike_screen/ingredient/type_one_wait_ingredient/location_title.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/general/title_gradient_container.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/request_buy_screen/action/add_product.dart';
-import 'package:masuapp/MasuShip/screens/userScreen/request_buy_screen/action/edit_product.dart';
-
+import 'package:masuapp/MasuShip/screens/userScreen/request_buy_screen/ingredient/general_ingredient.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/request_buy_screen/ingredient/item_market_location.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/request_buy_screen/ingredient/item_request_product.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/request_buy_screen/ingredient/start_order_button.dart';
+import '../../../Data/OrderData/requestBuyOrderData/requestBuyOrder.dart';
 import '../../../Data/locationData/Location.dart';
 import '../../../Data/otherData/Tool.dart';
 import '../general/search_location_dialog.dart';
@@ -19,15 +25,30 @@ class request_buy_step_1 extends StatefulWidget {
 
 class _request_buy_step_1State extends State<request_buy_step_1> {
   double product_fee = 0;
-  List<requestProduct> productList = [];
-  List<Location> start_location_list = [];
-  Location end_location = Location(placeId: '', description: '', longitude: 0, latitude: 0, mainText: '', secondaryText: '');
+  
+  requestBuyOrder order = requestBuyOrder(
+      id: generateID(25),
+      locationSet: finalData.shipper_account.location,
+      locationGet: finalData.shipper_account.location,
+      cost: 0,
+      owner: finalData.user_account,
+      shipper: finalData.shipper_account,
+      status: 'A',
+      voucher: Voucher(id: '', Money: 0, mincost: 0, startTime: getCurrentTime(), endTime: getCurrentTime(), useCount: 0, maxCount: 0, eventName: '', LocationId: '', type: 0, Otype: '', perCustom: 0, CustomList: [], maxSale: 0, area: ''),
+      S1time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
+      S2time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
+      S3time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
+      S4time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
+      productList: [],
+      costFee: finalData.bikeCost,
+      buyLocation: []
+  );
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    end_location = finalData.user_account.location;
+    order.locationGet = finalData.user_account.location;
   }
 
   @override
@@ -163,12 +184,12 @@ class _request_buy_step_1State extends State<request_buy_step_1> {
                 ),
               ),
 
-              Container(height: 30,),
+              Container(height: 20,),
 
               Padding(
                 padding: EdgeInsets.only(left: 10, right: 10),
                 child: Container(
-                  height: 150,
+                  height: 140,
                   child: Stack(
                     children: <Widget>[
                       Positioned(
@@ -177,18 +198,7 @@ class _request_buy_step_1State extends State<request_buy_step_1> {
                         right: 0,
                         bottom: 0,
                         child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.4), // màu của shadow
-                                spreadRadius: 2, // bán kính của shadow
-                                blurRadius: 7, // độ mờ của shadow
-                                offset: Offset(0, 3), // vị trí của shadow
-                              ),
-                            ],
-                          ),
+                          decoration: get_usually_decoration(),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -198,41 +208,7 @@ class _request_buy_step_1State extends State<request_buy_step_1> {
                                 height: 30,
                                 child: Row(
                                   children: [
-                                    Container(
-                                      width: 10,
-                                    ),
-
-                                    Container(
-                                      width: 30,
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                              fit: BoxFit.cover,
-                                              image: AssetImage('assets/image/redcircle.png')
-                                          )
-                                      ),
-                                    ),
-
-                                    Container(
-                                      width: 10,
-                                    ),
-
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 7, bottom: 7),
-                                      child: Container(
-                                        height: 30,
-                                        width: width - 40 - 30 - 30 - 10,
-                                        child: AutoSizeText(
-                                          'Điểm nhận hàng',
-                                          style: TextStyle(
-                                              fontFamily: 'muli',
-                                              color: Colors.black,
-                                              fontSize: 200,
-                                              fontWeight: FontWeight.normal
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                                    location_title(type: 'end'),
 
                                     GestureDetector(
                                       child: Container(
@@ -241,13 +217,7 @@ class _request_buy_step_1State extends State<request_buy_step_1> {
                                       onTap: () {
                                         showDialog(
                                             context: context,
-                                            builder: (context) {
-                                              return search_location_dialog(location: end_location, title: 'Chọn điểm nhận hàng', event: () {
-                                                setState(() {
-
-                                                });
-                                              });
-                                            }
+                                            builder: (context) {return search_location_dialog(location: order.locationGet, title: 'Chọn điểm nhận hàng', event: () {setState(() {});});}
                                         );
                                       },
                                     ),
@@ -257,83 +227,30 @@ class _request_buy_step_1State extends State<request_buy_step_1> {
 
                               Padding(
                                 padding: EdgeInsets.only(left: 50, right: 10),
+
+                              ),
+
+                              Padding(
+                                padding: EdgeInsets.only(left: 50, right: 10),
                                 child: FutureBuilder(
-                                  future: fetchLocationName(end_location),
+                                  future: fetchLocationName(order.locationGet),
                                   builder: (context, snapshot) {
                                     if (snapshot.connectionState == ConnectionState.waiting) {
-                                      return Container(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          'Đang tải vị trí...',
-                                          textAlign: TextAlign.start,
-                                          style: TextStyle(
-                                              fontFamily: 'muli',
-                                              color: Colors.black,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        ),
-                                      );
+                                      return general_ingredient.get_location_text('Đang tải vị trí ...');
                                     }
 
                                     if (snapshot.hasError) {
-                                      print(snapshot.error.toString());
-                                      return Container(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          'Lỗi dữ liệu vị trí, vui lòng thoát ra thử lại',
-                                          textAlign: TextAlign.start,
-                                          style: TextStyle(
-                                              fontFamily: 'muli',
-                                              color: Colors.black,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        ),
-                                      );
+                                      return general_ingredient.get_location_text('Lỗi dữ liệu vị trí, vui lòng thử lại');
                                     }
 
                                     if (!snapshot.hasData) {
-                                      print(snapshot.hasData.toString());
-                                      return Container(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          'Lỗi dữ liệu vị trí, vui lòng thoát ra thử lại',
-                                          textAlign: TextAlign.start,
-                                          style: TextStyle(
-                                              fontFamily: 'muli',
-                                              color: Colors.black,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        ),
-                                      );
+                                      return general_ingredient.get_location_text('Lỗi dữ liệu vị trí, vui lòng thử lại');
                                     }
 
-                                    return Container(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        snapshot.data.toString(),
-                                        textAlign: TextAlign.start,
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 2,
-                                        style: TextStyle(
-                                            fontFamily: 'muli',
-                                            color: Colors.black,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold
-                                        ),
-                                      ),
-                                    );
+                                    return general_ingredient.get_location_text(snapshot.data!.toString());
                                   },
                                 ),
                               ),
-
-                              Container(
-                                width: 30,
-                              ),
-
-                              Container(height: 30,),
                             ],
                           ),
                         ),
@@ -342,61 +259,7 @@ class _request_buy_step_1State extends State<request_buy_step_1> {
                       Positioned(
                         top: 0,
                         left: 30,
-                        child: Container(
-                          height: 40,
-                          width: width/3*2,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(1000),
-                            gradient: LinearGradient(
-                              colors: [Colors.yellow.withAlpha(200) ,Colors.white],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              stops: [0.0, 1.0],
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.2), // màu của shadow
-                                spreadRadius: 2, // bán kính của shadow
-                                blurRadius: 7, // độ mờ của shadow
-                                offset: Offset(0, 3), // vị trí của shadow
-                              ),
-                            ],
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-                            child: Row(
-                              children: <Widget>[
-                                Container(
-                                  width: 25,
-                                  child: Icon(
-                                    Icons.edit_location_outlined,
-                                    color: Colors.black,
-                                    size: 25,
-                                  ),
-                                ),
-
-                                Container(width: 5,),
-
-                                Padding(
-                                  padding: EdgeInsets.only(top: 7, bottom: 7),
-                                  child: Container(
-                                    width: width/3*2 - 50,
-                                    child: AutoSizeText(
-                                      'Bạn muốn nhận hàng tại',
-                                      style: TextStyle(
-                                        fontFamily: 'muli',
-                                        color: Colors.black,
-                                        fontSize: 100,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
+                        child: title_gradient_container(icon: Icons.location_on_outlined, title: 'Bạn muốn nhận hàng tại'),
                       ),
                     ],
                   ),
@@ -408,7 +271,7 @@ class _request_buy_step_1State extends State<request_buy_step_1> {
               Padding(
                 padding: EdgeInsets.only(left: 10, right: 10),
                 child: Container(
-                  height: 80 * start_location_list.length.toDouble() + 50 + 50,
+                  height: 80 * order.buyLocation.length.toDouble() + 90,
                   child: Stack(
                     children: <Widget>[
                       Positioned(
@@ -417,184 +280,19 @@ class _request_buy_step_1State extends State<request_buy_step_1> {
                         right: 0,
                         bottom: 0,
                         child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.4), // màu của shadow
-                                spreadRadius: 2, // bán kính của shadow
-                                blurRadius: 7, // độ mờ của shadow
-                                offset: Offset(0, 3), // vị trí của shadow
-                              ),
-                            ],
-                          ),
+                          decoration: get_usually_decoration(),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Container(height: 30,),
 
                               Container(
-                                height: 80 * start_location_list.length.toDouble(),
+                                height: 80 * order.buyLocation.length.toDouble(),
                                 child: ListView.builder(
-                                  itemCount: start_location_list.length,
+                                  itemCount: order.buyLocation.length,
                                   physics: NeverScrollableScrollPhysics(),
                                   itemBuilder: (context, index) {
-                                    return Container(
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Container(
-                                            height: 30,
-                                            child: Row(
-                                              children: [
-                                                Container(
-                                                  width: 10,
-                                                ),
-
-                                                Container(
-                                                  width: 30,
-                                                  height: 30,
-                                                  decoration: BoxDecoration(
-                                                      image: DecorationImage(
-                                                          fit: BoxFit.cover,
-                                                          image: AssetImage('assets/image/orangecircle.png')
-                                                      )
-                                                  ),
-                                                ),
-
-                                                Container(
-                                                  width: 10,
-                                                ),
-
-                                                Padding(
-                                                  padding: EdgeInsets.only(top: 7, bottom: 7),
-                                                  child: Container(
-                                                    height: 30,
-                                                    width: width - 40 - 30 - 50 - 10,
-                                                    child: AutoSizeText(
-                                                      'Điểm mua hàng ' + (index + 1).toString(),
-                                                      style: TextStyle(
-                                                          fontFamily: 'muli',
-                                                          color: Colors.black,
-                                                          fontSize: 200,
-                                                          fontWeight: FontWeight.normal
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-
-                                                GestureDetector(
-                                                  child: Container(
-                                                    child: Icon(Icons.mode_edit_outline_outlined, color: Colors.grey,size: 20,),
-                                                  ),
-                                                  onTap: () {
-                                                    showDialog(
-                                                        context: context,
-                                                        builder: (context) {
-                                                          return search_location_dialog(location: start_location_list[index], title: 'Chọn điểm mua hàng', event: () {
-                                                            setState(() {
-
-                                                            });
-                                                          });
-                                                        }
-                                                    );
-                                                  },
-                                                ),
-
-                                                GestureDetector(
-                                                  child: Container(
-                                                    child: Icon(Icons.delete_outline, color: Colors.redAccent,size: 20,),
-                                                  ),
-                                                  onTap: () {
-                                                    start_location_list.removeAt(index);
-                                                    setState(() {
-                                                      
-                                                    });
-                                                  },
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-
-                                          Padding(
-                                            padding: EdgeInsets.only(left: 50, right: 10),
-                                            child: FutureBuilder(
-                                              future: fetchLocationName(start_location_list[index]),
-                                              builder: (context, snapshot) {
-                                                if (snapshot.connectionState == ConnectionState.waiting) {
-                                                  return Container(
-                                                    alignment: Alignment.centerLeft,
-                                                    child: Text(
-                                                      'Đang tải vị trí...',
-                                                      textAlign: TextAlign.start,
-                                                      style: TextStyle(
-                                                          fontFamily: 'muli',
-                                                          color: Colors.black,
-                                                          fontSize: 16,
-                                                          fontWeight: FontWeight.bold
-                                                      ),
-                                                    ),
-                                                  );
-                                                }
-
-                                                if (snapshot.hasError) {
-                                                  print(snapshot.error.toString());
-                                                  return Container(
-                                                    alignment: Alignment.centerLeft,
-                                                    child: Text(
-                                                      'Lỗi dữ liệu vị trí, vui lòng thoát ra thử lại',
-                                                      textAlign: TextAlign.start,
-                                                      style: TextStyle(
-                                                          fontFamily: 'muli',
-                                                          color: Colors.black,
-                                                          fontSize: 16,
-                                                          fontWeight: FontWeight.bold
-                                                      ),
-                                                    ),
-                                                  );
-                                                }
-
-                                                if (!snapshot.hasData) {
-                                                  print(snapshot.hasData.toString());
-                                                  return Container(
-                                                    alignment: Alignment.centerLeft,
-                                                    child: Text(
-                                                      'Lỗi dữ liệu vị trí, vui lòng thoát ra thử lại',
-                                                      textAlign: TextAlign.start,
-                                                      style: TextStyle(
-                                                          fontFamily: 'muli',
-                                                          color: Colors.black,
-                                                          fontSize: 16,
-                                                          fontWeight: FontWeight.bold
-                                                      ),
-                                                    ),
-                                                  );
-                                                }
-
-                                                return Container(
-                                                  alignment: Alignment.centerLeft,
-                                                  child: Text(
-                                                    snapshot.data.toString(),
-                                                    textAlign: TextAlign.start,
-                                                    overflow: TextOverflow.ellipsis,
-                                                    maxLines: 2,
-                                                    style: TextStyle(
-                                                        fontFamily: 'muli',
-                                                        color: Colors.black,
-                                                        fontSize: 16,
-                                                        fontWeight: FontWeight.bold
-                                                    ),
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                          ),
-
-                                          Container(height: 10,),
-                                        ],
-                                      ),
-                                    );
+                                    return item_market_location(index: index, list: order.buyLocation, callback: () {setState(() {});},);
                                   },
                                 ),
                               ),
@@ -625,7 +323,7 @@ class _request_buy_step_1State extends State<request_buy_step_1> {
                                     builder: (context) {
                                       return search_location_dialog(location: location, title: 'Thêm vị trí mua hàng',
                                           event: () {
-                                            start_location_list.add(location);
+                                            order.buyLocation.add(location);
                                             setState(() {});
                                           }
                                       );
@@ -644,198 +342,42 @@ class _request_buy_step_1State extends State<request_buy_step_1> {
                       Positioned(
                         top: 0,
                         left: 30,
-                        child: Container(
-                          height: 40,
-                          width: width/3*2,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(1000),
-                            gradient: LinearGradient(
-                              colors: [Colors.yellow.withAlpha(200) ,Colors.white],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              stops: [0.0, 1.0],
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.2), // màu của shadow
-                                spreadRadius: 2, // bán kính của shadow
-                                blurRadius: 7, // độ mờ của shadow
-                                offset: Offset(0, 3), // vị trí của shadow
-                              ),
-                            ],
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-                            child: Row(
-                              children: <Widget>[
-                                Container(
-                                  width: 25,
-                                  child: Icon(
-                                    Icons.location_on_outlined,
-                                    color: Colors.black,
-                                    size: 25,
-                                  ),
-                                ),
-
-                                Container(width: 5,),
-
-                                Padding(
-                                  padding: EdgeInsets.only(top: 7, bottom: 7),
-                                  child: Container(
-                                    width: width/3*2 - 50,
-                                    child: AutoSizeText(
-                                      'Bạn muốn mua hàng ở đâu',
-                                      style: TextStyle(
-                                        fontFamily: 'muli',
-                                        color: Colors.black,
-                                        fontSize: 100,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
+                        child: title_gradient_container(icon: Icons.store_mall_directory_outlined, title: 'Bạn muốn mua hàng ở đâu?'),
                       ),
                     ],
                   ),
                 ),
               ),
 
-              Container(height: 30,),
+              Container(height: 20,),
 
               Padding(
                 padding: EdgeInsets.only(left: 10, right: 10),
                 child: Container(
-                  height: 80 + 45 * productList.length.toDouble(),
+                  height: 90 + 45 * order.productList.length.toDouble(),
                   child: Stack(
                     children: <Widget>[
                       Positioned(
                         top: 20,
                         left: 0,
                         right: 0,
+                        bottom: 0,
                         child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.4), // màu của shadow
-                                spreadRadius: 2, // bán kính của shadow
-                                blurRadius: 7, // độ mờ của shadow
-                                offset: Offset(0, 3), // vị trí của shadow
-                              ),
-                            ],
-                          ),
+                          decoration: get_usually_decoration(),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Container(height: 30,),
 
                               Container(
-                                height: 45 * productList.length.toDouble(),
+                                height: 45 * order.productList.length.toDouble(),
                                 child: ListView.builder(
                                   padding: EdgeInsets.zero,
                                   physics: NeverScrollableScrollPhysics(),
-                                  itemCount: productList.length,
+                                  itemCount: order.productList.length,
+                                  shrinkWrap: true,
                                   itemBuilder: (context, index) {
-                                    return Padding(
-                                      padding: EdgeInsets.only(),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Container(
-                                            height: 30,
-                                            child: Row(
-                                              children: [
-                                                Container(
-                                                  width: 10,
-                                                ),
-
-                                                Container(
-                                                  width: 30,
-                                                  height: 30,
-                                                  child: Icon(
-                                                    Icons.add_shopping_cart,
-                                                    color: Colors.black,
-                                                    size: 20,
-                                                  ),
-                                                ),
-
-                                                Container(
-                                                  width: 10,
-                                                ),
-
-                                                Padding(
-                                                  padding: EdgeInsets.only(top: 7, bottom: 7),
-                                                  child: Container(
-                                                    height: 30,
-                                                    width: width - 40 - 30 - 40 - 10,
-                                                    child: RichText(
-                                                      overflow: TextOverflow.ellipsis,
-                                                      text: TextSpan(
-                                                        children: [
-                                                          TextSpan(
-                                                            text: productList[index].name,
-                                                            style: TextStyle(
-                                                              fontSize: 13,
-                                                              fontFamily: 'muli',
-                                                              color: Colors.black,
-                                                              fontWeight: FontWeight.bold, // Để in đậm
-                                                            ),
-                                                          ),
-                                                          TextSpan(
-                                                            text: '-Số lượng: ' + productList[index].number.toStringAsFixed(0) + ' ' + productList[index].unit,
-                                                            style: TextStyle(
-                                                              fontSize: 13,
-                                                              fontFamily: 'muli',
-                                                              color: Colors.black,
-                                                              fontWeight: FontWeight.normal, // Để in đậm
-                                                            ),
-                                                          ),
-                                                        ]
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-
-                                                GestureDetector(
-                                                  child: Container(
-                                                    child: Icon(Icons.mode_edit_outline_outlined, color: Colors.grey,size: 20,),
-                                                  ),
-                                                  onTap: () {
-                                                    showDialog(
-                                                      context: context,
-                                                      builder: (context) {
-                                                        return edit_product(product: productList[index], event: () {setState(() {});});
-                                                        },
-                                                    );
-                                                  },
-                                                ),
-
-                                                GestureDetector(
-                                                  child: Container(
-                                                    child: Icon(Icons.delete_outline, color: Colors.redAccent,size: 20,),
-                                                  ),
-                                                  onTap: () {
-                                                    productList.removeAt(index);
-                                                    product_fee = 10000 * ((productList.length/3).toInt()).toDouble();
-                                                    setState(() {
-
-                                                    });
-                                                  },
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-
-                                          Container(height: 15,),
-                                        ],
-                                      ),
-                                    );
+                                    return item_request_product(index: index, list: order.productList, callback: () {setState(() {});});
                                   },
                                 ),
                               ),
@@ -863,8 +405,8 @@ class _request_buy_step_1State extends State<request_buy_step_1> {
                                   showDialog(
                                     context: context,
                                     builder: (context) {
-                                      return add_product(list: productList, event: () {
-                                        product_fee = 10000 * ((productList.length/3).toInt()).toDouble();
+                                      return add_product(list: order.productList, event: () {
+                                        product_fee = 10000 * ((order.productList.length/3).toInt()).toDouble();
                                         setState(() {
 
                                         });
@@ -883,68 +425,14 @@ class _request_buy_step_1State extends State<request_buy_step_1> {
                       Positioned(
                         top: 0,
                         left: 30,
-                        child: Container(
-                          height: 40,
-                          width: width/3*2,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(1000),
-                            gradient: LinearGradient(
-                              colors: [Colors.yellow.withAlpha(200) ,Colors.white],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              stops: [0.0, 1.0],
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.2), // màu của shadow
-                                spreadRadius: 2, // bán kính của shadow
-                                blurRadius: 7, // độ mờ của shadow
-                                offset: Offset(0, 3), // vị trí của shadow
-                              ),
-                            ],
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-                            child: Row(
-                              children: <Widget>[
-                                Container(
-                                  width: 25,
-                                  child: Icon(
-                                    Icons.shopping_bag_outlined,
-                                    color: Colors.black,
-                                    size: 25,
-                                  ),
-                                ),
-
-                                Container(width: 5,),
-
-                                Padding(
-                                  padding: EdgeInsets.only(top: 7, bottom: 7),
-                                  child: Container(
-                                    width: width/3*2 - 50,
-                                    child: AutoSizeText(
-                                      'Hàng hóa cần mua hộ',
-                                      style: TextStyle(
-                                        fontFamily: 'muli',
-                                        color: Colors.black,
-                                        fontSize: 100,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
+                        child: title_gradient_container(icon: Icons.shopping_bag_outlined, title: 'Hàng hóa cần mua hộ'),
                       ),
                     ],
                   ),
                 ),
               ),
 
-              Container(height: 30,),
+              Container(height: 20,),
 
               Padding(
                 padding: EdgeInsets.only(left: 10, right: 10),
@@ -958,18 +446,7 @@ class _request_buy_step_1State extends State<request_buy_step_1> {
                         right: 0,
                         bottom: 0,
                         child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.4), // màu của shadow
-                                spreadRadius: 2, // bán kính của shadow
-                                blurRadius: 7, // độ mờ của shadow
-                                offset: Offset(0, 3), // vị trí của shadow
-                              ),
-                            ],
-                          ),
+                          decoration: get_usually_decoration(),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -988,52 +465,21 @@ class _request_buy_step_1State extends State<request_buy_step_1> {
                                       child: Container(
                                         height: 30,
                                         width: (width - 40 - 20)/2,
-                                        child: start_location_list.length != 0 ? FutureBuilder(
-                                          future: getDistance(start_location_list.first, end_location),
+                                        child: order.buyLocation.length != 0 ? FutureBuilder(
+                                          future: getDistance(order.buyLocation.first, order.locationGet),
                                           builder: (context, snapshot) {
                                             if (snapshot.connectionState == ConnectionState.waiting) {
-                                              return Text('Chi phí di chuyển(...km)', style: TextStyle(color: Colors.black, fontSize: 15),);
+                                              return general_ingredient.get_cost_title('Chi phí di chuyển(...Km)', Colors.black, FontWeight.bold, width);
                                             }
-
                                             if (snapshot.hasError) {
-                                              print(snapshot.error.toString());
-                                              return Text('Lỗi vị trí, vui lòng thử lại', style: TextStyle(color: Colors.black, fontSize: 15),);
+                                              return general_ingredient.get_cost_title('Lỗi tính toán', Colors.black, FontWeight.bold, width);
                                             }
-
                                             if (!snapshot.hasData) {
-                                              return Text('Lỗi vị trí, vui lòng thử lại', style: TextStyle(color: Colors.black, fontSize: 15),);
+                                              return general_ingredient.get_cost_title('Lỗi tính toán', Colors.black, FontWeight.bold, width);
                                             }
-
-                                            return Container(
-                                              height: 30,
-                                              width: (width - 40 - 20)/2,
-                                              child: AutoSizeText(
-                                                'Chi phí di chuyển(' + snapshot.data!.toStringAsFixed(1) + ' Km)',
-                                                style: TextStyle(
-                                                    fontFamily: 'muli',
-                                                    color: Colors.black,
-                                                    fontSize: 200,
-                                                    fontWeight: FontWeight.bold
-                                                ),
-                                              ),
-                                            );
+                                            return general_ingredient.get_cost_title('Chi phí di chuyển(' + snapshot.data!.toStringAsFixed(1) + ' Km)', Colors.black, FontWeight.bold, width);
                                           },
-                                        ) : Container(child: RichText(
-                                          textAlign: TextAlign.start,
-                                          text: TextSpan(
-                                            children: [
-                                              TextSpan(
-                                                text: "Phí di chuyển",
-                                                style: TextStyle(
-                                                  fontFamily: 'muli',
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.normal,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),),
+                                        ) : general_ingredient.get_cost_title('Chi phí di chuyển(...Km)', Colors.black, FontWeight.bold, width),
                                       ),
                                     ),
 
@@ -1043,98 +489,21 @@ class _request_buy_step_1State extends State<request_buy_step_1> {
                                         height: 30,
                                         width: (width - 40 - 20)/2,
                                         alignment: Alignment.centerRight,
-                                        child: start_location_list.length != 0 ? FutureBuilder(
-                                          future: getCost(start_location_list.first, end_location, height),
+                                        child: order.buyLocation.length != 0 ? FutureBuilder(
+                                          future: getCost(order.buyLocation.first, order.locationGet, height),
                                           builder: (context, snapshot) {
                                             if (snapshot.connectionState == ConnectionState.waiting) {
-                                              return RichText(
-                                                textAlign: TextAlign.end,
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: "Đang tính toán giá tiền",
-                                                      style: TextStyle(
-                                                        fontFamily: 'muli',
-                                                        color: Colors.black,
-                                                        fontWeight: FontWeight.normal,
-                                                        fontSize: 14,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
+                                              return general_ingredient.get_cost_content('Đang tính toán', Colors.black, FontWeight.normal, width);
                                             }
-
                                             if (snapshot.hasError) {
-                                              print(snapshot.error.toString());
-                                              return RichText(
-                                                textAlign: TextAlign.end,
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: "Lỗi khi tính toán",
-                                                      style: TextStyle(
-                                                        fontFamily: 'muli',
-                                                        color: Colors.black,
-                                                        fontWeight: FontWeight.normal,
-                                                        fontSize: 14,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
+                                              return general_ingredient.get_cost_content('Lỗi tính toán', Colors.redAccent, FontWeight.normal, width);
                                             }
-
                                             if (!snapshot.hasData) {
-                                              return RichText(
-                                                textAlign: TextAlign.end,
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: "Lỗi khi tính toán",
-                                                      style: TextStyle(
-                                                        fontFamily: 'muli',
-                                                        color: Colors.black,
-                                                        fontWeight: FontWeight.normal,
-                                                        fontSize: 14,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
+                                              return general_ingredient.get_cost_content('Lỗi tính toán', Colors.redAccent, FontWeight.normal, width);
                                             }
-
-                                            return Container(
-                                              height: 30,
-                                              width: (width - 40 - 20)/2,
-                                              child: AutoSizeText(
-                                                getStringNumber(double.parse(snapshot.data.toString())) + '.đ',
-                                                textAlign: TextAlign.end,
-                                                style: TextStyle(
-                                                    fontFamily: 'muli',
-                                                    color: Colors.black,
-                                                    fontSize: 200,
-                                                    fontWeight: FontWeight.bold
-                                                ),
-                                              ),
-                                            );
+                                            return general_ingredient.get_cost_content(getStringNumber(double.parse(snapshot.data.toString())) + '.đ', Colors.black, FontWeight.bold, width);
                                           },
-                                        ) : Container(child: RichText(
-                                          textAlign: TextAlign.end,
-                                          text: TextSpan(
-                                            children: [
-                                              TextSpan(
-                                                text: "Chưa chọn vị trí",
-                                                style: TextStyle(
-                                                  fontFamily: 'muli',
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.normal,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),),
+                                        ) : general_ingredient.get_cost_content('Chưa chọn vị trí', Colors.black, FontWeight.normal, width),
                                       ),
                                     ),
                                   ],
@@ -1153,43 +522,12 @@ class _request_buy_step_1State extends State<request_buy_step_1> {
 
                                     Padding(
                                       padding: EdgeInsets.only(top: 7, bottom: 7),
-                                      child: Container(
-                                        height: 30,
-                                        width: (width - 40 - 20)/2,
-                                        child: AutoSizeText(
-                                          'Phụ thu thời tiết',
-                                          style: TextStyle(
-                                              fontFamily: 'muli',
-                                              color: Colors.black,
-                                              fontSize: 200,
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        ),
-                                      ),
+                                      child: general_ingredient.get_cost_title('Phụ thu thời tiết', Colors.black, FontWeight.bold, width),
                                     ),
 
                                     Padding(
                                       padding: EdgeInsets.only(top: 7, bottom: 7),
-                                      child: Container(
-                                        height: 30,
-                                        width: (width - 40 - 20)/2,
-                                        alignment: Alignment.centerRight,
-                                        child: RichText(
-                                          text: TextSpan(
-                                            children: [
-                                              TextSpan(
-                                                text: "0.đ",
-                                                style: TextStyle(
-                                                  fontFamily: 'muli',
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.normal,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
+                                      child: general_ingredient.get_cost_content('0.đ', Colors.black, FontWeight.bold, width),
                                     ),
                                   ],
                                 ),
@@ -1207,43 +545,12 @@ class _request_buy_step_1State extends State<request_buy_step_1> {
 
                                     Padding(
                                       padding: EdgeInsets.only(top: 7, bottom: 7),
-                                      child: Container(
-                                        height: 30,
-                                        width: (width - 40 - 20)/2,
-                                        child: AutoSizeText(
-                                          'Phụ thu hàng hóa(' + productList.length.toString() + ' điểm)',
-                                          style: TextStyle(
-                                              fontFamily: 'muli',
-                                              color: Colors.black,
-                                              fontSize: 200,
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        ),
-                                      ),
+                                      child: general_ingredient.get_cost_title('Phụ thu hàng hóa(' + order.productList.length.toString() + ' điểm)', Colors.black, FontWeight.bold, width),
                                     ),
 
                                     Padding(
                                       padding: EdgeInsets.only(top: 7, bottom: 7),
-                                      child: Container(
-                                        height: 30,
-                                        width: (width - 40 - 20)/2,
-                                        alignment: Alignment.centerRight,
-                                        child: RichText(
-                                          text: TextSpan(
-                                            children: [
-                                              TextSpan(
-                                                text: getStringNumber(product_fee) + ".đ",
-                                                style: TextStyle(
-                                                  fontFamily: 'muli',
-                                                  color: Colors.black,
-                                                  fontWeight: product_fee == 0 ? FontWeight.normal : FontWeight.bold,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
+                                      child: general_ingredient.get_cost_content(getStringNumber((10000 * ((order.productList.length/3).toInt()).toDouble())) + '.đ', Colors.black, FontWeight.bold, width),
                                     ),
                                   ],
                                 ),
@@ -1261,57 +568,17 @@ class _request_buy_step_1State extends State<request_buy_step_1> {
 
                                     Padding(
                                       padding: EdgeInsets.only(top: 7, bottom: 7),
-                                      child: Container(
-                                        height: 30,
-                                        width: (width - 40 - 20)/2,
-                                        child: AutoSizeText(
-                                          'Mã giảm giá',
-                                          style: TextStyle(
-                                              fontFamily: 'muli',
-                                              color: Colors.black,
-                                              fontSize: 200,
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        ),
-                                      ),
+                                      child: general_ingredient.get_cost_title('Mã giảm giá', Colors.black, FontWeight.bold, width),
                                     ),
 
                                     Padding(
                                       padding: EdgeInsets.only(top: 7, bottom: 7),
-                                      // child: GestureDetector(
-                                      //   child: Container(
-                                      //     height: 30,
-                                      //     width: (width - 40 - 20)/2,
-                                      //     alignment: Alignment.centerRight,
-                                      //     child: RichText(
-                                      //       text: TextSpan(
-                                      //         children: [
-                                      //           TextSpan(
-                                      //             text: order.voucher.id == '' ? "Chọn mã giảm giá" : ('- ' + getStringNumber(getVoucherSale(order.voucher, order.cost)) + '.đ'),
-                                      //             style: TextStyle(
-                                      //               fontFamily: 'muli',
-                                      //               color: Colors.redAccent,
-                                      //               fontWeight: FontWeight.normal,
-                                      //               fontSize: order.voucher.id == '' ? 12 : 14,
-                                      //             ),
-                                      //           ),
-                                      //         ],
-                                      //       ),
-                                      //     ),
-                                      //   ),
-                                      //   onTap: () {
-                                      //     showModalBottomSheet(
-                                      //       context: context,
-                                      //       builder: (context) {
-                                      //         return voucher_select(voucher: order.voucher, ontap: () {
-                                      //           setState(() {
-                                      //
-                                      //           });
-                                      //         }, cost: order.cost + weightFee);
-                                      //       },
-                                      //     );
-                                      //   },
-                                      // ),
+                                      child: GestureDetector(
+                                        child: general_ingredient.get_cost_content('Chưa chọn mã', Colors.redAccent, FontWeight.bold, width),
+                                        onTap: () {
+
+                                        },
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -1341,19 +608,7 @@ class _request_buy_step_1State extends State<request_buy_step_1> {
 
                                     Padding(
                                       padding: EdgeInsets.only(top: 4, bottom: 4),
-                                      child: Container(
-                                        height: 30,
-                                        width: (width - 40 - 20)/2,
-                                        child: AutoSizeText(
-                                          'Tổng thanh toán',
-                                          style: TextStyle(
-                                              fontFamily: 'muli',
-                                              color: Colors.black,
-                                              fontSize: 200,
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        ),
-                                      ),
+                                      child: general_ingredient.get_cost_title('Tổng thanh toán', Colors.black, FontWeight.bold, width),
                                     ),
 
                                     Padding(
@@ -1362,94 +617,24 @@ class _request_buy_step_1State extends State<request_buy_step_1> {
                                         height: 30,
                                         width: (width - 40 - 20)/2,
                                         alignment: Alignment.centerRight,
-                                        child: start_location_list.length != 0 ? FutureBuilder(
-                                          future: getCost(start_location_list.first, end_location, height),
+                                        child: order.buyLocation.length != 0 ? FutureBuilder(
+                                          future: getCost(order.buyLocation.first, order.locationGet, height),
                                           builder: (context, snapshot) {
                                             if (snapshot.connectionState == ConnectionState.waiting) {
-                                              return RichText(
-                                                textAlign: TextAlign.end,
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: "Đang tính toán giá tiền",
-                                                      style: TextStyle(
-                                                        fontFamily: 'muli',
-                                                        color: Colors.black,
-                                                        fontWeight: FontWeight.normal,
-                                                        fontSize: 14,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
+                                              return general_ingredient.get_cost_content('Đang tính toán', Colors.black, FontWeight.bold, width);
                                             }
 
                                             if (snapshot.hasError) {
-                                              print(snapshot.error.toString());
-                                              return RichText(
-                                                textAlign: TextAlign.end,
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: "Lỗi khi tính toán",
-                                                      style: TextStyle(
-                                                        fontFamily: 'muli',
-                                                        color: Colors.black,
-                                                        fontWeight: FontWeight.normal,
-                                                        fontSize: 14,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
+                                              return general_ingredient.get_cost_content('Lỗi tính toán', Colors.redAccent, FontWeight.normal, width);
                                             }
 
                                             if (!snapshot.hasData) {
-                                              return RichText(
-                                                textAlign: TextAlign.end,
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: "Lỗi khi tính toán",
-                                                      style: TextStyle(
-                                                        fontFamily: 'muli',
-                                                        color: Colors.black,
-                                                        fontWeight: FontWeight.normal,
-                                                        fontSize: 14,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
+                                              return general_ingredient.get_cost_content('Lỗi tính toán', Colors.redAccent, FontWeight.normal, width);
                                             }
 
-                                            return AutoSizeText(
-                                              getStringNumber(double.parse(snapshot.data.toString()) + product_fee) + '.đ',
-                                              //getStringNumber(double.parse(snapshot.data.toString()) - getVoucherSale(order.voucher, order.cost) + weightFee) + '.đ',
-                                              style: TextStyle(
-                                                  fontFamily: 'muli',
-                                                  color: Colors.black,
-                                                  fontSize: 200,
-                                                  fontWeight: FontWeight.normal
-                                              ),
-                                            );
+                                            return general_ingredient.get_cost_content(getStringNumber(double.parse(snapshot.data.toString()) + 10000 * ((order.productList.length/3).toInt()).toDouble()) + '.đ', Colors.black, FontWeight.bold, width);
                                           },
-                                        ) : Container(child: RichText(
-                                          textAlign: TextAlign.end,
-                                          text: TextSpan(
-                                            children: [
-                                              TextSpan(
-                                                text: "Chưa chọn vị trí",
-                                                style: TextStyle(
-                                                  fontFamily: 'muli',
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.normal,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),),
+                                        ) : general_ingredient.get_cost_content('Chưa tính toán', Colors.black, FontWeight.bold, width),
                                       ),
                                     ),
                                   ],
@@ -1465,66 +650,16 @@ class _request_buy_step_1State extends State<request_buy_step_1> {
                       Positioned(
                         top: 0,
                         left: 30,
-                        child: Container(
-                          height: 40,
-                          width: width/3*2,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(1000),
-                            gradient: LinearGradient(
-                              colors: [Colors.yellow.withAlpha(200) ,Colors.white],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              stops: [0.0, 1.0],
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.2), // màu của shadow
-                                spreadRadius: 2, // bán kính của shadow
-                                blurRadius: 7, // độ mờ của shadow
-                                offset: Offset(0, 3), // vị trí của shadow
-                              ),
-                            ],
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-                            child: Row(
-                              children: <Widget>[
-                                Container(
-                                  width: 25,
-                                  child: Icon(
-                                    Icons.monetization_on_outlined,
-                                    color: Colors.black,
-                                    size: 25,
-                                  ),
-                                ),
-
-                                Container(width: 5,),
-
-                                Padding(
-                                  padding: EdgeInsets.only(top: 7, bottom: 7),
-                                  child: Container(
-                                    width: width/3*2 - 50,
-                                    child: AutoSizeText(
-                                      'Thông tin thanh toán',
-                                      style: TextStyle(
-                                        fontFamily: 'muli',
-                                        color: Colors.black,
-                                        fontSize: 100,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
+                        child: title_gradient_container(icon: Icons.featured_play_list_outlined, title: 'Thông tin hóa đơn'),
                       ),
                     ],
                   ),
                 ),
               ),
+
+              Container(height: 20,),
+
+              start_order_button(order: order),
 
               Container(height: 30,),
             ],
