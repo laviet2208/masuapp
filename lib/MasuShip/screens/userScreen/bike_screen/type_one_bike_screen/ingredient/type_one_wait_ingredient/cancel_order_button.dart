@@ -74,7 +74,6 @@ class _cancel_order_buttonState extends State<cancel_order_button> {
               setState(() {
                 loading = false;
               });
-              Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => user_main_screen()));
             },
           ),
         );

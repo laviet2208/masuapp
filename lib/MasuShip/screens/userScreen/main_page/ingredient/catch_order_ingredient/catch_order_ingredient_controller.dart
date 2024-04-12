@@ -10,21 +10,17 @@ class catch_order_ingredient_controller {
       final dynamic orders = event.snapshot.value;
       if (orders != null) {
         await orders.forEach((key, value) {
-          if (value['buyLocation'] != null) {
-            if (value['status'].toString() == 'A' || value['status'].toString() == 'B' || value['status'].toString() == 'C') {
+          // đơn lái xe hộ
+          if (value['orderList'] != null) {
+            if (value['status'].toString() == 'UC') {
               check = false;
             }
-          } else {
-            if (value['orderList'] != null) {
-              if (value['status'].toString() == 'UC') {
-                check = false;
-              }
-            } else {
-              if (value['type'] == null) {
-                if (value['status'].toString() == 'A' || value['status'].toString() == 'B' || value['status'].toString() == 'C') {
-                  check = false;
-                }
-              }
+          }
+
+          // đơn gọi xe bình thường
+          if (value['type'] == null && value['payer'] == null && value['shopList'] == null  && value['buyLocation'] == null) {
+            if (value['status'].toString() == 'A' || value['status'].toString() == 'B' || value['status'].toString() == 'C') {
+              check = false;
             }
           }
         });
@@ -40,21 +36,17 @@ class catch_order_ingredient_controller {
     await reference.child("Order").orderByChild('owner/id').equalTo(finalData.user_account.id).once().then((DatabaseEvent event) async {
       final dynamic orders = event.snapshot.value;
       await orders.forEach((key, value) {
-        if (value['buyLocation'] != null) {
-          if (value['status'].toString() == 'A' || value['status'].toString() == 'B' || value['status'].toString() == 'C') {
+        // đơn lái xe hộ
+        if (value['orderList'] != null) {
+          if (value['status'].toString() == 'UC') {
             id = value['id'].toString();
           }
-        } else {
-          if (value['orderList'] != null) {
-            if (value['status'].toString() == 'UC') {
-              id = value['id'].toString();
-            }
-          } else {
-            if (value['type'] == null) {
-              if (value['status'].toString() == 'A' || value['status'].toString() == 'B' || value['status'].toString() == 'C') {
-                id = value['id'].toString();
-              }
-            }
+        }
+
+        // đơn gọi xe bình thường
+        if (value['type'] == null && value['payer'] == null && value['shopList'] == null) {
+          if (value['status'].toString() == 'A' || value['status'].toString() == 'B' || value['status'].toString() == 'C') {
+            id = value['id'].toString();
           }
         }
       });
@@ -72,9 +64,6 @@ class catch_order_ingredient_controller {
       }
       if (orders['orderList'] != null) {
         type = 3; // Gọi lái xe về hộ
-      }
-      if (orders['buyLocation'] != null) {
-        type = 4; // Đơn đi chợ hộ
       }
     });
     return type;

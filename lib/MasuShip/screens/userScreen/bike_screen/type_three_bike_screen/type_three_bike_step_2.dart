@@ -4,6 +4,7 @@ import 'package:masuapp/GENERAL/utils/utils.dart';
 import 'package:masuapp/MasuShip/Data/otherData/Tool.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_one_bike_screen/ingredient/type_one_wait_ingredient/location_title.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_three_bike_screen/type_three_bike_step_3.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/general/back_button.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/general/title_gradient_container.dart';
 
 import '../../../../Data/locationData/Location.dart';
@@ -75,27 +76,7 @@ class _type_three_bike_step_2State extends State<type_three_bike_step_2> {
             children: [
               Container(height: 20,),
 
-              Container(
-                height: 30,
-                child: Row(
-                  children: [
-                    Container(width: 10,),
-
-                    GestureDetector(
-                      child: Container(
-                        child: Icon(
-                          Icons.arrow_back_ios_new_rounded,
-                          color: Colors.black,
-                        ),
-                      ),
-                      onTap: () {
-                        Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => widget.beforeWidget));
-                      },
-                    ),
-
-                  ],
-                ),
-              ),
+              back_button(beforeWidget: widget.beforeWidget),
 
               Container(height: 20,),
 
@@ -405,7 +386,8 @@ class _type_three_bike_step_2State extends State<type_three_bike_step_2> {
         ),
       ),
       onWillPop: () async {
-        return false;
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => widget.beforeWidget,),);
+        return true;
       },
     );
   }

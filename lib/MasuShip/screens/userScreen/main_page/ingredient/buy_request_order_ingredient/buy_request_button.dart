@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/main_page/ingredient/buy_request_order_ingredient/request_buy_order_ingredient_controller.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/main_page/ingredient/catch_order_ingredient/catch_order_ingredient_controller.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/request_buy_screen/request_buy_wait.dart';
 import 'buy_request_order_ingredient_dialog.dart';
@@ -80,7 +81,7 @@ class _buy_request_buttonState extends State<buy_request_button> {
         setState(() {
           loading = true;
         });
-        if (await catch_order_ingredient_controller.check_if_no_have_order()) {
+        if (await request_buy_order_ingredient_controller.check_if_no_have_order()) {
           showDialog(
             context: context,
             builder: (context) {
@@ -109,14 +110,11 @@ class _buy_request_buttonState extends State<buy_request_button> {
                       setState(() {
                         loading1 = true;
                       });
-                      String id = await catch_order_ingredient_controller.get_un_complete_order_id();
-                      int type = await catch_order_ingredient_controller.get_un_complete_order_type(id);
+                      String id = await request_buy_order_ingredient_controller.get_un_complete_order_id();
                       setState(() {
                         loading1 = false;
                       });
-                      if (type == 4) {
-                        Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => request_but_wait(id: id)));
-                      }
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => request_buy_wait(id: id)));
                     },
                     child: Text(
                       'Đi đến xem đơn',

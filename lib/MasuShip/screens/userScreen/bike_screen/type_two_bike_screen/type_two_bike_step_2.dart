@@ -260,7 +260,8 @@ class _type_two_bike_step_2State extends State<type_two_bike_step_2> {
         ),
       ),
       onWillPop: () async {
-        return false;
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => type_two_bike_step_1(),),);
+        return true;
       },
     );
   }

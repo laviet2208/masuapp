@@ -13,6 +13,7 @@ class expressOrder extends CatchOrder {
   personInfo receiver;
   String item; // tên hàng hóa
   int weightType;
+  int payer; // 1: người gửi trả 2 : người nhận trả
   double codMoney;
   String note;
 
@@ -37,6 +38,7 @@ class expressOrder extends CatchOrder {
     required this.item,
     required this.weightType,
     required this.note,
+    required this.payer,
   }) : super(
     id: id,
     locationSet: locationSet,
@@ -64,6 +66,7 @@ class expressOrder extends CatchOrder {
     superJson['weightType'] = weightType;
     superJson['codMoney'] = codMoney;
     superJson['note'] = note;
+    superJson['payer'] = payer;
     return superJson;
   }
 
@@ -91,6 +94,7 @@ class expressOrder extends CatchOrder {
       item: json['item'].toString(),
       weightType: int.parse(json['weightType'].toString()),
       note: json['note'].toString(),
+      payer: int.parse(json['payer'].toString())
     );
   }
 }

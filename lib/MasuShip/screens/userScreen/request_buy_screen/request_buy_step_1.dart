@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
 import 'package:masuapp/MasuShip/Data/otherData/Time.dart';
+import 'package:masuapp/MasuShip/Data/otherData/utils.dart';
 import 'package:masuapp/MasuShip/Data/voucherData/Voucher.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_one_bike_screen/ingredient/type_one_wait_ingredient/location_title.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/general/title_gradient_container.dart';
@@ -14,6 +15,7 @@ import '../../../Data/OrderData/requestBuyOrderData/requestBuyOrder.dart';
 import '../../../Data/locationData/Location.dart';
 import '../../../Data/otherData/Tool.dart';
 import '../general/search_location_dialog.dart';
+import '../general/voucher_select.dart';
 import '../main_screen/user_main_screen.dart';
 
 class request_buy_step_1 extends StatefulWidget {
@@ -574,9 +576,22 @@ class _request_buy_step_1State extends State<request_buy_step_1> {
                                     Padding(
                                       padding: EdgeInsets.only(top: 7, bottom: 7),
                                       child: GestureDetector(
-                                        child: general_ingredient.get_cost_content('Chưa chọn mã', Colors.redAccent, FontWeight.bold, width),
+                                        child: general_ingredient.get_cost_content(order.voucher.id == '' ? 'Chọn mã khuyến mãi' : (getStringNumber(getVoucherSale(order.voucher, order.cost)) + '.đ'), Colors.redAccent, FontWeight.bold, width),
                                         onTap: () {
+                                          if (order.buyLocation.length == 0) {
+                                            toastMessage('Bạn chưa thêm vị trí nào');
+                                          } else {
+                                            showModalBottomSheet(
+                                              context: context,
+                                              builder: (context) {
+                                                return voucher_select(voucher: order.voucher, ontap: () {
+                                                  setState(() {
 
+                                                  });
+                                                }, cost: order.cost);
+                                              },
+                                            );
+                                          }
                                         },
                                       ),
                                     ),

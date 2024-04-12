@@ -18,6 +18,7 @@ import '../../../Data/otherData/Time.dart';
 import '../../../Data/otherData/utils.dart';
 import '../../../Data/voucherData/Voucher.dart';
 import '../general/search_location_dialog.dart';
+import '../main_screen/user_main_screen.dart';
 
 class express_step_1 extends StatefulWidget {
   const express_step_1({super.key});
@@ -33,7 +34,10 @@ class _express_step_1State extends State<express_step_1> {
   final moneyController = TextEditingController();
   final noteController = TextEditingController();
   String chosenWeight = '';
+  String chosenPayer = '';
   List<String> weightList = ['Dưới 10kg', 'Từ 10 - 25kg', 'Trên 25kg'];
+  List<String> payerList = ['Người nhận trả ship', 'Người gửi trả ship'];
+
 
   expressOrder order = expressOrder(
     id: generateID(25),
@@ -56,6 +60,7 @@ class _express_step_1State extends State<express_step_1> {
     item: '',
     weightType: 1,
     note: '',
+    payer: 1,
   );
 
   Future<String> fetchLocationName(Location location) async {
@@ -97,6 +102,15 @@ class _express_step_1State extends State<express_step_1> {
     });
   }
 
+  void dropdownPayer(String? selectedValue) {
+    if (selectedValue is String) {
+      chosenPayer = selectedValue;
+    }
+    setState(() {
+
+    });
+  }
+
   bool check_fill_data() {
     if (itemController.text.isNotEmpty) {
       if (order.locationSet.longitude != 0 && order.locationSet.latitude != 0 && order.locationGet.longitude != 0 && order.locationGet.latitude != 0) {
@@ -114,6 +128,7 @@ class _express_step_1State extends State<express_step_1> {
     // TODO: implement initState
     super.initState();
     chosenWeight = weightList.first;
+    chosenPayer = payerList.first;
     order.sender.name = finalData.user_account.name;
     order.sender.phone = finalData.user_account.phone;
     order.locationSet.longitude = finalData.user_account.location.longitude;
@@ -151,7 +166,7 @@ class _express_step_1State extends State<express_step_1> {
               Padding(
                 padding: EdgeInsets.only(left: 10, right: 10),
                 child: Container(
-                  height: width/3*2,
+                  height: 350,
                   child: Stack(
                     children: <Widget>[
                       Positioned(
@@ -264,6 +279,56 @@ class _express_step_1State extends State<express_step_1> {
                                         )).toList(),
                                         onChanged: (value) { dropdownWeight(value); },
                                         value: chosenWeight,
+                                        iconEnabledColor: Colors.black,
+                                        isExpanded: true,
+                                        iconDisabledColor: Colors.grey,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                              Container(height: 15,),
+
+                              Padding(
+                                padding: EdgeInsets.only(left: 12),
+                                child: Text(
+                                  'Người trả phí ship',
+                                  style: TextStyle(
+                                      fontFamily: 'muli',
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.black
+                                  ),
+                                ),
+                              ),
+
+                              Container(height: 5,),
+
+                              Padding(
+                                padding: EdgeInsets.only(left: 10, right: 10),
+                                child: Container(
+                                  height: 55,
+                                  decoration: BoxDecoration(
+                                    color: Color.fromRGBO(255, 255, 255, 1),
+                                  ),
+                                  child: Container(
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(color: Colors.black, width: 1)
+                                    ),
+                                    alignment: Alignment.centerLeft,
+                                    child: Padding(
+                                      padding: EdgeInsets.only(left: 10, right: 10),
+                                      child: DropdownButton<String>(
+                                        items: payerList.map((e) => DropdownMenuItem<String>(
+                                          value: e,
+                                          child: Text(e, style: TextStyle(fontFamily: 'muli'),),
+                                        )).toList(),
+                                        onChanged: (value) { dropdownPayer(value); },
+                                        value: chosenPayer,
                                         iconEnabledColor: Colors.black,
                                         isExpanded: true,
                                         iconDisabledColor: Colors.grey,
@@ -795,6 +860,7 @@ class _express_step_1State extends State<express_step_1> {
                       order.locationSet.mainText = await fetchLocationName(order.locationSet);
                       order.locationGet.mainText = await fetchLocationName(order.locationGet);
                       order.weightType = weightType;
+                      order.payer = chosenPayer == 'Người gửi trả ship' ? 1 : 2;
                       if (moneyController.text.isNotEmpty) {
                         order.codMoney = double.parse(moneyController.text.toString());
                       }
@@ -817,7 +883,8 @@ class _express_step_1State extends State<express_step_1> {
         ),
       ),
       onWillPop: () async {
-        return false;
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => user_main_screen(),),);
+        return true;
       },
     );
   }

@@ -89,6 +89,7 @@ class _start_order_buttonState extends State<start_order_button> {
                   type: 1,
                   motherOrder: widget.order.id
               );
+              orderType3.cost = orderType3.cost - getVoucherSale(orderType3.voucher, orderType3.cost);
               custom_order_list.add(orderType3);
               widget.order.orderList.add(orderType3.id);
             }
@@ -114,6 +115,7 @@ class _start_order_buttonState extends State<start_order_button> {
                   type: 2,
                   motherOrder: widget.order.id
               );
+              orderType3.cost = orderType3.cost - getVoucherSale(orderType3.voucher, orderType3.cost);
               bike_order_list.add(orderType3);
               widget.order.orderList.add(orderType3.id);
             }

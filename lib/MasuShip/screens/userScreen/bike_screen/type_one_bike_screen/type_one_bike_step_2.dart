@@ -705,6 +705,7 @@ class _type_one_bike_step_2State extends State<type_one_bike_step_2> {
                       loading = true;
                     });
                     order.S1time = getCurrentTime();
+                    order.cost = order.cost - getVoucherSale(order.voucher, order.cost);
                     await push_new_catch_type_one_order(order);
                     setState(() {
                       loading = false;

@@ -23,7 +23,7 @@ class type_three_bike_step_3 extends StatefulWidget {
 }
 
 class _type_three_bike_step_3State extends State<type_three_bike_step_3> {
-  motherOrder order = motherOrder(id: generateID(25), locationSet: finalData.shipper_account.location, locationGet: finalData.shipper_account.location, cost: 0, owner: finalData.user_account, shipper: finalData.shipper_account, status: 'UC', voucher: Voucher(id: '', Money: 0, mincost: 0, startTime: getCurrentTime(), endTime: getCurrentTime(), useCount: 0, maxCount: 0, eventName: '', LocationId: '', type: 0, Otype: '', perCustom: 0, CustomList: [], maxSale: 0, area: ''), orderList: []);
+  motherOrder order = motherOrder(id: generateID(25), locationSet: finalData.shipper_account.location, locationGet: finalData.shipper_account.location, cost: 0, owner: finalData.user_account, shipper: finalData.shipper_account, status: 'UC', voucher: Voucher(id: '', Money: 0, mincost: 0, startTime: getCurrentTime(), endTime: getCurrentTime(), useCount: 0, maxCount: 0, eventName: '', LocationId: '', type: 0, Otype: '', perCustom: 0, CustomList: [], maxSale: 0, area: ''), orderList: [], createTime: getCurrentTime());
 
   @override
   void initState() {
@@ -494,7 +494,8 @@ class _type_three_bike_step_3State extends State<type_three_bike_step_3> {
         ),
       ),
       onWillPop: () async {
-        return false;
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => type_three_bike_step_1(),),);
+        return true;
       },
     );
   }

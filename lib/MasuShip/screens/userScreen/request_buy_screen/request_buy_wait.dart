@@ -3,6 +3,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
 import 'package:masuapp/MasuShip/Data/otherData/Tool.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/main_screen/user_main_screen.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/request_buy_screen/ingredient/cancel_button.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/request_buy_screen/ingredient/general_ingredient.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_one_bike_screen/ingredient/type_one_wait_ingredient/back_button_in_wait.dart';
@@ -15,15 +16,15 @@ import '../../../Data/voucherData/Voucher.dart';
 import '../bike_screen/type_one_bike_screen/ingredient/type_one_wait_ingredient/location_title.dart';
 import '../general/title_gradient_container.dart';
 
-class request_but_wait extends StatefulWidget {
+class request_buy_wait extends StatefulWidget {
   final String id;
-  const request_but_wait({super.key, required this.id});
+  const request_buy_wait({super.key, required this.id});
 
   @override
-  State<request_but_wait> createState() => _request_but_waitState();
+  State<request_buy_wait> createState() => _request_buy_waitState();
 }
 
-class _request_but_waitState extends State<request_but_wait> {
+class _request_buy_waitState extends State<request_buy_wait> {
 
   requestBuyOrder order = requestBuyOrder(
       id: generateID(25),
@@ -66,8 +67,9 @@ class _request_but_waitState extends State<request_but_wait> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.width;
     return WillPopScope(
-      onWillPop: () async {
-        return false;
+      onWillPop: () {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => user_main_screen(),),);
+        return Future.value(false);
       },
       child: Scaffold(
         body: Container(

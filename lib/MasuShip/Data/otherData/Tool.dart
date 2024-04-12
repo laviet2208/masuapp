@@ -215,7 +215,7 @@ Future<String> fetchLocationName(Location location) async {
   double latitude = location.latitude;
   double longitude = location.longitude;
   final Uri uri = Uri.parse('https://rsapi.goong.io/Geocode?latlng=$latitude,$longitude&api_key=npcYThxwWdlxPTuGGZ8Tu4QAF7IyO3u2vYyWlV5Z');
-
+  print('Url lỗi: ' + 'https://rsapi.goong.io/Geocode?latlng=$latitude,$longitude&api_key=npcYThxwWdlxPTuGGZ8Tu4QAF7IyO3u2vYyWlV5Z');
   try {
     final response = await http.get(uri);
     if (response.statusCode == 200) {

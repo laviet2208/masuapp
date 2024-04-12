@@ -7,13 +7,13 @@ import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_one_bike_sc
 import 'package:masuapp/MasuShip/screens/userScreen/express_screen/ingredient/cancel_button.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/express_screen/ingredient/general_ingredient.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/express_screen/ingredient/location_title_custom_express.dart';
-
 import '../../../Data/OrderData/expressOrder/expressOrder.dart';
 import '../../../Data/OrderData/expressOrder/personInfo.dart';
 import '../../../Data/locationData/Location.dart';
 import '../../../Data/otherData/Time.dart';
 import '../../../Data/voucherData/Voucher.dart';
 import '../general/title_gradient_container.dart';
+import '../main_screen/user_main_screen.dart';
 import 'ingredient/express_log_ingredient.dart';
 
 class express_wait extends StatefulWidget {
@@ -49,6 +49,7 @@ class _express_waitState extends State<express_wait> {
     item: '',
     weightType: 1,
     note: '',
+    payer: 0,
   );
 
   void get_order_data() {
@@ -185,7 +186,7 @@ class _express_waitState extends State<express_wait> {
               Padding(
                 padding: EdgeInsets.only(left: 10, right: 10),
                 child: Container(
-                  height: 260,
+                  height: 300,
                   child: Stack(
                     children: <Widget>[
                       Positioned(
@@ -285,6 +286,29 @@ class _express_waitState extends State<express_wait> {
                                     Padding(
                                       padding: EdgeInsets.only(top: 7, bottom: 7),
                                       child: general_ingredient.get_cost_content(order.receiver.phone, Colors.black, FontWeight.normal, width),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                              Container(height: 10,),
+
+                              Container(
+                                height: 30,
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 10,
+                                    ),
+
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 7, bottom: 7),
+                                      child: general_ingredient.get_cost_title('Người trả ship', Colors.black, FontWeight.bold, width),
+                                    ),
+
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 7, bottom: 7),
+                                      child: general_ingredient.get_cost_content(order.payer == 1 ? 'Người gửi' : 'Người nhận', Colors.black, FontWeight.bold, width),
                                     ),
                                   ],
                                 ),
@@ -592,8 +616,8 @@ class _express_waitState extends State<express_wait> {
         ),
       ),
       onWillPop: () async {
-        return false;
-      },
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => user_main_screen(),),);
+        return true;      },
     );
   }
 }

@@ -262,61 +262,7 @@ class _express_step_2State extends State<express_step_2> {
                       Positioned(
                         top: 0,
                         left: 30,
-                        child: Container(
-                          height: 40,
-                          width: width/3*2,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(1000),
-                            gradient: LinearGradient(
-                              colors: [Colors.yellow.withAlpha(200) ,Colors.white],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              stops: [0.0, 1.0],
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.2), // màu của shadow
-                                spreadRadius: 2, // bán kính của shadow
-                                blurRadius: 7, // độ mờ của shadow
-                                offset: Offset(0, 3), // vị trí của shadow
-                              ),
-                            ],
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-                            child: Row(
-                              children: <Widget>[
-                                Container(
-                                  width: 25,
-                                  child: Icon(
-                                    Icons.delivery_dining,
-                                    color: Colors.black,
-                                    size: 25,
-                                  ),
-                                ),
-
-                                Container(width: 5,),
-
-                                Padding(
-                                  padding: EdgeInsets.only(top: 7, bottom: 7),
-                                  child: Container(
-                                    width: width/3*2 - 50,
-                                    child: AutoSizeText(
-                                      'Thông tin hàng hóa',
-                                      style: TextStyle(
-                                        fontFamily: 'muli',
-                                        color: Colors.black,
-                                        fontSize: 100,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
+                        child: title_gradient_container(icon: Icons.delivery_dining, title: 'Thông tin hàng hóa'),
                       ),
                     ],
                   ),
@@ -328,7 +274,7 @@ class _express_step_2State extends State<express_step_2> {
               Padding(
                 padding: EdgeInsets.only(left: 10, right: 10),
                 child: Container(
-                  height: 280,
+                  height: 320,
                   child: Stack(
                     children: <Widget>[
                       Positioned(
@@ -337,18 +283,7 @@ class _express_step_2State extends State<express_step_2> {
                         right: 0,
                         bottom: 0,
                         child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.4), // màu của shadow
-                                spreadRadius: 2, // bán kính của shadow
-                                blurRadius: 7, // độ mờ của shadow
-                                offset: Offset(0, 3), // vị trí của shadow
-                              ),
-                            ],
-                          ),
+                          decoration: get_usually_decoration(),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -476,6 +411,29 @@ class _express_step_2State extends State<express_step_2> {
 
                                     Padding(
                                       padding: EdgeInsets.only(top: 7, bottom: 7),
+                                      child: general_ingredient.get_cost_title('Người trả ship', Colors.black, FontWeight.bold, width),
+                                    ),
+
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 7, bottom: 7),
+                                      child: general_ingredient.get_cost_content(widget.order.payer == 1 ? 'Người gửi' : 'Người nhận', Colors.black, FontWeight.bold, width),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                              Container(height: 10,),
+
+                              Container(
+                                height: 30,
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 10,
+                                    ),
+
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 7, bottom: 7),
                                       child: general_ingredient.get_cost_title('Mã giảm giá', Colors.black, FontWeight.bold, width),
                                     ),
 
@@ -580,7 +538,8 @@ class _express_step_2State extends State<express_step_2> {
         ),
       ),
       onWillPop: () async {
-        return false;
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => express_step_1(),),);
+        return true;
       },
     );
   }

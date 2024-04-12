@@ -58,13 +58,13 @@ class _start_order_buttonState extends State<start_order_button> {
           });
           double distance = await getDistance(widget.order.buyLocation[0], widget.order.locationGet);
           double cost = getCosOfBike(distance);
-          widget.order.cost = cost;
+          widget.order.cost = cost - getVoucherSale(widget.order.voucher, cost);
           widget.order.S1time = getCurrentTime();
           await start_order_request_buy_button_controller.push_buy_request_order_data(widget.order);
           setState(() {
             loading = false;
           });
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => request_but_wait(id: widget.order.id),),);
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => request_buy_wait(id: widget.order.id),),);
         } else {
           toastMessage('Bạn cần hoàn thiện thông tin');
         }
