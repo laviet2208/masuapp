@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_one_bike_screen/controller/type_one_wait_controller.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/request_buy_screen/controller/cancel_button_controller.dart';
 
 import '../../../../Data/OrderData/requestBuyOrderData/requestBuyOrder.dart';
 import '../../../../Data/otherData/utils.dart';
@@ -20,8 +21,8 @@ class _cancel_buttonState extends State<cancel_button> {
       child: Padding(
         padding: EdgeInsets.only(left: 10, right: 10),
         child: Container(
-          height: widget.order.status == 'A' ? 45 : 0,
-          decoration: widget.order.status == 'A' ?  BoxDecoration(
+          height: type_one_wait_controller.check_if_can_cancel(widget.order.status) ? 45 : 0,
+          decoration: type_one_wait_controller.check_if_can_cancel(widget.order.status) ?  BoxDecoration(
             borderRadius: BorderRadius.circular(1000),
             boxShadow: [
               BoxShadow(
@@ -62,7 +63,7 @@ class _cancel_buttonState extends State<cancel_button> {
                     setState(() {
                       loading = true;
                     });
-                    await type_one_wait_controller.cancel_order(widget.order.id);
+                    await cancel_order_button_controller.cancel_order(widget.order);
                     toastMessage('Bạn đã hủy đơn thành công');
                     setState(() {
                       loading = false;

@@ -1,7 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/Data/OrderData/catchOrder.dart';
-import 'package:masuapp/MasuShip/screens/shipperScreen/divide_order_for_driver/controller/order_have_dialog_controller.dart';
 
 class catch_order_have_dialog extends StatefulWidget {
   final CatchOrder order;

@@ -1,9 +1,13 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/account_screen/policy_screen/policy_and_services_screen.dart';
 
 import '../../../Data/areaData/Area.dart';
+import '../../loginScreen/loading_screen.dart';
+import 'change_account_user_info/change_account_user_info.dart';
 
 class account_page extends StatefulWidget {
   const account_page({super.key});
@@ -26,6 +30,24 @@ class _account_pageState extends State<account_page> {
 
       });
     });
+  }
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  Future<void> signOutWithPhoneNumberOTP() async {
+    try {
+      // Kiểm tra nếu người dùng đã đăng nhập bằng số điện thoại OTP
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null && user.providerData.any((info) => info.providerId == 'phone')) {
+        // Nếu đăng nhập bằng số điện thoại OTP, thực hiện đăng xuất
+        await FirebaseAuth.instance.signOut();
+        print('Đăng xuất thành công!');
+      } else {
+        print('Không tìm thấy tài khoản đăng nhập bằng số điện thoại OTP.');
+      }
+    } catch (e) {
+      print('Đăng xuất thất bại: $e');
+    }
   }
 
   @override
@@ -206,6 +228,9 @@ class _account_pageState extends State<account_page> {
                       child: GestureDetector(
                         child: Container(
                           height: 60,
+                          decoration: BoxDecoration(
+                            color: Colors.transparent,
+                          ),
                           child: Stack(
                             children: <Widget>[
                               Positioned(
@@ -243,24 +268,24 @@ class _account_pageState extends State<account_page> {
                               ),
 
                               Positioned(
-                                top: 20,
+                                top: 0,
                                 right: 0,
+                                bottom: 0,
                                 child: Container(
-                                  height: 20,
                                   width: 20,
-                                  decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          fit: BoxFit.cover,
-                                          image: AssetImage('assets/image/righticon.png')
-                                      )
+                                  alignment: Alignment.center,
+                                  child: Icon(
+                                    Icons.chevron_right,
+                                    color: Colors.black,
+                                    size: 20,
                                   ),
                                 ),
-                              )
+                              ),
                             ],
                           ),
                         ),
                         onTap: () {
-
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => change_account_user_info(),),);
                         },
                       ),
                     ),
@@ -333,6 +358,9 @@ class _account_pageState extends State<account_page> {
                         },
                         child: Container(
                           height: 60,
+                          decoration: BoxDecoration(
+                            color: Colors.transparent,
+                          ),
                           child: Stack(
                             children: <Widget>[
                               Positioned(
@@ -406,94 +434,100 @@ class _account_pageState extends State<account_page> {
                       ),
                     ),
 
-
                     Container(height: 10,),
-
-                    Padding(
-                      padding: EdgeInsets.only(left: 10, right: 10),
-                      child: GestureDetector(
-                        child: Container(
-                          height: 60,
-                          child: Stack(
-                            children: <Widget>[
-                              Positioned(
-                                top: 15,
-                                left: 0,
-                                child: Container(
-                                  height: 29,
-                                  width: 29,
-                                  decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          fit: BoxFit.cover,
-                                          image: AssetImage('assets/image/iconaccinfo/3.png')
-                                      )
-                                  ),
-                                ),
-                              ),
-
-                              Positioned(
-                                top: 0,
-                                left: 60,
-                                child: Container(
-                                    width: (screenWidth-30)/3*2,
-                                    height: 60,
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      'Lịch sử đặt hàng',
-                                      style: TextStyle(
-                                          fontFamily: 'arial',
-                                          fontSize: 15,
-                                          color: Color.fromARGB(255, 32, 32, 32),
-                                          fontWeight: FontWeight.bold
-                                      ),
-                                    )
-                                ),
-                              ),
-
-                              Positioned(
-                                top: 20,
-                                right: 0,
-                                child: Container(
-                                  height: 20,
-                                  width: 20,
-                                  decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          fit: BoxFit.cover,
-                                          image: AssetImage('assets/image/righticon.png')
-                                      )
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        onTap: () {
-
-                        },
-                      ),
-                    ),
-
-                    Padding(
-                      padding: EdgeInsets.only(left: 10, right: 10),
-                      child: Container(
-                        height: 2,
-                        decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(20)
-                        ),
-                      ),
-                    ),
-
-                    Container(height: 10,),
+                    //
+                    // Padding(
+                    //   padding: EdgeInsets.only(left: 10, right: 10),
+                    //   child: GestureDetector(
+                    //     child: Container(
+                    //       height: 60,
+                    //       decoration: BoxDecoration(
+                    //         color: Colors.transparent,
+                    //       ),
+                    //       child: Stack(
+                    //         children: <Widget>[
+                    //           Positioned(
+                    //             top: 15,
+                    //             left: 0,
+                    //             child: Container(
+                    //               height: 29,
+                    //               width: 29,
+                    //               decoration: BoxDecoration(
+                    //                   image: DecorationImage(
+                    //                       fit: BoxFit.cover,
+                    //                       image: AssetImage('assets/image/iconaccinfo/3.png')
+                    //                   )
+                    //               ),
+                    //             ),
+                    //           ),
+                    //
+                    //           Positioned(
+                    //             top: 0,
+                    //             left: 60,
+                    //             child: Container(
+                    //                 width: (screenWidth-30)/3*2,
+                    //                 height: 60,
+                    //                 alignment: Alignment.centerLeft,
+                    //                 child: Text(
+                    //                   'Lịch sử đặt hàng',
+                    //                   style: TextStyle(
+                    //                       fontFamily: 'arial',
+                    //                       fontSize: 15,
+                    //                       color: Color.fromARGB(255, 32, 32, 32),
+                    //                       fontWeight: FontWeight.bold
+                    //                   ),
+                    //                 )
+                    //             ),
+                    //           ),
+                    //
+                    //           Positioned(
+                    //             top: 0,
+                    //             right: 0,
+                    //             bottom: 0,
+                    //             child: Container(
+                    //               width: 20,
+                    //               alignment: Alignment.center,
+                    //               child: Icon(
+                    //                 Icons.chevron_right,
+                    //                 color: Colors.black,
+                    //                 size: 20,
+                    //               ),
+                    //             ),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //     onTap: () {
+                    //
+                    //     },
+                    //   ),
+                    // ),
+                    //
+                    // Padding(
+                    //   padding: EdgeInsets.only(left: 10, right: 10),
+                    //   child: Container(
+                    //     height: 2,
+                    //     decoration: BoxDecoration(
+                    //         color: Colors.grey,
+                    //         borderRadius: BorderRadius.circular(20)
+                    //     ),
+                    //   ),
+                    // ),
+                    //
+                    // Container(height: 10,),
 
                     Padding(
                       padding: EdgeInsets.only(left: 10, right: 10),
                       child: GestureDetector(
                         onTap: () async {
-
+                          await _auth.signOut();
+                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => loading_screen()), (route) => false,);
                         },
                         child: Container(
                           height: 60,
+                          decoration: BoxDecoration(
+                            color: Colors.transparent,
+                          ),
                           child: Stack(
                             children: <Widget>[
                               Positioned(
@@ -531,19 +565,19 @@ class _account_pageState extends State<account_page> {
                               ),
 
                               Positioned(
-                                top: 20,
+                                top: 0,
                                 right: 0,
+                                bottom: 0,
                                 child: Container(
-                                  height: 20,
                                   width: 20,
-                                  decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          fit: BoxFit.cover,
-                                          image: AssetImage('assets/image/righticon.png')
-                                      )
+                                  alignment: Alignment.center,
+                                  child: Icon(
+                                    Icons.chevron_right,
+                                    color: Colors.black,
+                                    size: 20,
                                   ),
                                 ),
-                              )
+                              ),
                             ],
                           ),
                         ),
@@ -577,164 +611,93 @@ class _account_pageState extends State<account_page> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    // Container(height: 10,),
+                    //
+                    // Padding(
+                    //   padding: EdgeInsets.only(left: 10, right: 10),
+                    //   child: GestureDetector(
+                    //     child: Container(
+                    //       height: 60,
+                    //       decoration: BoxDecoration(
+                    //         color: Colors.transparent,
+                    //       ),
+                    //       child: Stack(
+                    //         children: <Widget>[
+                    //           Positioned(
+                    //             top: 15,
+                    //             left: 0,
+                    //             child: Container(
+                    //               height: 29,
+                    //               width: 29,
+                    //               decoration: BoxDecoration(
+                    //                   image: DecorationImage(
+                    //                       fit: BoxFit.cover,
+                    //                       image: AssetImage('assets/image/iconaccinfo/5.png')
+                    //                   )
+                    //               ),
+                    //             ),
+                    //           ),
+                    //
+                    //           Positioned(
+                    //             top: 0,
+                    //             left: 60,
+                    //             child: Container(
+                    //                 width: (screenWidth-30)/3*2,
+                    //                 height: 60,
+                    //                 alignment: Alignment.centerLeft,
+                    //                 child: Text(
+                    //                   'Đăng ký bán hàng trên Masu',
+                    //                   style: TextStyle(
+                    //                       fontFamily: 'arial',
+                    //                       fontSize: 15,
+                    //                       color: Color.fromARGB(255, 32, 32, 32),
+                    //                       fontWeight: FontWeight.bold
+                    //                   ),
+                    //                 )
+                    //             ),
+                    //           ),
+                    //
+                    //           Positioned(
+                    //             top: 0,
+                    //             right: 0,
+                    //             bottom: 0,
+                    //             child: Container(
+                    //               width: 20,
+                    //               alignment: Alignment.center,
+                    //               child: Icon(
+                    //                 Icons.chevron_right,
+                    //                 color: Colors.black,
+                    //                 size: 20,
+                    //               ),
+                    //             ),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                    //
+                    // Padding(
+                    //   padding: EdgeInsets.only(left: 10, right: 10),
+                    //   child: Container(
+                    //     height: 2,
+                    //     decoration: BoxDecoration(
+                    //         color: Colors.grey,
+                    //         borderRadius: BorderRadius.circular(20)
+                    //     ),
+                    //   ),
+                    // ),
+
                     Container(height: 10,),
 
                     Padding(
                       padding: EdgeInsets.only(left: 10, right: 10),
                       child: GestureDetector(
-                        onTap: () async {
-
-                        },
                         child: Container(
                           height: 60,
-                          child: Stack(
-                            children: <Widget>[
-                              Positioned(
-                                top: 15,
-                                left: 0,
-                                child: Container(
-                                  height: 29,
-                                  width: 29,
-                                  decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          fit: BoxFit.cover,
-                                          image: AssetImage('assets/image/iconaccinfo/5.png')
-                                      )
-                                  ),
-                                ),
-                              ),
-
-                              Positioned(
-                                top: 0,
-                                left: 60,
-                                child: Container(
-                                    width: (screenWidth-30)/3*2,
-                                    height: 60,
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      'Nộp đơn tài xế với Masu',
-                                      style: TextStyle(
-                                          fontFamily: 'arial',
-                                          fontSize: 15,
-                                          color: Color.fromARGB(255, 32, 32, 32),
-                                          fontWeight: FontWeight.bold
-                                      ),
-                                    )
-                                ),
-                              ),
-
-                              Positioned(
-                                top: 20,
-                                right: 0,
-                                child: Container(
-                                  height: 20,
-                                  width: 20,
-                                  decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          fit: BoxFit.cover,
-                                          image: AssetImage('assets/image/righticon.png')
-                                      )
-                                  ),
-                                ),
-                              )
-                            ],
+                          decoration: BoxDecoration(
+                            color: Colors.transparent,
                           ),
-                        ),
-                      ),
-                    ),
-
-                    Padding(
-                      padding: EdgeInsets.only(left: 10, right: 10),
-                      child: Container(
-                        height: 2,
-                        decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(20)
-                        ),
-                      ),
-                    ),
-
-                    Container(height: 10,),
-
-                    Padding(
-                      padding: EdgeInsets.only(left: 10, right: 10),
-                      child: GestureDetector(
-                        child: Container(
-                          height: 60,
-                          child: Stack(
-                            children: <Widget>[
-                              Positioned(
-                                top: 15,
-                                left: 0,
-                                child: Container(
-                                  height: 29,
-                                  width: 29,
-                                  decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          fit: BoxFit.cover,
-                                          image: AssetImage('assets/image/iconaccinfo/5.png')
-                                      )
-                                  ),
-                                ),
-                              ),
-
-                              Positioned(
-                                top: 0,
-                                left: 60,
-                                child: Container(
-                                    width: (screenWidth-30)/3*2,
-                                    height: 60,
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      'Đăng ký bán hàng trên Masu',
-                                      style: TextStyle(
-                                          fontFamily: 'arial',
-                                          fontSize: 15,
-                                          color: Color.fromARGB(255, 32, 32, 32),
-                                          fontWeight: FontWeight.bold
-                                      ),
-                                    )
-                                ),
-                              ),
-
-                              Positioned(
-                                top: 20,
-                                right: 0,
-                                child: Container(
-                                  height: 20,
-                                  width: 20,
-                                  decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          fit: BoxFit.cover,
-                                          image: AssetImage('assets/image/righticon.png')
-                                      )
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    Padding(
-                      padding: EdgeInsets.only(left: 10, right: 10),
-                      child: Container(
-                        height: 2,
-                        decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(20)
-                        ),
-                      ),
-                    ),
-
-                    Container(height: 10,),
-
-                    Padding(
-                      padding: EdgeInsets.only(left: 10, right: 10),
-                      child: GestureDetector(
-                        child: Container(
-                          height: 60,
                           child: Stack(
                             children: <Widget>[
                               Positioned(
@@ -772,19 +735,19 @@ class _account_pageState extends State<account_page> {
                               ),
 
                               Positioned(
-                                top: 20,
+                                top: 0,
                                 right: 0,
+                                bottom: 0,
                                 child: Container(
-                                  height: 20,
                                   width: 20,
-                                  decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          fit: BoxFit.cover,
-                                          image: AssetImage('assets/image/righticon.png')
-                                      )
+                                  alignment: Alignment.center,
+                                  child: Icon(
+                                    Icons.chevron_right,
+                                    color: Colors.black,
+                                    size: 20,
                                   ),
                                 ),
-                              )
+                              ),
                             ],
                           ),
                         ),
@@ -809,6 +772,9 @@ class _account_pageState extends State<account_page> {
                       child: GestureDetector(
                         child: Container(
                           height: 60,
+                          decoration: BoxDecoration(
+                            color: Colors.transparent,
+                          ),
                           child: Stack(
                             children: <Widget>[
                               Positioned(
@@ -844,29 +810,29 @@ class _account_pageState extends State<account_page> {
                                         ),
                                       )
                                   ),
-                                  onTap: () {
-
-                                  },
                                 ),
                               ),
 
                               Positioned(
-                                top: 20,
+                                top: 0,
                                 right: 0,
+                                bottom: 0,
                                 child: Container(
-                                  height: 20,
                                   width: 20,
-                                  decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          fit: BoxFit.cover,
-                                          image: AssetImage('assets/image/righticon.png')
-                                      )
+                                  alignment: Alignment.center,
+                                  child: Icon(
+                                    Icons.chevron_right,
+                                    color: Colors.black,
+                                    size: 20,
                                   ),
                                 ),
-                              )
+                              ),
                             ],
                           ),
                         ),
+                        onTap: () {
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => policy_and_services_screen(),),);
+                        },
                       ),
                     ),
 
@@ -928,19 +894,19 @@ class _account_pageState extends State<account_page> {
                               ),
 
                               Positioned(
-                                top: 20,
+                                top: 0,
                                 right: 0,
+                                bottom: 0,
                                 child: Container(
-                                  height: 20,
                                   width: 20,
-                                  decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          fit: BoxFit.cover,
-                                          image: AssetImage('assets/image/righticon.png')
-                                      )
+                                  alignment: Alignment.center,
+                                  child: Icon(
+                                    Icons.chevron_right,
+                                    color: Colors.black,
+                                    size: 20,
                                   ),
                                 ),
-                              )
+                              ),
                             ],
                           ),
                         ),

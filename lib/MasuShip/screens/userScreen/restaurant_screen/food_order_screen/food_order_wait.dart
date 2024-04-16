@@ -5,13 +5,13 @@ import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_one_bike_sc
 import 'package:masuapp/MasuShip/screens/userScreen/express_screen/ingredient/general_ingredient.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/restaurant_screen/food_order_screen/ingredient/cancel_food_order_button.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/restaurant_screen/food_order_screen/ingredient/food_order_log.dart';
-
 import '../../../../Data/OrderData/foodOrder/foodOrder.dart';
 import '../../../../Data/accountData/shopData/cartProduct.dart';
 import '../../../../Data/otherData/Tool.dart';
 import '../../../../Data/voucherData/Voucher.dart';
 import '../../express_screen/ingredient/location_title_custom_express.dart';
 import '../../general/title_gradient_container.dart';
+import '../../main_screen/user_main_screen.dart';
 import 'food_order_step_1/item_food_view.dart';
 
 class food_order_wait extends StatefulWidget {
@@ -209,7 +209,7 @@ class _food_order_waitState extends State<food_order_wait> {
               Padding(
                 padding: EdgeInsets.only(left: 10, right: 10),
                 child: Container(
-                  height: 340,
+                  height: 360,
                   child: Stack(
                     children: <Widget>[
                       Positioned(
@@ -360,6 +360,27 @@ class _food_order_waitState extends State<food_order_wait> {
 
                               Container(height: 10,),
 
+                              Container(
+                                height: 30,
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 10,
+                                    ),
+
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 7, bottom: 7),
+                                      child: general_ingredient.get_cost_title('Mã giảm giá', Colors.black, FontWeight.bold, width),
+                                    ),
+
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 7, bottom: 7),
+                                      child: general_ingredient.get_cost_content(order.voucher.id == '' ? 'Không chọn mã' : ('-' + getStringNumber(getVoucherSale(order.voucher, order.cost)) + '.đ'), Colors.red, FontWeight.normal, width),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
                               Container(height: 10,),
 
                               Padding(
@@ -389,7 +410,7 @@ class _food_order_waitState extends State<food_order_wait> {
 
                                     Padding(
                                       padding: EdgeInsets.only(top: 4, bottom: 4),
-                                      child: general_ingredient.get_cost_content(getStringNumber(order.cost + order.pointFee + order.weatherFee + order.waitFee + get_total_cart_money(order.productList)) + '.đ', Colors.black, FontWeight.bold, width),
+                                      child: general_ingredient.get_cost_content(getStringNumber(order.cost + order.pointFee + order.weatherFee + order.waitFee + get_total_cart_money(order.productList) - getVoucherSale(order.voucher, order.cost)) + '.đ', Colors.black, FontWeight.bold, width),
                                     ),
                                   ],
                                 ),
@@ -421,7 +442,8 @@ class _food_order_waitState extends State<food_order_wait> {
         ),
       ),
       onWillPop: () async {
-        return false;
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => user_main_screen(),),);
+        return true;
       },
     );
   }

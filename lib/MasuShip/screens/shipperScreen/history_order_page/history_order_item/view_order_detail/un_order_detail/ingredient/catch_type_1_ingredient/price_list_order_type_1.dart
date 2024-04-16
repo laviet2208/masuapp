@@ -101,7 +101,7 @@ class price_list_order_type_1 extends StatelessWidget {
                   child: Stack(
                     children: <Widget>[
                       cost_ingredient.left_title_cost('Tổng thu của khách', Colors.black, FontWeight.bold),
-                      cost_ingredient.right_title_cost(getStringNumber(order.cost + order.subFee) + '.đ', Colors.black, FontWeight.bold),
+                      cost_ingredient.right_title_cost(getStringNumber(order.cost + order.subFee - getVoucherSale(order.voucher, order.cost)) + '.đ', Colors.black, FontWeight.bold),
                     ],
                   )
               ),
@@ -117,7 +117,7 @@ class price_list_order_type_1 extends StatelessWidget {
                   child: Stack(
                     children: <Widget>[
                       cost_ingredient.left_title_cost('Tài xế thực nhận', Colors.black, FontWeight.bold),
-                      cost_ingredient.right_title_cost(getStringNumber(order.cost + order.subFee + getVoucherSale(order.voucher, order.cost) - ((order.cost + getVoucherSale(order.voucher, order.cost)) * (order.costFee.discount/100))) + '.đ', Colors.black, FontWeight.bold),
+                      cost_ingredient.right_title_cost(getStringNumber(order.cost + order.subFee - ((order.cost + getVoucherSale(order.voucher, order.cost)) * (order.costFee.discount/100))) + '.đ', Colors.black, FontWeight.bold),
                     ],
                   )
               ),

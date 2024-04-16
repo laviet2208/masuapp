@@ -1,7 +1,4 @@
-import 'dart:convert';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:http/http.dart' as http;
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/Data/OrderData/catchOrder.dart';
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
@@ -12,6 +9,8 @@ import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_one_bike_sc
 import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_one_bike_screen/ingredient/type_one_wait_ingredient/location_title.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_one_bike_screen/type_one_bike_step_1.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_one_bike_screen/type_one_bike_wait.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_three_bike_screen/Ingredient/general_ingredient.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/general/back_button.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/general/title_gradient_container.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/general/voucher_select.dart';
 
@@ -29,7 +28,6 @@ class type_one_bike_step_2 extends StatefulWidget {
 
 class _type_one_bike_step_2State extends State<type_one_bike_step_2> {
   bool loading = false;
-  double mainCost = 0;
 
   CatchOrder order = CatchOrder(
     id: generateID(25),
@@ -48,26 +46,9 @@ class _type_one_bike_step_2State extends State<type_one_bike_step_2> {
     subFee: 0,
   );
 
-  Future<double> getDistance(double startLatitude, double startLongitude, double endLatitude, double endLongitude) async {
-    final url = Uri.parse("https://rsapi.goong.io/DistanceMatrix?origins=$startLatitude,$startLongitude&destinations=$endLatitude,$endLongitude&vehicle=bike&api_key=npcYThxwWdlxPTuGGZ8Tu4QAF7IyO3u2vYyWlV5Z");
-    try {
-      final response = await http.get(url);
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        final distance = data['rows'][0]['elements'][0]['distance']['value'];
-        return distance.toDouble()/1000;
-      } else {
-        throw Exception('Lỗi khi gửi yêu cầu tới Goong API: ${response.statusCode}');
-      }
-    } catch (e) {
-      throw Exception('Lỗi khi xử lý dữ liệu: $e');
-    }
-  }
-
   Future<double> getCost() async {
     double cost = 0;
-    double distance = await getDistance(widget.start_location.latitude, widget.start_location.longitude, widget.end_location.latitude, widget.end_location.longitude);
+    double distance = await getDistance(widget.start_location, widget.end_location);
     if (distance >= finalData.bikeCost.departKM) {
       cost += finalData.bikeCost.departKM.toInt() * finalData.bikeCost.departCost.toInt(); // Giá cước cho 2km đầu tiên (10.000 VND/km * 2km)
       distance -= finalData.bikeCost.departKM; // Trừ đi 2km đã tính giá cước
@@ -122,7 +103,7 @@ class _type_one_bike_step_2State extends State<type_one_bike_step_2> {
             children: [
               Container(height: 20,),
 
-              back_button_in_wait(),
+              back_button(beforeWidget: type_one_bike_step_1()),
 
               Container(height: 10,),
 
@@ -137,18 +118,7 @@ class _type_one_bike_step_2State extends State<type_one_bike_step_2> {
                         left: 0,
                         right: 0,
                         child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.4), // màu của shadow
-                                spreadRadius: 2, // bán kính của shadow
-                                blurRadius: 7, // độ mờ của shadow
-                                offset: Offset(0, 3), // vị trí của shadow
-                              ),
-                            ],
-                          ),
+                          decoration: get_usually_decoration(),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -199,18 +169,7 @@ class _type_one_bike_step_2State extends State<type_one_bike_step_2> {
                         left: 0,
                         right: 0,
                         child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.4), // màu của shadow
-                                spreadRadius: 2, // bán kính của shadow
-                                blurRadius: 7, // độ mờ của shadow
-                                offset: Offset(0, 3), // vị trí của shadow
-                              ),
-                            ],
-                          ),
+                          decoration: get_usually_decoration(),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -230,34 +189,21 @@ class _type_one_bike_step_2State extends State<type_one_bike_step_2> {
                                         height: 30,
                                         width: (width - 40 - 20)/2,
                                         child: FutureBuilder(
-                                          future: getDistance(widget.start_location.latitude, widget.start_location.longitude, widget.end_location.latitude, widget.end_location.longitude),
+                                          future: getDistance(widget.start_location, widget.end_location),
                                           builder: (context, snapshot) {
                                             if (snapshot.connectionState == ConnectionState.waiting) {
-                                              return Text('Chi phí di chuyển(...km)', style: TextStyle(color: Colors.black, fontSize: 15),);
+                                              return general_ingredient.get_cost_title('Chi phí di chuyển(..Km)', width, 0);
                                             }
 
                                             if (snapshot.hasError) {
-                                              print(snapshot.error.toString());
-                                              return Text('Lỗi vị trí, vui lòng thử lại', style: TextStyle(color: Colors.black, fontSize: 15),);
+                                              return general_ingredient.get_cost_title('Chi phí di chuyển(Lỗi)', width, 0);
                                             }
 
                                             if (!snapshot.hasData) {
-                                              return Text('Lỗi vị trí, vui lòng thử lại', style: TextStyle(color: Colors.black, fontSize: 15),);
+                                              return general_ingredient.get_cost_title('Chi phí di chuyển(Lỗi)', width, 0);
                                             }
 
-                                            return Container(
-                                              height: 30,
-                                              width: (width - 40 - 20)/2,
-                                              child: AutoSizeText(
-                                                'Chi phí di chuyển(' + snapshot.data!.toStringAsFixed(1) + ' Km)',
-                                                style: TextStyle(
-                                                    fontFamily: 'muli',
-                                                    color: Colors.black,
-                                                    fontSize: 200,
-                                                    fontWeight: FontWeight.bold
-                                                ),
-                                              ),
-                                            );
+                                            return general_ingredient.get_cost_title('Chi phí di chuyển(' + snapshot.data!.toStringAsFixed(1) + 'Km)', width, 0);
                                           },
                                         ),
                                       ),
@@ -273,77 +219,18 @@ class _type_one_bike_step_2State extends State<type_one_bike_step_2> {
                                           future: getCost(),
                                           builder: (context, snapshot) {
                                             if (snapshot.connectionState == ConnectionState.waiting) {
-                                              return RichText(
-                                                textAlign: TextAlign.end,
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: "Đang tính toán giá tiền",
-                                                      style: TextStyle(
-                                                        fontFamily: 'muli',
-                                                        color: Colors.black,
-                                                        fontWeight: FontWeight.normal,
-                                                        fontSize: 14,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
+                                              return general_ingredient.get_money_text('Đang tính toán', width);
                                             }
 
                                             if (snapshot.hasError) {
-                                              print(snapshot.error.toString());
-                                              return RichText(
-                                                textAlign: TextAlign.end,
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: "Lỗi khi tính toán",
-                                                      style: TextStyle(
-                                                        fontFamily: 'muli',
-                                                        color: Colors.black,
-                                                        fontWeight: FontWeight.normal,
-                                                        fontSize: 14,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
+                                              return general_ingredient.get_money_text('Lỗi', width);
                                             }
 
                                             if (!snapshot.hasData) {
-                                              return RichText(
-                                                textAlign: TextAlign.end,
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: "Lỗi khi tính toán",
-                                                      style: TextStyle(
-                                                        fontFamily: 'muli',
-                                                        color: Colors.black,
-                                                        fontWeight: FontWeight.normal,
-                                                        fontSize: 14,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
+                                              return general_ingredient.get_money_text('Lỗi', width);
                                             }
 
-                                            return Container(
-                                              height: 30,
-                                              width: (width - 40 - 20)/2,
-                                              child: AutoSizeText(
-                                                getStringNumber(double.parse(snapshot.data.toString())) + '.đ',
-                                                textAlign: TextAlign.end,
-                                                style: TextStyle(
-                                                    fontFamily: 'muli',
-                                                    color: Colors.black,
-                                                    fontSize: 200,
-                                                    fontWeight: FontWeight.bold
-                                                ),
-                                              ),
-                                            );
+                                            return general_ingredient.get_money_text(getStringNumber(double.parse(snapshot.data.toString())) + '.đ', width);
                                           },
                                         ),
                                       ),
@@ -364,43 +251,12 @@ class _type_one_bike_step_2State extends State<type_one_bike_step_2> {
 
                                     Padding(
                                       padding: EdgeInsets.only(top: 7, bottom: 7),
-                                      child: Container(
-                                        height: 30,
-                                        width: (width - 40 - 20)/2,
-                                        child: AutoSizeText(
-                                          'Phụ thu',
-                                          style: TextStyle(
-                                              fontFamily: 'muli',
-                                              color: Colors.black,
-                                              fontSize: 200,
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        ),
-                                      ),
+                                      child: general_ingredient.get_cost_title('Phụ thu', width, 0),
                                     ),
 
                                     Padding(
                                       padding: EdgeInsets.only(top: 7, bottom: 7),
-                                      child: Container(
-                                        height: 30,
-                                        width: (width - 40 - 20)/2,
-                                        alignment: Alignment.centerRight,
-                                        child: RichText(
-                                          text: TextSpan(
-                                            children: [
-                                              TextSpan(
-                                                text: getStringNumber(order.subFee) + ".đ",
-                                                style: TextStyle(
-                                                  fontFamily: 'muli',
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.normal,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
+                                      child: general_ingredient.get_cost_money(getStringNumber(order.subFee) + ".đ", width,),
                                     ),
                                   ],
                                 ),
@@ -421,15 +277,7 @@ class _type_one_bike_step_2State extends State<type_one_bike_step_2> {
                                       child: Container(
                                         height: 30,
                                         width: (width - 40 - 20)/2,
-                                        child: AutoSizeText(
-                                          'Mã giảm giá',
-                                          style: TextStyle(
-                                              fontFamily: 'muli',
-                                              color: Colors.black,
-                                              fontSize: 200,
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        ),
+                                        child: general_ingredient.get_cost_title('Mã giảm giá', width, 0),
                                       ),
                                     ),
 
@@ -496,101 +344,27 @@ class _type_one_bike_step_2State extends State<type_one_bike_step_2> {
                                       width: 10,
                                     ),
 
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 4, bottom: 4),
-                                      child: Container(
-                                        height: 30,
-                                        width: (width - 40 - 20)/2,
-                                        child: AutoSizeText(
-                                          'Tổng thanh toán',
-                                          style: TextStyle(
-                                              fontFamily: 'muli',
-                                              color: Colors.black,
-                                              fontSize: 200,
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                                    general_ingredient.get_cost_title('Tổng thanh toán', width, 4),
 
                                     Padding(
                                       padding: EdgeInsets.only(top: 4, bottom: 4),
-                                      child: Container(
-                                        height: 30,
-                                        width: (width - 40 - 20)/2,
-                                        alignment: Alignment.centerRight,
-                                        child: FutureBuilder(
-                                          future: getCost(),
-                                          builder: (context, snapshot) {
-                                            if (snapshot.connectionState == ConnectionState.waiting) {
-                                              return RichText(
-                                                textAlign: TextAlign.end,
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: "Đang tính toán giá tiền",
-                                                      style: TextStyle(
-                                                        fontFamily: 'muli',
-                                                        color: Colors.black,
-                                                        fontWeight: FontWeight.normal,
-                                                        fontSize: 14,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
-                                            }
+                                      child: FutureBuilder(
+                                        future: getCost(),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.connectionState == ConnectionState.waiting) {
+                                            general_ingredient.get_cost_money('...', width,);
+                                          }
 
-                                            if (snapshot.hasError) {
-                                              print(snapshot.error.toString());
-                                              return RichText(
-                                                textAlign: TextAlign.end,
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: "Lỗi khi tính toán",
-                                                      style: TextStyle(
-                                                        fontFamily: 'muli',
-                                                        color: Colors.black,
-                                                        fontWeight: FontWeight.normal,
-                                                        fontSize: 14,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
-                                            }
+                                          if (snapshot.hasError) {
+                                            general_ingredient.get_cost_money('Lỗi', width,);
+                                          }
 
-                                            if (!snapshot.hasData) {
-                                              return RichText(
-                                                textAlign: TextAlign.end,
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: "Lỗi khi tính toán",
-                                                      style: TextStyle(
-                                                        fontFamily: 'muli',
-                                                        color: Colors.black,
-                                                        fontWeight: FontWeight.normal,
-                                                        fontSize: 14,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
-                                            }
+                                          if (!snapshot.hasData) {
+                                            general_ingredient.get_cost_money('Lỗi', width,);
+                                          }
 
-                                            return AutoSizeText(
-                                              getStringNumber(double.parse(snapshot.data.toString()) - getVoucherSale(order.voucher, order.cost)) + '.đ',
-                                              style: TextStyle(
-                                                  fontFamily: 'muli',
-                                                  color: Colors.black,
-                                                  fontSize: 200,
-                                                  fontWeight: FontWeight.normal
-                                              ),
-                                            );
-                                          },
-                                        ),
+                                          return general_ingredient.get_cost_money(getStringNumber(double.parse(snapshot.data.toString()) - getVoucherSale(order.voucher, order.cost)) + '.đ', width,);
+                                        },
                                       ),
                                     ),
                                   ],
@@ -606,61 +380,7 @@ class _type_one_bike_step_2State extends State<type_one_bike_step_2> {
                       Positioned(
                         top: 0,
                         left: 30,
-                        child: Container(
-                          height: 40,
-                          width: width/3*2,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(1000),
-                            gradient: LinearGradient(
-                              colors: [Colors.yellow.withAlpha(200) ,Colors.white],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              stops: [0.0, 1.0],
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.2), // màu của shadow
-                                spreadRadius: 2, // bán kính của shadow
-                                blurRadius: 7, // độ mờ của shadow
-                                offset: Offset(0, 3), // vị trí của shadow
-                              ),
-                            ],
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-                            child: Row(
-                              children: <Widget>[
-                                Container(
-                                  width: 25,
-                                  child: Icon(
-                                    Icons.monetization_on_outlined,
-                                    color: Colors.black,
-                                    size: 25,
-                                  ),
-                                ),
-
-                                Container(width: 5,),
-
-                                Padding(
-                                  padding: EdgeInsets.only(top: 7, bottom: 7),
-                                  child: Container(
-                                    width: width/3*2 - 50,
-                                    child: AutoSizeText(
-                                      'Thông tin thanh toán',
-                                      style: TextStyle(
-                                        fontFamily: 'muli',
-                                        color: Colors.black,
-                                        fontSize: 100,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
+                        child: title_gradient_container(icon: Icons.monetization_on_outlined, title: 'Thông tin thanh toán'),
                       ),
                     ],
                   ),
@@ -705,7 +425,7 @@ class _type_one_bike_step_2State extends State<type_one_bike_step_2> {
                       loading = true;
                     });
                     order.S1time = getCurrentTime();
-                    order.cost = order.cost - getVoucherSale(order.voucher, order.cost);
+                    order.cost = getCosOfBike(await getDistance(order.locationSet, order.locationGet));
                     await push_new_catch_type_one_order(order);
                     setState(() {
                       loading = false;

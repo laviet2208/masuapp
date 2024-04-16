@@ -1,13 +1,12 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:masuapp/GENERAL/Tool/Tool.dart';
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
 import 'package:masuapp/MasuShip/Data/locationData/Location.dart';
-import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_two_bike_screen/type_two_bike_gradient/next_to_step_3_button.dart';
+import 'package:masuapp/MasuShip/Data/otherData/Tool.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/general/back_button.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/general/title_gradient_container.dart';
-
 import '../type_one_bike_screen/ingredient/type_one_wait_ingredient/location_title.dart';
+import 'type_two_bike_ingredient/next_to_step_3_button.dart';
 import 'type_two_bike_step_1.dart';
 
 class type_two_bike_step_2 extends StatefulWidget {
@@ -123,18 +122,7 @@ class _type_two_bike_step_2State extends State<type_two_bike_step_2> {
                         left: 0,
                         right: 0,
                         child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.4), // màu của shadow
-                                spreadRadius: 2, // bán kính của shadow
-                                blurRadius: 7, // độ mờ của shadow
-                                offset: Offset(0, 3), // vị trí của shadow
-                              ),
-                            ],
-                          ),
+                          decoration: get_usually_decoration(),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -192,18 +180,7 @@ class _type_two_bike_step_2State extends State<type_two_bike_step_2> {
                         left: 0,
                         right: 0,
                         child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.4), // màu của shadow
-                                spreadRadius: 2, // bán kính của shadow
-                                blurRadius: 7, // độ mờ của shadow
-                                offset: Offset(0, 3), // vị trí của shadow
-                              ),
-                            ],
-                          ),
+                          decoration: get_usually_decoration(),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [

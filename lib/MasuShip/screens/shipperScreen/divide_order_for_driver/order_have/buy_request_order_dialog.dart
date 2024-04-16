@@ -60,7 +60,7 @@ class _buy_request_order_dialogState extends State<buy_request_order_dialog> {
                 alignment: Alignment.center,
                 child: Center(
                   child: Icon(
-                    Icons.check_circle,
+                    Icons.shopping_bag_outlined,
                     color: Colors.green,
                     size: 50,
                   ),
@@ -70,12 +70,12 @@ class _buy_request_order_dialogState extends State<buy_request_order_dialog> {
             Container(height: 20,),
 
             Container(
-              height: 20,
               alignment: Alignment.center,
-              child: AutoSizeText(
-                'Đơn mua hộ ' + widget.order.id,
+              child: Text(
+                'Đơn mua hộ\n' + widget.order.id,
+                textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontSize: 100,
+                    fontSize: 15,
                     color: Colors.black,
                     fontWeight: FontWeight.bold
                 ),

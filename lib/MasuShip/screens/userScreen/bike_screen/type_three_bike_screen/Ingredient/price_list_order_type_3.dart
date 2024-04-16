@@ -15,17 +15,6 @@ class price_list_order_type_3 extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(left: 0, right: 0),
       child: Container(
-        decoration: BoxDecoration(
-          // color: Colors.white,
-          // boxShadow: [
-          //   BoxShadow(
-          //     color: Colors.grey.withOpacity(0.4), // màu của shadow
-          //     spreadRadius: 2, // bán kính của shadow
-          //     blurRadius: 7, // độ mờ của shadow
-          //     offset: Offset(0, 3), // vị trí của shadow
-          //   ),
-          // ],
-        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -39,7 +28,7 @@ class price_list_order_type_3 extends StatelessWidget {
                   child: Stack(
                     children: <Widget>[
                       cost_ingredient.left_title_cost('Chi phí di chuyển(' + getDistanceOfBike(order.cost).toStringAsFixed(1) + 'Km)', Colors.red, FontWeight.bold),
-                      cost_ingredient.right_title_cost((getStringNumber(order.cost + getVoucherSale(order.voucher, order.cost)) + '.đ'), Colors.red, FontWeight.bold),
+                      cost_ingredient.right_title_cost((getStringNumber(order.cost) + '.đ'), Colors.red, FontWeight.bold),
                     ],
                   )
               ),
@@ -87,7 +76,7 @@ class price_list_order_type_3 extends StatelessWidget {
                   child: Stack(
                     children: <Widget>[
                       cost_ingredient.left_title_cost('Cần thanh toán', Colors.black, FontWeight.bold),
-                      cost_ingredient.right_title_cost(getStringNumber(order.cost + order.subFee) + '.đ' , Colors.black, FontWeight.bold),
+                      cost_ingredient.right_title_cost(getStringNumber(order.cost + order.subFee - getVoucherSale(order.voucher, order.cost)) + '.đ' , Colors.black, FontWeight.bold),
                     ],
                   )
               ),

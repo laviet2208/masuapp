@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
 import 'package:masuapp/MasuShip/screens/shipperScreen/main_page/controller/main_page_controller.dart';
 import 'package:masuapp/MasuShip/screens/shipperScreen/main_page/dash_board.dart';
+import 'package:masuapp/MasuShip/screens/shipperScreen/main_page/shipper_dashboard/shipper_dashboard_day.dart';
+import 'package:masuapp/MasuShip/screens/shipperScreen/main_page/shipper_dashboard/shipper_dashboard_month.dart';
 
 class main_page extends StatefulWidget {
   const main_page({Key? key}) : super(key: key);
@@ -38,9 +40,9 @@ class _main_pageState extends State<main_page> {
           ),
         ),
 
-        child: Column(
+        child: ListView(
           children: [
-            Container(height: 50,),
+            Container(height: 10,),
 
             Padding(
               padding: EdgeInsets.only(left: 15,right: 15),
@@ -175,7 +177,17 @@ class _main_pageState extends State<main_page> {
             Padding(
               padding: EdgeInsets.only(left: 15, right: 15),
               child: dash_board_container(),
-            )
+            ),
+
+            Container(height: 20,),
+
+            shipper_dashboard_day(),
+
+            Container(height: 20,),
+
+            shipper_dashboard_month(),
+
+            Container(height: 20,),
           ],
         ),
       ),

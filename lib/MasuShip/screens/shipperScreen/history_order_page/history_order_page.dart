@@ -9,13 +9,54 @@ class history_order_page extends StatefulWidget {
   State<history_order_page> createState() => _history_order_pageState();
 }
 
-class _history_order_pageState extends State<history_order_page> {
-  int indexTab = 1;
+class _history_order_pageState extends State<history_order_page> with SingleTickerProviderStateMixin {
+  int indexTab = 0;
+
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false, // Ẩn nút back
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: SizedBox.shrink(),
+        flexibleSpace: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            TabBar(
+              controller: _tabController,
+              labelColor: Colors.black,
+              indicatorColor: Colors.yellow,
+              onTap: (index) {
+                setState(() {
+                  indexTab = index;
+                });
+              },
+              labelStyle: TextStyle(fontFamily: 'muli', fontWeight: FontWeight.bold), // TextStyle của văn bản khi được chọn
+              padding: EdgeInsets.only(left: 5, right: 5, bottom: 5, top: 10),
+              indicator: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: Colors.yellow,
+              ),
+              tabs: [
+                Tab(text: 'Đơn đang chạy'),
+                Tab(text: 'Đã hoàn thành'),
+              ],
+            ),
+          ],
+
+        ),
+      ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -28,85 +69,7 @@ class _history_order_pageState extends State<history_order_page> {
         child: Stack(
           children: <Widget>[
             Positioned(
-              top: 50,
-              left: 10,
-              right: 10,
-              child: Container(
-                height: 50,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  color: Colors.white
-                ),
-                child: Stack(
-                  children: <Widget>[
-                    Positioned(
-                      top: 5,
-                      bottom: 5,
-                      left: 10,
-                      child: GestureDetector(
-                        child: Container(
-                          width: (width - 50)/2,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              color: indexTab == 1 ? Colors.yellow : null
-                          ),
-                          child: Center(
-                            child: Text(
-                              'Đơn đang chạy',
-                              style: TextStyle(
-                                  fontFamily: 'roboto',
-                                  color: Colors.black,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.bold
-                              ),
-                            ),
-                          ),
-                        ),
-                        onTap: () {
-                          setState(() {
-                            indexTab = 1;
-                          });
-                        },
-                      ),
-                    ),
-
-                    Positioned(
-                      top: 5,
-                      bottom: 5,
-                      right: 10,
-                      child: GestureDetector(
-                        child: Container(
-                          width: (width - 50)/2,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              color: indexTab == 2 ? Colors.yellow : null
-                          ),
-                          child: Center(
-                            child: Text(
-                              'Đơn đã hoàn thành',
-                              style: TextStyle(
-                                  fontFamily: 'roboto',
-                                  color: Colors.black,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.bold
-                              ),
-                            ),
-                          ),
-                        ),
-                        onTap: () {
-                          setState(() {
-                            indexTab = 2;
-                          });
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            Positioned(
-              top: 100,
+              top: 0,
               bottom: 0,
               left: 0,
               right: 0,

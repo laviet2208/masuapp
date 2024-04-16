@@ -20,7 +20,7 @@ class _wallet_itemState extends State<wallet_item> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    if (widget.data.type == 5 || widget.data.type == 8) {
+    if (widget.data.type == 5 || widget.data.type == 9) {
       moneyText = '- ' + getStringNumber(widget.data.money) + 'đ';
       colorText = Colors.redAccent;
     } else {
@@ -60,7 +60,7 @@ class _wallet_itemState extends State<wallet_item> {
 
               ),
               child: AutoSizeText(
-                widget.data.type == 5 ? 'Chiết khấu đơn hàng' : (widget.data.type == 6 ? 'Hoàn chiết khấu' : (widget.data.type == 7 ? 'Cộng tiền khuyến mãi' : (widget.data.type == 8 ? 'Trừ tiền đơn nhà hàng' : 'Hoàn tiền nhà hàng'))),
+                widget.data.type == 5 ? 'Chiết khấu đơn hàng' : (widget.data.type == 6 ? 'Hoàn chiết khấu' : (widget.data.type == 7 ? 'Cộng tiền khuyến mãi' : (widget.data.type == 9 ? 'Trừ tiền đơn nhà hàng' : 'Hoàn tiền nhà hàng'))),
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.black,

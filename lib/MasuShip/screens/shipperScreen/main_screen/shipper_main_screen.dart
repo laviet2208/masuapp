@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -16,7 +18,6 @@ class shipper_main_screen extends StatefulWidget {
 }
 
 class _shipper_main_screenState extends State<shipper_main_screen> {
-  int indexPage = 0;
   late final Timer _timer;
   void getData() async {
     final reference = FirebaseDatabase.instance.reference();
@@ -33,10 +34,11 @@ class _shipper_main_screenState extends State<shipper_main_screen> {
   @override
   void initState() {
     super.initState();
+    finalData.lastOrderTime = DateTime.now().add(Duration(seconds: Random().nextInt(21) + 30));
     getData();
     location_controller.getCurrentLocation();
     _timer = Timer.periodic(Duration(seconds: 1), (Timer timer) async {
-      if (finalData.shipper_account.orderHaveStatus == 0 && finalData.shipper_account.onlineStatus == 1 && DateTime.now().difference(finalData.lastOrderTime).inMilliseconds >= 40500 && DateTime.now().difference(finalData.lastOrderTime).inSeconds % 10 == 0) {
+      if (finalData.shipper_account.orderHaveStatus == 0 && finalData.shipper_account.onlineStatus == 1  && finalData.shipper_account.debt == 0 && DateTime.now().difference(finalData.lastOrderTime).inMilliseconds >= 40500 && DateTime.now().difference(finalData.lastOrderTime).inSeconds % 10 == 0) {
         print('Gọi hàm lấy đơn tự động ' + finalData.lastOrderTime.millisecond.toString());
         await order_have_dialog_controller.Get_Order_Automatic1(context);
       }
@@ -54,7 +56,7 @@ class _shipper_main_screenState extends State<shipper_main_screen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       child: Scaffold(
-        body: shipper_controller.getBodyWidget(indexPage),
+        body: shipper_controller.getBodyWidget(finalData.shipperIndexTempotary.intData),
 
         bottomNavigationBar: Container(
           color: Colors.white,
@@ -65,13 +67,13 @@ class _shipper_main_screenState extends State<shipper_main_screen> {
               color: Colors.grey,
               activeColor: Colors.black,
               tabBackgroundColor: Colors.yellow,
-              gap: 8,
+              gap: 3,
               onTabChange: (index) {
                 setState(() {
-                  indexPage = index;
+                  finalData.shipperIndexTempotary.intData = index;
                 });
               },
-
+              selectedIndex: finalData.shipperIndexTempotary.intData,
               padding: EdgeInsets.all(12),
               tabs: const [
                 GButton(

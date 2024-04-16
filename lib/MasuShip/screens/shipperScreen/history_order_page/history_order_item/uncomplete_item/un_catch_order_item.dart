@@ -23,7 +23,7 @@ class _un_catch_order_itemState extends State<un_catch_order_item> {
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.2), // màu của shadow
+              color: Colors.grey.withOpacity(0.4), // màu của shadow
               spreadRadius: 5, // bán kính của shadow
               blurRadius: 7, // độ mờ của shadow
               offset: Offset(0, 3), // vị trí của shadow
@@ -184,7 +184,7 @@ class _un_catch_order_itemState extends State<un_catch_order_item> {
                         top: 0,
                         right: 0,
                         child: Text(
-                          getStringNumber(widget.order.cost + getVoucherSale(widget.order.voucher, widget.order.cost)) + 'đ',
+                          getStringNumber(widget.order.cost) + 'đ',
                           textAlign: TextAlign.end,
                           style: TextStyle(
                               fontSize: 14,
@@ -226,7 +226,7 @@ class _un_catch_order_itemState extends State<un_catch_order_item> {
                         top: 0,
                         right: 0,
                         child: Text(
-                          getStringNumber((widget.order.cost+getVoucherSale(widget.order.voucher, widget.order.cost)) * (widget.order.costFee.discount/100)) + '.đ',
+                          getStringNumber((widget.order.cost) * (widget.order.costFee.discount/100)) + '.đ',
                           textAlign: TextAlign.end,
                           style: TextStyle(
                               fontSize: 14,
@@ -268,7 +268,7 @@ class _un_catch_order_itemState extends State<un_catch_order_item> {
                         top: 0,
                         right: 0,
                         child: Text(
-                          getStringNumber(widget.order.cost + getVoucherSale(widget.order.voucher, widget.order.cost) - ((widget.order.cost + getVoucherSale(widget.order.voucher, widget.order.cost)) * (widget.order.costFee.discount/100))) + '.đ',
+                          getStringNumber(widget.order.cost - (widget.order.cost * (widget.order.costFee.discount/100))) + '.đ',
                           textAlign: TextAlign.end,
                           style: TextStyle(
                               fontSize: 14,

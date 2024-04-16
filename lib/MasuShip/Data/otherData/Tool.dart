@@ -37,7 +37,7 @@ double getVoucherSale(Voucher voucher, double cost) {
   double money = 0;
 
   if(voucher.Money < 100) {
-    double mn = cost/(1-(voucher.Money/100))*(voucher.Money/100);
+    double mn = cost * voucher.Money/100;
     if (mn <= voucher.maxSale) {
       money = mn;
     } else {
@@ -63,19 +63,15 @@ double getCosOfBike(double distance) {
 }
 
 double getDistanceOfBike(double cost) {
-  double distance = 0;
-  double remainingCost = cost;
-
-  // Tính khoảng cách cho phần giá cước ban đầu cho 2km đầu tiên
-  double initialCost = finalData.bikeCost.departKM * finalData.bikeCost.departCost;
-  if (remainingCost >= initialCost) {
+  double distance = 0.0;
+  if (cost >= (finalData.bikeCost.departKM * finalData.bikeCost.departCost)) {
     distance += finalData.bikeCost.departKM;
-    remainingCost -= initialCost;
+    double remainingCost = cost - (finalData.bikeCost.departKM * finalData.bikeCost.departCost);
     distance += remainingCost / finalData.bikeCost.perKMcost;
+    distance = distance + finalData.bikeCost.departKM;
   } else {
-    distance = remainingCost / finalData.bikeCost.departCost;
+    distance = cost / finalData.bikeCost.departCost;
   }
-
   return distance;
 }
 

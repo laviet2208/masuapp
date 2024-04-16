@@ -39,7 +39,7 @@ class express_log_ingredient extends StatelessWidget {
               ),
             ),
 
-            order_type_one_log_line(currentStatus: order.status, lineStatus: 'B', title: 'Tài xế đã lấy hàng', time: order.S2time,),
+            order_type_one_log_line(currentStatus: order.status, lineStatus: 'B', title: 'Tài xế đã nhận đơn', time: order.S2time,),
 
             Container(
               height: 20,

@@ -4,7 +4,6 @@ import 'package:masuapp/GENERAL/utils/utils.dart';
 
 class CameraPreviewScreen extends StatefulWidget {
   final int type;
-
   CameraPreviewScreen({required this.type});
 
   @override

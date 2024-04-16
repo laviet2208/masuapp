@@ -2,6 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/Data/OrderData/foodOrder/foodOrder.dart';
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/history_page/history_food_order_page/history_food_order_item.dart';
 
 class history_food_order_page extends StatefulWidget {
   const history_food_order_page({super.key});
@@ -134,7 +135,21 @@ class _history_food_order_pageState extends State<history_food_order_page> {
 
           Container(height: 20,),
 
+          Container(
+            child: ListView.builder(
+              itemCount: chosenList.length,
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: EdgeInsets.only(top: 20),
+                  child: history_food_order_item(order: chosenList[index]),
+                );
+              },
+            ),
+          ),
 
+          Container(height: 30,),
         ],
       ),
     );

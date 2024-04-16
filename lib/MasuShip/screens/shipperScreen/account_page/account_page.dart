@@ -72,14 +72,22 @@ class _account_pageState extends State<account_page> {
             Padding(
               padding: EdgeInsets.only(left: 10, right: 10),
               child: Container(
-                  height: (screenWidth - 20)/2,
+                  height: screenWidth/2,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                        colors: [finalData.shipper_account.onlineStatus == 1 ? Colors.yellow.shade700 : Colors.black26,finalData.shipper_account.onlineStatus == 1 ? Colors.yellowAccent.withOpacity(0.5) : Colors.white],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
+                        colors: [finalData.shipper_account.onlineStatus == 1 ? Colors.yellow : Colors.black26,finalData.shipper_account.onlineStatus == 1 ? Colors.white : Colors.white],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
                         stops: [0.0, 1.0],
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.4), // màu của shadow
+                        spreadRadius: 5, // bán kính của shadow
+                        blurRadius: 7, // độ mờ của shadow
+                        offset: Offset(0, 3), // vị trí của shadow
                       ),
+                    ],
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Column(
@@ -122,7 +130,7 @@ class _account_pageState extends State<account_page> {
                         ),
                       ),
 
-                      Container(height: 40,),
+                      Container(height: 20,),
 
                       Padding(
                         padding: EdgeInsets.only(left: 15),
@@ -148,7 +156,7 @@ class _account_pageState extends State<account_page> {
                                   child: Container(
                                     width: screenWidth/3 * 2,
                                     child: AutoSizeText(
-                                      (finalData.shipper_account.phone[0] == '0') ? finalData.shipper_account.phone : ('0' + finalData.shipper_account.phone),
+                                      '0' + finalData.shipper_account.phone,
                                       style: TextStyle(
                                         fontSize: 160,
                                         fontWeight: FontWeight.normal,
@@ -163,7 +171,7 @@ class _account_pageState extends State<account_page> {
                         ),
                       ),
 
-                      Container(height: 10,),
+                      Container(height: 7,),
 
                       Padding(
                         padding: EdgeInsets.only(left: 15),
@@ -186,7 +194,48 @@ class _account_pageState extends State<account_page> {
                                   child: Container(
                                     width: screenWidth/3 * 2,
                                     child: AutoSizeText(
-                                      getStringNumber(finalData.shipper_account.money) + 'đ',
+                                      'Số dư ví: ' + getStringNumber(finalData.shipper_account.money) + 'đ',
+                                      style: TextStyle(
+                                        fontSize: 160,
+                                        fontWeight: FontWeight.normal,
+                                        fontFamily: 'muli',
+                                        color: finalData.shipper_account.onlineStatus == 1 ? Colors.black : Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            )
+                        ),
+                      ),
+
+                      Container(height: 7,),
+
+                      Padding(
+                        padding: EdgeInsets.only(left: 15),
+                        child: Container(
+                            height: 25,
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 25,
+                                  height: 25,
+                                  child: Icon(
+                                    Icons.money_outlined,
+                                    color: finalData.shipper_account.onlineStatus == 1 ? Colors.black : Colors.white,
+                                  ),
+                                ),
+
+                                Container(
+                                  width: 10,
+                                ),
+
+                                Padding(
+                                  padding: EdgeInsets.only(top: 5,bottom: 5),
+                                  child: Container(
+                                    width: screenWidth/3 * 2,
+                                    child: AutoSizeText(
+                                      'Ví nợ: ' + getStringNumber(finalData.shipper_account.debt) + '.đ',
                                       style: TextStyle(
                                         fontSize: 160,
                                         fontWeight: FontWeight.normal,

@@ -1,8 +1,6 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/Data/OrderData/catchOrder.dart';
-import 'package:masuapp/MasuShip/screens/shipperScreen/history_order_page/history_order_item/view_order_detail/un_order_detail/controller/catch_type_2_controller/un_complete_catch_type_2_controller.dart';
-import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_one_bike_screen/ingredient/general/general_ingredient.dart';
+import 'package:masuapp/MasuShip/Data/otherData/Tool.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_one_bike_screen/ingredient/type_one_wait_ingredient/location_title.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -40,22 +38,10 @@ class location_info_order_type_2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
     return Padding(
       padding: EdgeInsets.only(left: 10, right: 10),
       child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.2), // màu của shadow
-              spreadRadius: 2, // bán kính của shadow
-              blurRadius: 7, // độ mờ của shadow
-              offset: Offset(0, 3), // vị trí của shadow
-            ),
-          ],
-        ),
+        decoration: get_usually_decoration(),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -100,7 +86,7 @@ class location_info_order_type_2 extends StatelessWidget {
 
             Padding(
               padding: EdgeInsets.only(left: 50, right: 10),
-              child: get_location_text(order.locationSet.mainText + ',' + order.locationSet.secondaryText),
+              child: get_location_text(order.locationSet.mainText + '-' + order.locationSet.secondaryText),
             ),
 
             Container(height: 8,),

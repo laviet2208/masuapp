@@ -1,11 +1,9 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
 import 'package:masuapp/MasuShip/Data/otherData/Tool.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_one_bike_screen/ingredient/type_one_wait_ingredient/back_button_in_wait.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_three_bike_screen/Ingredient/item_order_in_wait.dart';
-
 import '../../../../Data/OrderData/catch_order_type_3_data/motherOrder.dart';
 import '../../../../Data/voucherData/Voucher.dart';
 import '../../main_screen/user_main_screen.dart';
@@ -42,7 +40,6 @@ class _type_three_bike_waitState extends State<type_three_bike_wait> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
     return WillPopScope(
       child: Scaffold(
         body: Container(
@@ -64,7 +61,7 @@ class _type_three_bike_waitState extends State<type_three_bike_wait> {
                     return Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        item_order_in_wait(id: order.orderList[index], callback: () {setState(() {});},),
+                        item_order_in_wait(id: order.orderList[index], callback: () {setState(() {});}, order: order,),
 
                         Container(height: 20,)
                       ],

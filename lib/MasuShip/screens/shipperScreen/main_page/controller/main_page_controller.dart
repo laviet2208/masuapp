@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
@@ -33,7 +35,7 @@ class main_page_controller {
               TextButton(
                 onPressed: () async {
                   await main_page_controller.switchOperatingStatus(1);
-                  finalData.lastOrderTime = DateTime.now();
+                  finalData.lastOrderTime = DateTime.now().add(Duration(seconds: Random().nextInt(21) + 30));
                   Navigator.of(context).pop();
                   setStateEvent();
                 },

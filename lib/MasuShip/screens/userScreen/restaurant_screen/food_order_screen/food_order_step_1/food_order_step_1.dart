@@ -6,9 +6,11 @@ import 'package:masuapp/MasuShip/Data/otherData/Tool.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/express_screen/ingredient/general_ingredient.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/express_screen/ingredient/location_title_custom_express.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/general/title_gradient_container.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/restaurant_screen/food_order_screen/food_order_controller.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/restaurant_screen/food_order_screen/food_order_step_1/item_food_view.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/restaurant_screen/food_order_screen/ingredient/start_food_order_button.dart';
 import '../../../general/search_location_dialog.dart';
+import '../../../general/voucher_select.dart';
 
 class food_order_step_1 extends StatefulWidget {
   final Widget beforeWidget;
@@ -23,30 +25,9 @@ class _food_order_step_1State extends State<food_order_step_1> {
   TextEditingController noteController = TextEditingController();
   bool loading = false;
 
-  Future<double> getCost() async {
-    double cost = 0;
-    double distance = await getDistance(widget.order.locationSet, widget.order.locationGet);
-    if (distance >= finalData.bikeCost.departKM) {
-      cost += finalData.bikeCost.departKM.toInt() * finalData.bikeCost.departCost.toInt(); // Giá cước cho 2km đầu tiên (10.000 VND/km * 2km)
-      distance -= finalData.bikeCost.departKM; // Trừ đi 2km đã tính giá cước
-      cost = cost + ((distance - finalData.bikeCost.departKM) * finalData.bikeCost.perKMcost);
-    } else {
-      cost += (distance * finalData.bikeCost.departCost); // Giá cước cho khoảng cách dưới 2km
-    }
-    widget.order.cost = cost;
-    return cost;
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
     return WillPopScope(
       child: Scaffold(
         body: Container(
@@ -288,7 +269,7 @@ class _food_order_step_1State extends State<food_order_step_1> {
               Padding(
                 padding: EdgeInsets.only(left: 10, right: 10),
                 child: Container(
-                  height: 340,
+                  height: 370,
                   child: Stack(
                     children: <Widget>[
                       Positioned(
@@ -340,7 +321,7 @@ class _food_order_step_1State extends State<food_order_step_1> {
                                         height: 30,
                                         width: (width - 40 - 20)/2,
                                         child: FutureBuilder(
-                                          future: getDistance(widget.order.locationSet, widget.order.locationGet),
+                                          future: food_order_controller.getMaxDistance(widget.order),
                                           builder: (context, snapshot) {
                                             if (snapshot.connectionState == ConnectionState.waiting) {
                                               return general_ingredient.get_cost_title('Chi phí ship(...km)', Colors.black, FontWeight.bold, width);
@@ -367,7 +348,7 @@ class _food_order_step_1State extends State<food_order_step_1> {
                                         width: (width - 40 - 20)/2,
                                         alignment: Alignment.centerRight,
                                         child: FutureBuilder(
-                                          future: getCost(),
+                                          future: food_order_controller.getMaxCost(widget.order),
                                           builder: (context, snapshot) {
                                             if (snapshot.connectionState == ConnectionState.waiting) {
                                               return general_ingredient.get_cost_content('Đang tính toán', Colors.black, FontWeight.bold, width);
@@ -461,6 +442,40 @@ class _food_order_step_1State extends State<food_order_step_1> {
 
                               Container(height: 10,),
 
+                              Container(
+                                height: 30,
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 10,
+                                    ),
+
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 7, bottom: 7),
+                                      child: general_ingredient.get_cost_title('Mã giảm giá', Colors.black, FontWeight.bold, width),
+                                    ),
+
+                                    GestureDetector(
+                                      child: Padding(
+                                        padding: EdgeInsets.only(top: 7, bottom: 7),
+                                        child: general_ingredient.get_cost_content(widget.order.voucher.id == '' ? 'Chọn mã giảm giá' : ('-' + getStringNumber(getVoucherSale(widget.order.voucher, widget.order.cost)) + '.đ'), Colors.red, FontWeight.normal, width),
+                                      ),
+
+                                      onTap: () {
+                                        showModalBottomSheet(
+                                          context: context,
+                                          builder: (context) {
+                                            return voucher_select(voucher: widget.order.voucher, ontap: () {setState(() {});}, cost: widget.order.cost);
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                              Container(height: 10,),
+
                               Container(height: 10,),
 
                               Padding(
@@ -495,7 +510,7 @@ class _food_order_step_1State extends State<food_order_step_1> {
                                         width: (width - 40 - 20)/2,
                                         alignment: Alignment.centerRight,
                                         child: FutureBuilder(
-                                          future: getCost(),
+                                          future: food_order_controller.getMaxCost(widget.order),
                                           builder: (context, snapshot) {
                                             if (snapshot.connectionState == ConnectionState.waiting) {
                                               return general_ingredient.get_cost_content('Đang tính toán', Colors.black, FontWeight.bold, width);
@@ -509,7 +524,7 @@ class _food_order_step_1State extends State<food_order_step_1> {
                                               return general_ingredient.get_cost_content('Lỗi dữ liệu', Colors.black, FontWeight.bold, width);
                                             }
 
-                                            return general_ingredient.get_cost_content(getStringNumber(double.parse(snapshot.data.toString()) + get_total_cart_money() + widget.order.pointFee) + '.đ', Colors.black, FontWeight.bold, width);
+                                            return general_ingredient.get_cost_content(getStringNumber(double.parse(snapshot.data.toString()) + get_total_cart_money() + widget.order.pointFee - getVoucherSale(widget.order.voucher, widget.order.cost)) + '.đ', Colors.black, FontWeight.bold, width);
                                           },
                                         ),
                                       ),

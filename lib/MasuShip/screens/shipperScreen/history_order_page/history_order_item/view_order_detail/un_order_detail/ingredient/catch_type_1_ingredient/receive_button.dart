@@ -40,7 +40,7 @@ class _receive_buttonState extends State<receive_button> {
           ),
           alignment: Alignment.center,
           child: Text(
-            widget.order.status == 'B' ? 'Đã đón được khách' : 'Khách đã tới nơi',
+            widget.order.status == 'B' ? 'Đã đón được khách' : 'Đã đưa khách tới nơi',
             style: TextStyle(
                 fontFamily: 'muli',
                 color: Colors.black,

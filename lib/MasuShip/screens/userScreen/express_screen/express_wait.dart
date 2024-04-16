@@ -96,7 +96,7 @@ class _express_waitState extends State<express_wait> {
               Padding(
                 padding: EdgeInsets.only(left: 10, right: 10),
                 child: Container(
-                  height: 230,
+                  height: 240,
                   child: Stack(
                     children: <Widget>[
                       Positioned(
@@ -448,28 +448,7 @@ class _express_waitState extends State<express_wait> {
 
                                     Padding(
                                       padding: EdgeInsets.only(top: 7, bottom: 7),
-                                      child: Container(
-                                        height: 30,
-                                        width: (width - 40 - 20)/2,
-                                        child: FutureBuilder(
-                                          future: getDistance(order.locationSet, order.locationGet),
-                                          builder: (context, snapshot) {
-                                            if (snapshot.connectionState == ConnectionState.waiting) {
-                                              return general_ingredient.get_cost_title('Chi phí di chuyển(...km)', Colors.black, FontWeight.bold, width);
-                                            }
-
-                                            if (snapshot.hasError) {
-                                              return general_ingredient.get_cost_title('Lỗi khoảng cách', Colors.black, FontWeight.bold, width);
-                                            }
-
-                                            if (!snapshot.hasData) {
-                                              return general_ingredient.get_cost_title('Lỗi khoảng cách', Colors.black, FontWeight.bold, width);
-                                            }
-
-                                            return general_ingredient.get_cost_title('Chi phí di chuyển(' + snapshot.data!.toStringAsFixed(1) + ' Km)', Colors.black, FontWeight.bold, width);
-                                          },
-                                        ),
-                                      ),
+                                      child: general_ingredient.get_cost_title('Chi phí di chuyển(' + getDistanceOfBike(order.cost).toStringAsFixed(1) + ' Km)', Colors.black, FontWeight.bold, width),
                                     ),
 
                                     Padding(
@@ -617,7 +596,8 @@ class _express_waitState extends State<express_wait> {
       ),
       onWillPop: () async {
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => user_main_screen(),),);
-        return true;      },
+        return true;
+        },
     );
   }
 }

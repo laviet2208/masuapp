@@ -79,7 +79,7 @@ class _un_catch_order_type_2_itemState extends State<un_catch_order_type_2_item>
               child: Container(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  widget.order.locationSet.mainText + ',' + widget.order.locationSet.secondaryText,
+                  widget.order.locationSet.mainText + '-' + widget.order.locationSet.secondaryText,
                   style: TextStyle(
                       fontSize: 14,
                       color: Colors.black,
@@ -91,7 +91,7 @@ class _un_catch_order_type_2_itemState extends State<un_catch_order_type_2_item>
             ),
 
             Container(
-              height: 8,
+              height: 15,
             ),
 
             Container(
@@ -125,6 +125,24 @@ class _un_catch_order_type_2_itemState extends State<un_catch_order_type_2_item>
 
                   Container(width: 10,),
                 ],
+              ),
+            ),
+
+            Container(height: 8,),
+
+            Padding(
+              padding: EdgeInsets.only(left: 15, right: 15),
+              child: Container(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Điểm đến sẽ hiển thị sau khi bạn đưa khách tới nơi',
+                  style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.black,
+                      fontFamily: 'arial',
+                      fontWeight: FontWeight.bold
+                  ),
+                ),
               ),
             ),
 

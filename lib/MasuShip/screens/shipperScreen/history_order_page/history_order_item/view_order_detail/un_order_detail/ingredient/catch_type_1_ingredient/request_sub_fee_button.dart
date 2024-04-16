@@ -20,7 +20,7 @@ class _request_sub_fee_buttonState extends State<request_sub_fee_button> {
       child: Padding(
         padding: EdgeInsets.only(left: 10, right: 10),
         child: Container(
-          height: (widget.order.subFee == 0 && finalData.weathercost.available == 1) ? 45 : 0,
+          height: (widget.order.subFee == 0 && finalData.weathercost.available == 1 && (widget.order.status == 'A' || widget.order.status == 'B' || widget.order.status == 'C')) ? 45 : 0,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
             border: Border.all(color: Colors.black),

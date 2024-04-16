@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
@@ -21,11 +23,11 @@ class receive_button_controller {
     view_catch_order_controller.show_C_dialog(context, MediaQuery.of(context).size.width - 30);
     await change_order_status('D', order.id);
     await change_order_time('S4time', order.id);
-    finalData.lastOrderTime = DateTime.now().add(Duration(seconds: 50));
+    finalData.lastOrderTime = DateTime.now().add(Duration(seconds: Random().nextInt(21) + 30));
     if (order.voucher.id != '') {
       finalData.shipper_account.money = finalData.shipper_account.money + getVoucherSale(order.voucher, order.cost);
       await change_shipper_money();
-      historyTransactionData his = historyTransactionData(id: generateID(15), senderId: '', receiverId: finalData.shipper_account.id, transactionTime: getCurrentTime(), type: 7, content: order.id, money: getVoucherSale(order.voucher, order.cost), area: order.owner.area);
+      historyTransactionData his = historyTransactionData(id: generateID(30), senderId: '', receiverId: finalData.shipper_account.id, transactionTime: getCurrentTime(), type: 7, content: order.id, money: getVoucherSale(order.voucher, order.cost), area: order.owner.area);
       await order_have_dialog_controller.push_history_data(his);
     }
     finalData.shipper_account.orderHaveStatus = 0;

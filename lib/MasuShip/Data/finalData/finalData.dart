@@ -9,6 +9,7 @@ import '../accountData/userAccount.dart';
 import '../costData/restaurantCost.dart';
 import '../costData/weatherCost.dart';
 import '../locationData/Location.dart';
+import '../otherData/Temporary.dart';
 import '../otherData/Time.dart';
 
 class finalData {
@@ -16,7 +17,7 @@ class finalData {
       location: Location(placeId: '', description: '', longitude: 0, latitude: 0, mainText: '', secondaryText: ''),);
 
   static shipperAccount shipper_account = shipperAccount(id: '', createTime: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0), lockStatus: 0, name: '', area: '', phone: '',
-      location: Location(placeId: '', description: '', longitude: 0, latitude: 0, mainText: '', secondaryText: ''), onlineStatus: 0, money: 0, license: '', orderHaveStatus: 0);
+      location: Location(placeId: '', description: '', longitude: 0, latitude: 0, mainText: '', secondaryText: ''), onlineStatus: 0, money: 0, license: '', orderHaveStatus: 0, debt: 0);
 
   static UserAccount user_account = UserAccount(id: '', createTime: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0), lockStatus: 0, name: '', area: '', phone: '',
     location: Location(placeId: '', description: '', longitude: 0, latitude: 0, mainText: '', secondaryText: ''),);
@@ -34,4 +35,6 @@ class finalData {
   static restaurantCost restaurantcost = restaurantCost(discount: 0);
 
   static List<cartProduct> cartList = [];
+
+  static Temporary shipperIndexTempotary = Temporary(stringData: '', intData: 0, doubleData: 0);
 }

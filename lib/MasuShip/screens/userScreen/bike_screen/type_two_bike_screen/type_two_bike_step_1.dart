@@ -1,7 +1,5 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:masuapp/GENERAL/utils/utils.dart';
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_one_bike_screen/ingredient/type_one_wait_ingredient/location_title.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_two_bike_screen/type_two_bike_step_2.dart';
@@ -9,6 +7,7 @@ import 'package:masuapp/MasuShip/screens/userScreen/general/future_location_name
 import 'package:masuapp/MasuShip/screens/userScreen/general/title_gradient_container.dart';
 import 'dart:convert';
 import '../../../../Data/locationData/Location.dart';
+import '../../../../Data/otherData/utils.dart';
 import '../../general/search_location_dialog.dart';
 import '../../main_screen/user_main_screen.dart';
 
@@ -295,8 +294,9 @@ class _type_two_bike_step_1State extends State<type_two_bike_step_1> {
                       ),
                     ),
                   ),
-                  onTap: () {
+                  onTap: () async {
                     if (start_location.longitude != 0 && start_location.latitude != 0) {
+                      start_location.mainText = await fetchLocationName(start_location.latitude, start_location.longitude);
                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => type_two_bike_step_2(start_location: start_location,),),);
                     } else {
                       toastMessage('Cần trọn điểm đón');

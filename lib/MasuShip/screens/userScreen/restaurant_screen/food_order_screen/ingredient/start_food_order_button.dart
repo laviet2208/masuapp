@@ -1,7 +1,9 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/Data/OrderData/foodOrder/foodOrder.dart';
+import 'package:masuapp/MasuShip/Data/accountData/shopData/shopAccount.dart';
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
+import 'package:masuapp/MasuShip/Data/locationData/Location.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/restaurant_screen/food_order_screen/food_order_wait.dart';
 
 import '../../../../../Data/otherData/Tool.dart';
@@ -63,6 +65,7 @@ class _start_food_order_buttonState extends State<start_food_order_button> {
           loading = true;
         });
         widget.order.timeList[0] = getCurrentTime();
+
         await push_food_order_data(widget.order);
         setState(() {
           loading = false;

@@ -2,7 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/Data/OrderData/requestBuyOrderData/requestBuyOrder.dart';
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
-import 'package:masuapp/MasuShip/screens/shipperScreen/history_order_page/history_order_item/complete_item/complete_catch_order_item.dart';
+import 'package:masuapp/MasuShip/screens/shipperScreen/history_order_page/history_order_item/complete_item/complete_catch_order_item/complete_catch_order_people_item.dart';
 
 import '../../../../../Data/OrderData/catchOrder.dart';
 import '../../history_order_item/complete_item/complete_buy_request_order_item.dart';
@@ -24,16 +24,32 @@ class _complete_buy_request_order_pageState extends State<complete_buy_request_o
       complete_buy_request_order_list.clear();
       final dynamic orders = event.snapshot.value;
       orders.forEach((key, value) {
-        print(value['status'].toString());
-        if (value['status'].toString() == 'D' || value['status'].toString() != 'E' || value['status'].toString() != 'E1' || value['status'].toString() != 'E2') {
-          if (value['productList'] != null) {
+        if (value['status'].toString() != 'A' || value['status'].toString() != 'B' || value['status'].toString() != 'C') {
+          if (value['buyLocation'] != null) {
             complete_buy_request_order_list.add(requestBuyOrder.fromJson(value));
+            setState(() {
+              sortbypushtime(complete_buy_request_order_list);
+            });
           }
         }
       });
-      setState(() {
+    });
+  }
 
-      });
+  void sortbypushtime(List<requestBuyOrder> chosenList) {
+    chosenList.sort((a, b) {
+      // Sắp xếp theo thời gian tạo giảm dần (mới nhất lên đầu)
+      return b.S2time.year.compareTo(a.S2time.year) != 0
+          ? b.S2time.year.compareTo(a.S2time.year)
+          : (b.S2time.month.compareTo(a.S2time.month) != 0
+          ? b.S2time.month.compareTo(a.S2time.month)
+          : (b.S2time.day.compareTo(a.S2time.day) != 0
+          ? b.S2time.day.compareTo(a.S2time.day)
+          : (b.S2time.hour.compareTo(a.S2time.hour) != 0
+          ? b.S2time.hour.compareTo(a.S2time.hour)
+          : (b.S2time.minute.compareTo(a.S2time.minute) != 0
+          ? b.S2time.minute.compareTo(a.S2time.minute)
+          : b.S2time.second.compareTo(a.S2time.second)))));
     });
   }
 
@@ -47,11 +63,19 @@ class _complete_buy_request_order_pageState extends State<complete_buy_request_o
   @override
   Widget build(BuildContext context) {
     return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Colors.yellow, Colors.white],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          stops: [0.0, 1.0],
+        ),
+      ),
       child: ListView.builder(
         itemCount: complete_buy_request_order_list.length,
         itemBuilder: (context, index) {
           return Padding(
-            padding: EdgeInsets.only(bottom: 10),
+            padding: EdgeInsets.only(top: 20, bottom: 20),
             child: complete_buy_request_order_item(order: complete_buy_request_order_list[index]),
           );
         },

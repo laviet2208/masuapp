@@ -314,7 +314,8 @@ class _change_account_shipper_infoState extends State<change_account_shipper_inf
           ),
         ),
         onWillPop: () async {
-          return false;
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => shipper_main_screen(),),);
+          return true;
         }
     );
   }

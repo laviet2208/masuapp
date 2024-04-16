@@ -1,6 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:masuapp/MasuShip/Data/OrderData/catchOrder.dart';
 import 'package:masuapp/MasuShip/Data/OrderData/requestBuyOrderData/requestBuyOrder.dart';
 
 import '../../../../../Data/otherData/Tool.dart';
@@ -103,24 +102,6 @@ class _un_request_buy_order_itemState extends State<un_request_buy_order_item> {
               ),
             ),
 
-            Container(height: 8,),
-
-            Padding(
-              padding: EdgeInsets.only(left: 15, right: 15),
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  widget.order.locationSet.mainText + ',' + widget.order.locationSet.secondaryText,
-                  style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.black,
-                      fontFamily: 'arial',
-                      fontWeight: FontWeight.bold
-                  ),
-                ),
-              ),
-            ),
-
             Container(
               height: 8,
             ),
@@ -177,6 +158,44 @@ class _un_request_buy_order_itemState extends State<un_request_buy_order_item> {
               ),
             ),
 
+            Container(
+              height: 8,
+            ),
+
+            Container(
+              height: 25,
+              child: Row(
+                children: [
+                  Container(width: 15,),
+
+                  Icon(
+                    Icons.add_box_outlined,
+                    size: 25,
+                    color: Colors.green,
+                  ),
+
+                  Container(width: 10,),
+
+                  Padding(
+                    padding: EdgeInsets.only(top: 4, bottom: 4),
+                    child: Container(
+                      width: width/2,
+                      child: AutoSizeText(
+                        'Đơn mua hộ',
+                        style: TextStyle(
+                            fontSize: 100,
+                            color: Colors.black,
+                            fontFamily: 'arial'
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  Container(width: 10,),
+                ],
+              ),
+            ),
+
             Container(height: 15,),
 
             Padding(
@@ -216,91 +235,7 @@ class _un_request_buy_order_itemState extends State<un_request_buy_order_item> {
                         top: 0,
                         right: 0,
                         child: Text(
-                          getStringNumber(widget.order.cost + getVoucherSale(widget.order.voucher, widget.order.cost)) + 'đ',
-                          textAlign: TextAlign.end,
-                          style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.redAccent,
-                              fontFamily: 'arial',
-                              fontWeight: FontWeight.bold
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-              ),
-            ),
-
-            Container(height: 15,),
-
-            Padding(
-              padding: EdgeInsets.only(left: 15, right: 15),
-              child: Container(
-                  alignment: Alignment.centerLeft,
-                  height: 15,
-                  child: Stack(
-                    children: <Widget>[
-                      Positioned(
-                        top: 0,
-                        left: 0,
-                        child: Text(
-                          'Chi phí mua hộ',
-                          style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey,
-                              fontFamily: 'arial',
-                              fontWeight: FontWeight.normal
-                          ),
-                        ),
-                      ),
-
-                      Positioned(
-                        top: 0,
-                        right: 0,
-                        child: Text(
-                          getStringNumber(totalmoney) + 'đ',
-                          textAlign: TextAlign.end,
-                          style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.redAccent,
-                              fontFamily: 'arial',
-                              fontWeight: FontWeight.bold
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-              ),
-            ),
-
-            Container(height: 15,),
-
-            Padding(
-              padding: EdgeInsets.only(left: 15, right: 15),
-              child: Container(
-                  alignment: Alignment.centerLeft,
-                  height: 15,
-                  child: Stack(
-                    children: <Widget>[
-                      Positioned(
-                        top: 0,
-                        left: 0,
-                        child: Text(
-                          'Chiết khấu',
-                          style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey,
-                              fontFamily: 'arial',
-                              fontWeight: FontWeight.normal
-                          ),
-                        ),
-                      ),
-
-                      Positioned(
-                        top: 0,
-                        right: 0,
-                        child: Text(
-                          getStringNumber((widget.order.cost+getVoucherSale(widget.order.voucher, widget.order.cost)) * (widget.order.costFee.discount/100)) + '.đ',
+                          getStringNumber(widget.order.cost) + '.đ',
                           textAlign: TextAlign.end,
                           style: TextStyle(
                               fontSize: 14,
@@ -342,7 +277,7 @@ class _un_request_buy_order_itemState extends State<un_request_buy_order_item> {
                         top: 0,
                         right: 0,
                         child: Text(
-                          getStringNumber(widget.order.cost + getVoucherSale(widget.order.voucher, widget.order.cost) - ((widget.order.cost + getVoucherSale(widget.order.voucher, widget.order.cost)) * (widget.order.costFee.discount/100))) + '.đ',
+                          getStringNumber(widget.order.cost + widget.order.subFee + (10000 * ((widget.order.productList.length/3).toInt()).toDouble()) - ((widget.order.cost + getVoucherSale(widget.order.voucher, widget.order.cost)) * (widget.order.costFee.discount/100))) + '.đ',
                           textAlign: TextAlign.end,
                           style: TextStyle(
                               fontSize: 14,

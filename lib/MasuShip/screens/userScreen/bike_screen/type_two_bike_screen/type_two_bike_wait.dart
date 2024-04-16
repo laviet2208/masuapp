@@ -1,15 +1,19 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
 import 'package:masuapp/MasuShip/Data/otherData/Tool.dart';
-import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_one_bike_screen/controller/type_one_wait_controller.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_two_bike_screen/type_two_bike_ingredient/cancel_catch_type_2_button.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/express_screen/ingredient/general_ingredient.dart';
+import '../../../../Data/OrderData/catchOrder.dart';
+import '../../../../Data/locationData/Location.dart';
+import '../../../../Data/otherData/Time.dart';
+import '../../../../Data/voucherData/Voucher.dart';
 import '../../general/title_gradient_container.dart';
 import '../../main_screen/user_main_screen.dart';
 import '../type_one_bike_screen/ingredient/type_one_wait_ingredient/back_button_in_wait.dart';
-import '../type_one_bike_screen/ingredient/type_one_wait_ingredient/cancel_order_button.dart';
-import '../type_one_bike_screen/ingredient/type_one_wait_ingredient/location_future_builder.dart';
 import '../type_one_bike_screen/ingredient/type_one_wait_ingredient/location_title.dart';
 import '../type_one_bike_screen/ingredient/type_one_wait_ingredient/order_type_one_log_ingredient/order_log_type_one_ingredient.dart';
-import '../type_one_bike_screen/ingredient/type_one_wait_ingredient/price_list_type_1_wait_ingredient.dart';
-import 'type_two_bike_gradient/price_list_type_2_wait_ingredient.dart';
+import 'type_two_bike_ingredient/price_list_type_2_wait_ingredient.dart';
 
 class type_two_bike_wait extends StatefulWidget {
   final String orderId;
@@ -20,8 +24,44 @@ class type_two_bike_wait extends StatefulWidget {
 }
 
 class _type_two_bike_waitState extends State<type_two_bike_wait> {
+  CatchOrder order = CatchOrder(
+    id: generateID(25),
+    locationSet: Location(placeId: '', description: '', longitude: 0, latitude: 0, mainText: '', secondaryText: ''),
+    locationGet: Location(placeId: '', description: '', longitude: 0, latitude: 0, mainText: '', secondaryText: ''),
+    cost: 0,
+    owner: finalData.user_account,
+    shipper: finalData.shipper_account,
+    status: 'A',
+    voucher: Voucher(id: '', Money: 0, mincost: 0, startTime: getCurrentTime(), endTime: getCurrentTime(), useCount: 0, maxCount: 0, eventName: '', LocationId: '', type: 1, Otype: '', perCustom: 0, CustomList: [], maxSale: 0, area: ''),
+    S1time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
+    S2time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
+    S3time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
+    S4time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
+    costFee: finalData.bikeCost,
+    subFee: 0,
+  );
+
+  void get_catch_type_2_data() {
+    final reference = FirebaseDatabase.instance.reference();
+    reference.child("Order").child(widget.orderId).onValue.listen((event) {
+      final dynamic orders = event.snapshot.value;
+      order = CatchOrder.fromJson(orders);
+      setState(() {
+
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    get_catch_type_2_data();
+  }
+
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     return WillPopScope(
       child: Scaffold(
         body: Container(
@@ -44,6 +84,7 @@ class _type_two_bike_waitState extends State<type_two_bike_wait> {
                         top: 20,
                         left: 0,
                         right: 0,
+                        bottom: 0,
                         child: Container(
                           decoration: get_usually_decoration(),
                           child: Column(
@@ -56,7 +97,7 @@ class _type_two_bike_waitState extends State<type_two_bike_wait> {
                               Padding(
                                 padding: EdgeInsets.only(left: 50, right: 10),
                                 child: Container(
-                                  child: location_future_builder(futureFunc: type_one_wait_controller.get_un_complete_order_data(widget.orderId), type: 'start',),
+                                  child: general_ingredient.get_location_text(order.locationSet.mainText + ',' + order.locationSet.secondaryText, Colors.black),
                                 ),
                               ),
 
@@ -88,6 +129,7 @@ class _type_two_bike_waitState extends State<type_two_bike_wait> {
                         top: 20,
                         left: 0,
                         right: 0,
+                        bottom: 0,
                         child: Container(
                           decoration: get_usually_decoration(),
                           child: Column(
@@ -100,7 +142,7 @@ class _type_two_bike_waitState extends State<type_two_bike_wait> {
                               Padding(
                                 padding: EdgeInsets.only(left: 50, right: 10),
                                 child: Container(
-                                  child: location_future_builder(futureFunc: type_one_wait_controller.get_un_complete_order_data(widget.orderId), type: 'end',),
+                                  child: general_ingredient.get_location_text(order.locationGet.longitude == 0 ? 'Điểm đến sẽ hiển thị khi bạn đến nơi' : (order.locationGet.mainText + ',' + order.locationGet.secondaryText), Colors.black),
                                 ),
                               ),
 
@@ -132,7 +174,8 @@ class _type_two_bike_waitState extends State<type_two_bike_wait> {
                         top: 20,
                         left: 0,
                         right: 0,
-                        child: order_log_type_one_ingredient(id: widget.orderId, beforeWidget: user_main_screen(),),
+                        bottom: 0,
+                        child: order_log_type_one_ingredient(order: order,),
                       ),
 
                       Positioned(
@@ -145,17 +188,20 @@ class _type_two_bike_waitState extends State<type_two_bike_wait> {
                 ),
               ),
 
+              Container(height: 20,),
+
               Padding(
                 padding: EdgeInsets.only(left: 10, right: 10),
                 child: Container(
-                  height: 250,
+                  height: 200,
                   child: Stack(
                     children: <Widget>[
                       Positioned(
                         top: 20,
                         left: 0,
                         right: 0,
-                        child: price_list_type_2_wait_ingredient(id: widget.orderId),
+                        bottom: 0,
+                        child: price_list_type_2_wait_ingredient(order: order),
                       ),
 
                       Positioned(
@@ -168,7 +214,9 @@ class _type_two_bike_waitState extends State<type_two_bike_wait> {
                 ),
               ),
 
-              cancel_order_button(id: widget.orderId),
+              Container(height: 20,),
+
+              cancel_catch_type_2_button(order: order),
 
               Container(height: 20,),
             ],

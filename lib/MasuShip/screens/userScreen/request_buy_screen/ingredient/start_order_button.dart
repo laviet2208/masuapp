@@ -56,9 +56,8 @@ class _start_order_buttonState extends State<start_order_button> {
           setState(() {
             loading = true;
           });
-          double distance = await getDistance(widget.order.buyLocation[0], widget.order.locationGet);
-          double cost = getCosOfBike(distance);
-          widget.order.cost = cost - getVoucherSale(widget.order.voucher, cost);
+          widget.order.locationGet.mainText = await fetchLocationName(widget.order.locationGet);
+          widget.order.cost = await start_order_request_buy_button_controller.getMaxCost(widget.order.buyLocation, widget.order.locationGet);
           widget.order.S1time = getCurrentTime();
           await start_order_request_buy_button_controller.push_buy_request_order_data(widget.order);
           setState(() {

@@ -94,24 +94,7 @@ class _item_market_locationState extends State<item_market_location> {
 
           Padding(
             padding: EdgeInsets.only(left: 50, right: 10),
-            child: FutureBuilder(
-              future: fetchLocationName(widget.list[widget.index]),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return general_ingredient.get_location_text('Đang tải vị trí ...');
-                }
-
-                if (snapshot.hasError) {
-                  return general_ingredient.get_location_text('Lỗi dữ liệu vị trí, vui lòng thử lại');
-                }
-
-                if (!snapshot.hasData) {
-                  return general_ingredient.get_location_text('Lỗi dữ liệu vị trí, vui lòng thử lại');
-                }
-
-                return general_ingredient.get_location_text(snapshot.data!.toString());
-              },
-            ),
+            child: general_ingredient.get_location_text(widget.list[widget.index].mainText + ', ' + widget.list[widget.index].secondaryText),
           ),
 
           Container(height: 10,),

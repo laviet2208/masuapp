@@ -8,6 +8,7 @@ class shipperAccount extends Account {
   int onlineStatus; //Trạng thái check-in,chech-out
   int orderHaveStatus; //0: chưa có đơn,1: đang có đơn
   double money;
+  double debt;
   String license;
 
   shipperAccount({
@@ -22,6 +23,7 @@ class shipperAccount extends Account {
     required this.money,
     required this.license,
     required this.orderHaveStatus,
+    required this.debt,
   }) : super(
     id: id,
     createTime: createTime,
@@ -38,6 +40,7 @@ class shipperAccount extends Account {
     superJson['onlineStatus'] = onlineStatus;
     superJson['orderHaveStatus'] = orderHaveStatus;
     superJson['money'] = money;
+    superJson['debt'] = debt;
     return superJson;
   }
 
@@ -54,6 +57,7 @@ class shipperAccount extends Account {
       money: double.parse(json['money'].toString()),
       license: json['license'].toString(),
       orderHaveStatus: int.parse(json['orderHaveStatus'].toString()),
+      debt: double.parse(json['debt'].toString()),
     );
   }
 
@@ -68,6 +72,7 @@ class shipperAccount extends Account {
     onlineStatus  = int.parse(json['onlineStatus'].toString());
     money = double.parse(json['money'].toString());
     license = json['license'].toString();
+    debt = double.parse(json['debt'].toString());
     orderHaveStatus = int.parse(json['orderHaveStatus'].toString());
   }
 }

@@ -89,7 +89,6 @@ class _start_order_buttonState extends State<start_order_button> {
                   type: 1,
                   motherOrder: widget.order.id
               );
-              orderType3.cost = orderType3.cost - getVoucherSale(orderType3.voucher, orderType3.cost);
               custom_order_list.add(orderType3);
               widget.order.orderList.add(orderType3.id);
             }
@@ -115,11 +114,11 @@ class _start_order_buttonState extends State<start_order_button> {
                   type: 2,
                   motherOrder: widget.order.id
               );
-              orderType3.cost = orderType3.cost - getVoucherSale(orderType3.voucher, orderType3.cost);
+              orderType3.cost = orderType3.cost;
               bike_order_list.add(orderType3);
               widget.order.orderList.add(orderType3.id);
             }
-
+            widget.order.locationSet.mainText = await fetchLocationName(widget.order.locationSet);
             start_order_button_controller.push_mother_order_data(widget.order);
             for (int i = 0; i < custom_order_list.length; i++) {
               await start_order_button_controller.push_child_order_data(custom_order_list[i]);

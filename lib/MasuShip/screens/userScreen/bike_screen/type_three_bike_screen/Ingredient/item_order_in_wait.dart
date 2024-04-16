@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/Data/OrderData/catch_order_type_3_data/catchOrderType3.dart';
+import 'package:masuapp/MasuShip/Data/OrderData/catch_order_type_3_data/motherOrder.dart';
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
 import 'package:masuapp/MasuShip/Data/voucherData/Voucher.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_three_bike_screen/Ingredient/cancel_order_button.dart';
@@ -11,9 +12,10 @@ import '../../../../../Data/otherData/Time.dart';
 import '../../../../../Data/otherData/Tool.dart';
 
 class item_order_in_wait extends StatefulWidget {
+  final motherOrder order;
   final String id;
   final VoidCallback callback;
-  const item_order_in_wait({super.key, required this.id, required this.callback});
+  const item_order_in_wait({super.key, required this.id, required this.callback, required this.order});
 
   @override
   State<item_order_in_wait> createState() => _item_order_in_waitState();
@@ -62,8 +64,7 @@ class _item_order_in_waitState extends State<item_order_in_wait> {
       child: Padding(
         padding: EdgeInsets.only(left: 10, right: 10),
         child: Container(
-          height: (orderType3.status == 'E' || orderType3.status == 'E1') ? 0 : null,
-          decoration: (orderType3.status == 'E' || orderType3.status == 'E1') ? null :BoxDecoration(
+          decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(10),
             boxShadow: [
@@ -100,7 +101,7 @@ class _item_order_in_waitState extends State<item_order_in_wait> {
 
               Container(height: 10,),
 
-              cancel_order_button(orderType3: orderType3),
+              cancel_order_button(orderType3: orderType3, order: widget.order,),
 
               Container(height: 20,),
             ],

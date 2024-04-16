@@ -60,9 +60,8 @@ class _start_express_order_buttonState extends State<start_express_order_button>
             loading = true;
           });
           widget.order.S1time = getCurrentTime();
-          widget.order.locationGet.mainText = await fetchLocationName(widget.order.locationGet);
           widget.order.locationSet.mainText = await fetchLocationName(widget.order.locationSet);
-          widget.order.cost = widget.order.cost - getVoucherSale(widget.order.voucher, widget.order.cost);
+          widget.order.cost = getCosOfBike(await getDistance(widget.order.locationSet, widget.order.locationGet));
           await push_express_order_data();
           setState(() {
             loading = false;

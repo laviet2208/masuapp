@@ -41,7 +41,8 @@ class _request_buy_waitState extends State<request_buy_wait> {
       S4time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
       productList: [],
       costFee: finalData.bikeCost,
-      buyLocation: []
+      buyLocation: [],
+    subFee: 0,
   );
 
   void get_order_data() {
@@ -115,24 +116,7 @@ class _request_buy_waitState extends State<request_buy_wait> {
 
                               Padding(
                                 padding: EdgeInsets.only(left: 50, right: 10),
-                                child: FutureBuilder(
-                                  future: fetchLocationName(order.locationGet),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.connectionState == ConnectionState.waiting) {
-                                      return general_ingredient.get_location_text('Đang tải vị trí ...');
-                                    }
-
-                                    if (snapshot.hasError) {
-                                      return general_ingredient.get_location_text('Lỗi dữ liệu vị trí, vui lòng thử lại');
-                                    }
-
-                                    if (!snapshot.hasData) {
-                                      return general_ingredient.get_location_text('Lỗi dữ liệu vị trí, vui lòng thử lại');
-                                    }
-
-                                    return general_ingredient.get_location_text(snapshot.data!.toString());
-                                  },
-                                ),
+                                child: general_ingredient.get_location_text(order.locationGet.mainText),
                               ),
 
                               Container(height: 8,),
@@ -269,46 +253,13 @@ class _request_buy_waitState extends State<request_buy_wait> {
                                       child: Container(
                                         height: 30,
                                         width: (width - 40 - 20)/2,
-                                        child: order.buyLocation.length != 0 ? FutureBuilder(
-                                          future: getDistance(order.buyLocation.first, order.locationGet),
-                                          builder: (context, snapshot) {
-                                            if (snapshot.connectionState == ConnectionState.waiting) {
-                                              return general_ingredient.get_cost_title('Chi phí di chuyển(...Km)', Colors.black, FontWeight.bold, width);
-                                            }
-                                            if (snapshot.hasError) {
-                                              return general_ingredient.get_cost_title('Lỗi tính toán', Colors.black, FontWeight.bold, width);
-                                            }
-                                            if (!snapshot.hasData) {
-                                              return general_ingredient.get_cost_title('Lỗi tính toán', Colors.black, FontWeight.bold, width);
-                                            }
-                                            return general_ingredient.get_cost_title('Chi phí di chuyển(' + snapshot.data!.toStringAsFixed(1) + ' Km)', Colors.black, FontWeight.bold, width);
-                                          },
-                                        ) : general_ingredient.get_cost_title('Chi phí di chuyển(...Km)', Colors.black, FontWeight.bold, width),
+                                        child: general_ingredient.get_cost_title('Chi phí di chuyển(' + getDistanceOfBike(order.cost).toStringAsFixed(1) + 'Km)', Colors.black, FontWeight.bold, width),
                                       ),
                                     ),
 
                                     Padding(
                                       padding: EdgeInsets.only(top: 7, bottom: 7),
-                                      child: Container(
-                                        height: 30,
-                                        width: (width - 40 - 20)/2,
-                                        alignment: Alignment.centerRight,
-                                        child: order.buyLocation.length != 0 ? FutureBuilder(
-                                          future: getCost(order.buyLocation.first, order.locationGet, height),
-                                          builder: (context, snapshot) {
-                                            if (snapshot.connectionState == ConnectionState.waiting) {
-                                              return general_ingredient.get_cost_content('Đang tính toán', Colors.black, FontWeight.normal, width);
-                                            }
-                                            if (snapshot.hasError) {
-                                              return general_ingredient.get_cost_content('Lỗi tính toán', Colors.redAccent, FontWeight.normal, width);
-                                            }
-                                            if (!snapshot.hasData) {
-                                              return general_ingredient.get_cost_content('Lỗi tính toán', Colors.redAccent, FontWeight.normal, width);
-                                            }
-                                            return general_ingredient.get_cost_content(getStringNumber(double.parse(snapshot.data.toString())) + '.đ', Colors.black, FontWeight.bold, width);
-                                          },
-                                        ) : general_ingredient.get_cost_content('Chưa chọn vị trí', Colors.black, FontWeight.normal, width),
-                                      ),
+                                      child: general_ingredient.get_cost_content(getStringNumber(order.cost) + '.đ', Colors.black, FontWeight.bold, width),
                                     ),
                                   ],
                                 ),
@@ -331,7 +282,7 @@ class _request_buy_waitState extends State<request_buy_wait> {
 
                                     Padding(
                                       padding: EdgeInsets.only(top: 7, bottom: 7),
-                                      child: general_ingredient.get_cost_content('0.đ', Colors.black, FontWeight.bold, width),
+                                      child: general_ingredient.get_cost_content(getStringNumber(order.subFee) + '.đ', Colors.black, FontWeight.bold, width),
                                     ),
                                   ],
                                 ),
@@ -417,29 +368,7 @@ class _request_buy_waitState extends State<request_buy_wait> {
 
                                     Padding(
                                       padding: EdgeInsets.only(top: 4, bottom: 4),
-                                      child: Container(
-                                        height: 30,
-                                        width: (width - 40 - 20)/2,
-                                        alignment: Alignment.centerRight,
-                                        child: order.buyLocation.length != 0 ? FutureBuilder(
-                                          future: getCost(order.buyLocation.first, order.locationGet, height),
-                                          builder: (context, snapshot) {
-                                            if (snapshot.connectionState == ConnectionState.waiting) {
-                                              return general_ingredient.get_cost_content('Đang tính toán', Colors.black, FontWeight.bold, width);
-                                            }
-
-                                            if (snapshot.hasError) {
-                                              return general_ingredient.get_cost_content('Lỗi tính toán', Colors.redAccent, FontWeight.normal, width);
-                                            }
-
-                                            if (!snapshot.hasData) {
-                                              return general_ingredient.get_cost_content('Lỗi tính toán', Colors.redAccent, FontWeight.normal, width);
-                                            }
-
-                                            return general_ingredient.get_cost_content(getStringNumber(double.parse(snapshot.data.toString()) + 10000 * ((order.productList.length/3).toInt()).toDouble()) + '.đ', Colors.black, FontWeight.bold, width);
-                                          },
-                                        ) : general_ingredient.get_cost_content('Chưa tính toán', Colors.black, FontWeight.bold, width),
-                                      ),
+                                      child: general_ingredient.get_cost_content(getStringNumber(order.cost + order.subFee + 10000 * ((order.productList.length/3).toInt()).toDouble()) + '.đ', Colors.black, FontWeight.bold, width),
                                     ),
                                   ],
                                 ),

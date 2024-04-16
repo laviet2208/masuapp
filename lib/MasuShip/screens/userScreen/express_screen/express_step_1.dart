@@ -1,8 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
 import 'package:masuapp/MasuShip/Data/locationData/Location.dart';
 import 'package:masuapp/MasuShip/Data/otherData/Tool.dart';
@@ -62,25 +60,6 @@ class _express_step_1State extends State<express_step_1> {
     note: '',
     payer: 1,
   );
-
-  Future<String> fetchLocationName(Location location) async {
-    double longitude = location.longitude;
-    double latitude = location.latitude;
-    final Uri uri = Uri.parse('https://rsapi.goong.io/Geocode?latlng=$latitude,$longitude&api_key=npcYThxwWdlxPTuGGZ8Tu4QAF7IyO3u2vYyWlV5Z');
-
-    try {
-      final response = await http.get(uri);
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        location.mainText = data['results'][0]['formatted_address'];
-        return data['results'][0]['formatted_address'];
-      } else {
-        throw Exception('Failed to load location');
-      }
-    } catch (e) {
-      throw Exception('Lỗi khi xử lý dữ liệu: $e');
-    }
-  }
 
   void dropdownWeight(String? selectedValue) {
     if (selectedValue is String) {
@@ -624,24 +603,7 @@ class _express_step_1State extends State<express_step_1> {
 
                               Padding(
                                 padding: EdgeInsets.only(left: 50, right: 10),
-                                child: FutureBuilder(
-                                  future: fetchLocationName(order.locationGet),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.connectionState == ConnectionState.waiting) {
-                                      return general_ingredient.get_location_text('Đang tải vị trí...', Colors.black);
-                                    }
-
-                                    if (snapshot.hasError) {
-                                      return general_ingredient.get_location_text('Hãy chọn vị trí giao hàng', Colors.redAccent);
-                                    }
-
-                                    if (!snapshot.hasData) {
-                                      return general_ingredient.get_location_text('Hãy chọn vị trí giao hàng', Colors.redAccent);
-                                    }
-
-                                    return general_ingredient.get_location_text(snapshot.data!.toString(), Colors.black);
-                                  },
-                                ),
+                                child: general_ingredient.get_location_text(order.locationGet.mainText + ',' + order.locationGet.secondaryText, Colors.black),
                               ),
 
                               Container(height: 20,),

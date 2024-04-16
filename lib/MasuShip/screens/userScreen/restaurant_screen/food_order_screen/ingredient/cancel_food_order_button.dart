@@ -2,6 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/Data/OrderData/foodOrder/foodOrder.dart';
 import 'package:masuapp/MasuShip/Data/otherData/Tool.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/restaurant_screen/food_order_screen/food_order_controller.dart';
 
 import '../../../../../Data/otherData/utils.dart';
 
@@ -15,15 +16,6 @@ class cancel_food_order_button extends StatefulWidget {
 
 class _cancel_food_order_buttonState extends State<cancel_food_order_button> {
   bool loading = false;
-
-  Future<void> cancel_order() async {
-    DatabaseReference reference = FirebaseDatabase.instance.reference();
-    await reference.child('Order').child(widget.order.id).child('status').set('G2');
-    reference = FirebaseDatabase.instance.reference();
-    widget.order.timeList[5] = getCurrentTime();
-    await reference.child('Order').child(widget.order.id).child('timeList').set(widget.order.timeList.map((e) => e.toJson()).toList());
-  }
-
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +65,7 @@ class _cancel_food_order_buttonState extends State<cancel_food_order_button> {
                     setState(() {
                       loading = true;
                     });
-                    await cancel_order();
+                    await food_order_controller.cancel_order(widget.order);
                     toastMessage('Bạn đã hủy đơn thành công');
                     setState(() {
                       loading = false;

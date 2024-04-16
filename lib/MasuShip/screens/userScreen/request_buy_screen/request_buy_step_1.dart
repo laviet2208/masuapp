@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
+import 'package:masuapp/MasuShip/Data/map_api_interact.dart';
 import 'package:masuapp/MasuShip/Data/otherData/Time.dart';
 import 'package:masuapp/MasuShip/Data/otherData/utils.dart';
 import 'package:masuapp/MasuShip/Data/voucherData/Voucher.dart';
@@ -43,7 +44,8 @@ class _request_buy_step_1State extends State<request_buy_step_1> {
       S4time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
       productList: [],
       costFee: finalData.bikeCost,
-      buyLocation: []
+      buyLocation: [],
+    subFee: 0,
   );
 
   @override
@@ -273,89 +275,6 @@ class _request_buy_step_1State extends State<request_buy_step_1> {
               Padding(
                 padding: EdgeInsets.only(left: 10, right: 10),
                 child: Container(
-                  height: 80 * order.buyLocation.length.toDouble() + 90,
-                  child: Stack(
-                    children: <Widget>[
-                      Positioned(
-                        top: 20,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        child: Container(
-                          decoration: get_usually_decoration(),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(height: 30,),
-
-                              Container(
-                                height: 80 * order.buyLocation.length.toDouble(),
-                                child: ListView.builder(
-                                  itemCount: order.buyLocation.length,
-                                  physics: NeverScrollableScrollPhysics(),
-                                  itemBuilder: (context, index) {
-                                    return item_market_location(index: index, list: order.buyLocation, callback: () {setState(() {});},);
-                                  },
-                                ),
-                              ),
-
-                              GestureDetector(
-                                child: Padding(
-                                  padding: EdgeInsets.only(left: 15),
-                                  child: Container(
-                                    height: 18,
-                                    alignment: Alignment.centerLeft,
-                                    decoration: BoxDecoration(
-                                      color: Colors.transparent,
-                                    ),
-                                    child: AutoSizeText(
-                                      'Thêm vị trí mua hàng',
-                                      style: TextStyle(
-                                          fontFamily: 'muli',
-                                          color: Colors.blueAccent,
-                                          fontSize: 100
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                onTap: () {
-                                  Location location = Location(placeId: '', description: '', longitude: 0, latitude: 0, mainText: '', secondaryText: '');
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return search_location_dialog(location: location, title: 'Thêm vị trí mua hàng',
-                                          event: () {
-                                            order.buyLocation.add(location);
-                                            setState(() {});
-                                          }
-                                      );
-                                    },
-                                  );
-                                },
-                              ),
-
-                              Container(height: 10,),
-
-                            ],
-                          ),
-                        ),
-                      ),
-
-                      Positioned(
-                        top: 0,
-                        left: 30,
-                        child: title_gradient_container(icon: Icons.store_mall_directory_outlined, title: 'Bạn muốn mua hàng ở đâu?'),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              Container(height: 20,),
-
-              Padding(
-                padding: EdgeInsets.only(left: 10, right: 10),
-                child: Container(
                   height: 90 + 45 * order.productList.length.toDouble(),
                   child: Stack(
                     children: <Widget>[
@@ -439,7 +358,7 @@ class _request_buy_step_1State extends State<request_buy_step_1> {
               Padding(
                 padding: EdgeInsets.only(left: 10, right: 10),
                 child: Container(
-                  height: 280,
+                  height: 80 * order.buyLocation.length.toDouble() + 90,
                   child: Stack(
                     children: <Widget>[
                       Positioned(
@@ -455,60 +374,164 @@ class _request_buy_step_1State extends State<request_buy_step_1> {
                               Container(height: 30,),
 
                               Container(
+                                height: 80 * order.buyLocation.length.toDouble(),
+                                child: ListView.builder(
+                                  itemCount: order.buyLocation.length,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemBuilder: (context, index) {
+                                    return item_market_location(index: index, list: order.buyLocation, callback: () {setState(() {});},);
+                                  },
+                                ),
+                              ),
+
+                              GestureDetector(
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 15),
+                                  child: Container(
+                                    height: 18,
+                                    alignment: Alignment.centerLeft,
+                                    decoration: BoxDecoration(
+                                      color: Colors.transparent,
+                                    ),
+                                    child: AutoSizeText(
+                                      'Thêm vị trí mua hàng',
+                                      style: TextStyle(
+                                          fontFamily: 'muli',
+                                          color: Colors.blueAccent,
+                                          fontSize: 100
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                onTap: () {
+                                  if (order.productList.length != 0) {
+                                    Location location = Location(placeId: '', description: '', longitude: 0, latitude: 0, mainText: '', secondaryText: '');
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return search_location_dialog(location: location, title: 'Thêm vị trí mua hàng',
+                                            event: () {
+                                              order.buyLocation.add(location);
+                                              setState(() {});
+                                            }
+                                        );
+                                      },
+                                    );
+                                  } else {
+                                    toastMessage('Bạn cần thêm sản phẩm trước');
+                                  }
+                                },
+                              ),
+
+                              Container(height: 10,),
+
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      Positioned(
+                        top: 0,
+                        left: 30,
+                        child: title_gradient_container(icon: Icons.store_mall_directory_outlined, title: 'Bạn muốn mua hàng ở đâu?'),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              Container(height: 20,),
+
+              Padding(
+                padding: EdgeInsets.only(left: 10, right: 10),
+                child: Container(
+                  height: 280,
+                  child: Stack(
+                    children: <Widget>[
+                      Positioned(
+                        top: 20,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        child: Container(
+                          decoration: get_usually_decoration(),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(height: 30,),
+                              
+                              Container(
                                 height: 30,
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      width: 10,
-                                    ),
+                                child: Padding(
+                                  padding: EdgeInsets.only(top: 7, bottom: 7),
+                                  child: order.buyLocation.length != 0 ? FutureBuilder(
+                                    future: map_api_interact.getMaxDistance(order.buyLocation, order.locationGet),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState == ConnectionState.waiting) {
+                                        return Row(
+                                          children: [
+                                            Container(
+                                              width: 10,
+                                            ),
 
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 7, bottom: 7),
-                                      child: Container(
-                                        height: 30,
-                                        width: (width - 40 - 20)/2,
-                                        child: order.buyLocation.length != 0 ? FutureBuilder(
-                                          future: getDistance(order.buyLocation.first, order.locationGet),
-                                          builder: (context, snapshot) {
-                                            if (snapshot.connectionState == ConnectionState.waiting) {
-                                              return general_ingredient.get_cost_title('Chi phí di chuyển(...Km)', Colors.black, FontWeight.bold, width);
-                                            }
-                                            if (snapshot.hasError) {
-                                              return general_ingredient.get_cost_title('Lỗi tính toán', Colors.black, FontWeight.bold, width);
-                                            }
-                                            if (!snapshot.hasData) {
-                                              return general_ingredient.get_cost_title('Lỗi tính toán', Colors.black, FontWeight.bold, width);
-                                            }
-                                            return general_ingredient.get_cost_title('Chi phí di chuyển(' + snapshot.data!.toStringAsFixed(1) + ' Km)', Colors.black, FontWeight.bold, width);
-                                          },
-                                        ) : general_ingredient.get_cost_title('Chi phí di chuyển(...Km)', Colors.black, FontWeight.bold, width),
-                                      ),
-                                    ),
+                                            general_ingredient.get_cost_title('Chi phí di chuyển(...Km)', Colors.black, FontWeight.bold, width),
 
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 7, bottom: 7),
-                                      child: Container(
-                                        height: 30,
-                                        width: (width - 40 - 20)/2,
-                                        alignment: Alignment.centerRight,
-                                        child: order.buyLocation.length != 0 ? FutureBuilder(
-                                          future: getCost(order.buyLocation.first, order.locationGet, height),
-                                          builder: (context, snapshot) {
-                                            if (snapshot.connectionState == ConnectionState.waiting) {
-                                              return general_ingredient.get_cost_content('Đang tính toán', Colors.black, FontWeight.normal, width);
-                                            }
-                                            if (snapshot.hasError) {
-                                              return general_ingredient.get_cost_content('Lỗi tính toán', Colors.redAccent, FontWeight.normal, width);
-                                            }
-                                            if (!snapshot.hasData) {
-                                              return general_ingredient.get_cost_content('Lỗi tính toán', Colors.redAccent, FontWeight.normal, width);
-                                            }
-                                            return general_ingredient.get_cost_content(getStringNumber(double.parse(snapshot.data.toString())) + '.đ', Colors.black, FontWeight.bold, width);
-                                          },
-                                        ) : general_ingredient.get_cost_content('Chưa chọn vị trí', Colors.black, FontWeight.normal, width),
+                                            general_ingredient.get_cost_content('Đang tính toán', Colors.black, FontWeight.normal, width),
+                                          ],
+                                        );
+                                      }
+
+                                      if (snapshot.hasError)
+                                      {
+                                        return Row(
+                                          children: [
+                                            Container(
+                                              width: 10,
+                                            ),
+
+                                            general_ingredient.get_cost_title('Chi phí di chuyển(lỗi)', Colors.black, FontWeight.bold, width),
+
+                                            general_ingredient.get_cost_content('Lỗi tính toán', Colors.black, FontWeight.normal, width),
+                                          ],
+                                        );
+                                      }
+                                      if (!snapshot.hasData) {
+                                        return Row(
+                                          children: [
+                                            Container(
+                                              width: 10,
+                                            ),
+
+                                            general_ingredient.get_cost_title('Chi phí di chuyển(lỗi)', Colors.black, FontWeight.bold, width),
+
+                                            general_ingredient.get_cost_content('Lỗi tính toán', Colors.black, FontWeight.normal, width),
+                                          ],
+                                        );
+                                      }
+
+                                      return Row(
+                                        children: [
+                                          Container(
+                                            width: 10,
+                                          ),
+
+                                          general_ingredient.get_cost_title('Chi phí di chuyển(' + snapshot.data!.toStringAsFixed(1) + 'Km)', Colors.black, FontWeight.bold, width),
+
+                                          general_ingredient.get_cost_content(getStringNumber(getCosOfBike(snapshot.data!)) + '.đ', Colors.black, FontWeight.normal, width),
+                                        ],
+                                      );
+                                    },
+                                  ) : Row(
+                                    children: [
+                                      Container(
+                                        width: 10,
                                       ),
-                                    ),
-                                  ],
+
+                                      general_ingredient.get_cost_title('Chi phí di chuyển(chưa chọn)', Colors.black, FontWeight.bold, width),
+
+                                      general_ingredient.get_cost_content('Chưa chọn', Colors.black, FontWeight.normal, width),
+                                    ],
+                                  ),
                                 ),
                               ),
 
@@ -633,7 +656,7 @@ class _request_buy_step_1State extends State<request_buy_step_1> {
                                         width: (width - 40 - 20)/2,
                                         alignment: Alignment.centerRight,
                                         child: order.buyLocation.length != 0 ? FutureBuilder(
-                                          future: getCost(order.buyLocation.first, order.locationGet, height),
+                                          future: map_api_interact.getMaxDistance(order.buyLocation, order.locationGet),
                                           builder: (context, snapshot) {
                                             if (snapshot.connectionState == ConnectionState.waiting) {
                                               return general_ingredient.get_cost_content('Đang tính toán', Colors.black, FontWeight.bold, width);
@@ -647,7 +670,7 @@ class _request_buy_step_1State extends State<request_buy_step_1> {
                                               return general_ingredient.get_cost_content('Lỗi tính toán', Colors.redAccent, FontWeight.normal, width);
                                             }
 
-                                            return general_ingredient.get_cost_content(getStringNumber(double.parse(snapshot.data.toString()) + 10000 * ((order.productList.length/3).toInt()).toDouble()) + '.đ', Colors.black, FontWeight.bold, width);
+                                            return general_ingredient.get_cost_content(getStringNumber(getCosOfBike(snapshot.data!) - getVoucherSale(order.voucher, getCosOfBike(snapshot.data!)) + 10000 * ((order.productList.length/3).toInt()).toDouble()) + '.đ', Colors.black, FontWeight.bold, width);
                                           },
                                         ) : general_ingredient.get_cost_content('Chưa tính toán', Colors.black, FontWeight.bold, width),
                                       ),

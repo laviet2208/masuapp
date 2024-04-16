@@ -15,6 +15,7 @@ class requestBuyOrder extends Order {
   Time S4time;
   List<Location> buyLocation;
   List<requestProduct> productList;
+  double subFee;
   Cost costFee;
 
   requestBuyOrder({
@@ -32,6 +33,7 @@ class requestBuyOrder extends Order {
     required this.S4time,
     required this.productList,
     required this.costFee,
+    required this.subFee,
     required this.buyLocation,
   }) : super(
     id: id,
@@ -53,6 +55,7 @@ class requestBuyOrder extends Order {
     superJson['S4time'] = S4time.toJson();
     superJson['productList'] = productList.map((e) => e.toJson()).toList();
     superJson['costFee'] = costFee.toJson();
+    superJson['subFee'] = subFee;
     superJson['buyLocation'] = buyLocation.map((e) => e.toJson()).toList();
     return superJson;
   }
@@ -76,21 +79,22 @@ class requestBuyOrder extends Order {
     }
 
     return requestBuyOrder(
-      id: order.id,
-      locationSet: order.locationSet,
-      locationGet: order.locationGet,
-      cost: order.cost,
-      owner: order.owner,
-      shipper: order.shipper,
-      status: order.status,
-      voucher: order.voucher,
-      S1time: Time.fromJson(json['S1time']),
-      S2time: Time.fromJson(json['S2time']),
-      S3time: Time.fromJson(json['S3time']),
-      S4time: Time.fromJson(json['S4time']),
-      costFee: Cost.fromJson(json['costFee']),
-      productList: products,
-      buyLocation: locations
+        id: order.id,
+        locationSet: order.locationSet,
+        locationGet: order.locationGet,
+        cost: order.cost,
+        owner: order.owner,
+        shipper: order.shipper,
+        status: order.status,
+        voucher: order.voucher,
+        S1time: Time.fromJson(json['S1time']),
+        S2time: Time.fromJson(json['S2time']),
+        S3time: Time.fromJson(json['S3time']),
+        S4time: Time.fromJson(json['S4time']),
+        costFee: Cost.fromJson(json['costFee']),
+        subFee: double.parse(json['subFee'].toString()),
+        productList: products,
+        buyLocation: locations,
     );
   }
 }

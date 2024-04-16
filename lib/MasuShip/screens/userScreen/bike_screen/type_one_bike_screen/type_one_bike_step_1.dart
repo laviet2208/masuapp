@@ -362,7 +362,8 @@ class _type_one_bike_step_1State extends State<type_one_bike_step_1> {
         ),
       ),
       onWillPop: () async {
-        return false;
+        Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => user_main_screen()));
+        return true;
       },
     );
   }

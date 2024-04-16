@@ -24,26 +24,6 @@ class _type_three_bike_screen_step_1State extends State<type_three_bike_step_1> 
   String locationName = '';
   Location start_location = Location(placeId: '', description: '', longitude: 0, latitude: 0, mainText: '', secondaryText: '');
 
-  Future<String> fetchLocationName(Location location) async {
-    double latitude = location.latitude;
-    double longitude = location.longitude;
-    final Uri uri = Uri.parse('https://rsapi.goong.io/Geocode?latlng=$latitude,$longitude&api_key=npcYThxwWdlxPTuGGZ8Tu4QAF7IyO3u2vYyWlV5Z');
-
-    try {
-      final response = await http.get(uri);
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        locationName = data['results'][0]['formatted_address'];
-        start_location.mainText = locationName;
-        return data['results'][0]['formatted_address'];
-      } else {
-        throw Exception('Failed to load location');
-      }
-    } catch (e) {
-      throw Exception('Lỗi khi xử lý dữ liệu: $e');
-    }
-  }
-
   void change_to_next_step(int customer, int bike) {
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => type_three_bike_step_2(beforeWidget: type_three_bike_step_1(), customer_number: customer, bike_number: bike, start_location: start_location,),),);
   }

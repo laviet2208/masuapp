@@ -23,20 +23,6 @@ class _express_step_2State extends State<express_step_2> {
   double weightFee = 0;
   String weightType = 'Dưới 10kg';
 
-  Future<double> getCost() async {
-    double cost = 0;
-    double distance = await getDistance(widget.order.locationSet, widget.order.locationGet);
-    if (distance >= finalData.bikeCost.departKM) {
-      cost += finalData.bikeCost.departKM.toInt() * finalData.bikeCost.departCost.toInt(); // Giá cước cho 2km đầu tiên (10.000 VND/km * 2km)
-      distance -= finalData.bikeCost.departKM; // Trừ đi 2km đã tính giá cước
-      cost = cost + ((distance - finalData.bikeCost.departKM) * finalData.bikeCost.perKMcost);
-    } else {
-      cost += (distance * finalData.bikeCost.departCost); // Giá cước cho khoảng cách dưới 2km
-    }
-    widget.order.cost = cost;
-    return cost;
-  }
-
   @override
   void initState() {
     // TODO: implement initState
@@ -291,65 +277,50 @@ class _express_step_2State extends State<express_step_2> {
 
                               Container(
                                 height: 30,
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      width: 10,
-                                    ),
+                                child: Padding(
+                                  padding: EdgeInsets.only(top: 7, bottom: 7),
+                                  child: FutureBuilder(
+                                    future: getDistance(widget.order.locationSet, widget.order.locationGet),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState == ConnectionState.waiting) {
+                                        return Row(
+                                          children: [
+                                            Container(width: 10,),
+                                            general_ingredient.get_cost_title('Chi phí di chuyển(...km)', Colors.black, FontWeight.bold, width),
+                                            general_ingredient.get_cost_content('Đang tính toán giá tiền', Colors.black, FontWeight.bold, width)
+                                          ],
+                                        );
+                                      }
 
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 7, bottom: 7),
-                                      child: Container(
-                                        height: 30,
-                                        width: (width - 40 - 20)/2,
-                                        child: FutureBuilder(
-                                          future: getDistance(widget.order.locationSet, widget.order.locationGet),
-                                          builder: (context, snapshot) {
-                                            if (snapshot.connectionState == ConnectionState.waiting) {
-                                              return general_ingredient.get_cost_title('Chi phí di chuyển(...km)', Colors.black, FontWeight.bold, width);
-                                            }
+                                      if (snapshot.hasError) {
+                                        return Row(
+                                          children: [
+                                            Container(width: 10,),
+                                            general_ingredient.get_cost_title('Chi phí di chuyển(Lỗi)', Colors.black, FontWeight.bold, width),
+                                            general_ingredient.get_cost_content('Lỗi', Colors.black, FontWeight.bold, width)
+                                          ],
+                                        );
+                                      }
 
-                                            if (snapshot.hasError) {
-                                              return general_ingredient.get_cost_title('Lỗi khoảng cách', Colors.black, FontWeight.bold, width);
-                                            }
+                                      if (!snapshot.hasData) {
+                                        return Row(
+                                          children: [
+                                            Container(width: 10,),
+                                            general_ingredient.get_cost_title('Chi phí di chuyển(Lỗi)', Colors.black, FontWeight.bold, width),
+                                            general_ingredient.get_cost_content('Lỗi', Colors.black, FontWeight.bold, width)
+                                          ],
+                                        );
+                                      }
 
-                                            if (!snapshot.hasData) {
-                                              return general_ingredient.get_cost_title('Lỗi khoảng cách', Colors.black, FontWeight.bold, width);
-                                            }
-
-                                            return general_ingredient.get_cost_title('Chi phí di chuyển(' + snapshot.data!.toStringAsFixed(1) + ' Km)', Colors.black, FontWeight.bold, width);
-                                          },
-                                        ),
-                                      ),
-                                    ),
-
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 7, bottom: 7),
-                                      child: Container(
-                                        height: 30,
-                                        width: (width - 40 - 20)/2,
-                                        alignment: Alignment.centerRight,
-                                        child: FutureBuilder(
-                                          future: getCost(),
-                                          builder: (context, snapshot) {
-                                            if (snapshot.connectionState == ConnectionState.waiting) {
-                                              return general_ingredient.get_cost_content('Đang tính toán giá tiền', Colors.black, FontWeight.bold, width);
-                                            }
-
-                                            if (snapshot.hasError) {
-                                              return general_ingredient.get_cost_content('Lỗi tính toán', Colors.black, FontWeight.bold, width);
-                                            }
-
-                                            if (!snapshot.hasData) {
-                                              return general_ingredient.get_cost_content('Lỗi tính toán', Colors.black, FontWeight.bold, width);
-                                            }
-
-                                            return general_ingredient.get_cost_content(getStringNumber(double.parse(snapshot.data.toString())) + '.đ', Colors.black, FontWeight.bold, width);
-                                          },
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                      return Row(
+                                        children: [
+                                          Container(width: 10,),
+                                          general_ingredient.get_cost_title('Chi phí di chuyển(' + snapshot.data!.toStringAsFixed(1) + 'Km)', Colors.black, FontWeight.bold, width),
+                                          general_ingredient.get_cost_content(getStringNumber(getCosOfBike(snapshot.data!)) + '.đ', Colors.black, FontWeight.bold, width)
+                                        ],
+                                      );
+                                    },
+                                  ),
                                 ),
                               ),
 
@@ -489,7 +460,7 @@ class _express_step_2State extends State<express_step_2> {
                                         width: (width - 40 - 20)/2,
                                         alignment: Alignment.centerRight,
                                         child: FutureBuilder(
-                                          future: getCost(),
+                                          future: getDistance(widget.order.locationSet, widget.order.locationGet),
                                           builder: (context, snapshot) {
                                             if (snapshot.connectionState == ConnectionState.waiting) {
                                               return general_ingredient.get_cost_content('Đang tính toán', Colors.black, FontWeight.bold, width);
@@ -503,7 +474,7 @@ class _express_step_2State extends State<express_step_2> {
                                               return general_ingredient.get_cost_content('Lỗi tính toán', Colors.black, FontWeight.bold, width);
                                             }
 
-                                            return general_ingredient.get_cost_content(getStringNumber(double.parse(snapshot.data.toString()) - getVoucherSale(widget.order.voucher, widget.order.cost) + weightFee) + '.đ', Colors.black, FontWeight.bold, width);
+                                            return general_ingredient.get_cost_content(getStringNumber(getCosOfBike(snapshot.data!) - getVoucherSale(widget.order.voucher, widget.order.cost) + weightFee + widget.order.subFee) + '.đ', Colors.black, FontWeight.bold, width);
                                             },
                                         ),
                                       ),
