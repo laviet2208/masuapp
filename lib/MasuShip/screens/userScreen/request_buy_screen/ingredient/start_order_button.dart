@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/Data/OrderData/requestBuyOrderData/requestBuyOrder.dart';
+import 'package:masuapp/MasuShip/Data/firebase_interact/firebase_interact.dart';
 import 'package:masuapp/MasuShip/Data/otherData/Tool.dart';
 import 'package:masuapp/MasuShip/Data/otherData/utils.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/request_buy_screen/controller/start_order_button_controller.dart';
@@ -59,6 +60,7 @@ class _start_order_buttonState extends State<start_order_button> {
           widget.order.locationGet.mainText = await fetchLocationName(widget.order.locationGet);
           widget.order.cost = await start_order_request_buy_button_controller.getMaxCost(widget.order.buyLocation, widget.order.locationGet);
           widget.order.S1time = getCurrentTime();
+          await firebase_interact.pushVoucher(widget.order.voucher);
           await start_order_request_buy_button_controller.push_buy_request_order_data(widget.order);
           setState(() {
             loading = false;

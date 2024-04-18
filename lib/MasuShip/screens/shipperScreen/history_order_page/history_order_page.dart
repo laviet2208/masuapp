@@ -11,7 +11,6 @@ class history_order_page extends StatefulWidget {
 
 class _history_order_pageState extends State<history_order_page> with SingleTickerProviderStateMixin {
   int indexTab = 0;
-
   late TabController _tabController;
 
   @override

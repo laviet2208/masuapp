@@ -368,7 +368,7 @@ class _request_buy_waitState extends State<request_buy_wait> {
 
                                     Padding(
                                       padding: EdgeInsets.only(top: 4, bottom: 4),
-                                      child: general_ingredient.get_cost_content(getStringNumber(order.cost + order.subFee + 10000 * ((order.productList.length/3).toInt()).toDouble()) + '.đ', Colors.black, FontWeight.bold, width),
+                                      child: general_ingredient.get_cost_content(getStringNumber(order.cost + order.subFee - getVoucherSale(order.voucher, order.cost) + 10000 * ((order.productList.length/3).toInt()).toDouble()) + '.đ', Colors.black, FontWeight.bold, width),
                                     ),
                                   ],
                                 ),

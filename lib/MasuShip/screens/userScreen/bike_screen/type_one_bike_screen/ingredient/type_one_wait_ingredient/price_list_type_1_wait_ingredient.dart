@@ -159,7 +159,7 @@ class price_list_type_1_wait_ingredient extends StatelessWidget {
 
                 Padding(
                   padding: EdgeInsets.only(top: 4, bottom: 4),
-                  child: general_ingredient.get_cost_money(getStringNumber(order.cost + order.subFee) + '.đ', width),
+                  child: general_ingredient.get_cost_money(getStringNumber(order.cost + order.subFee  - getVoucherSale(order.voucher, order.cost)) + '.đ', width),
                 ),
               ],
             ),

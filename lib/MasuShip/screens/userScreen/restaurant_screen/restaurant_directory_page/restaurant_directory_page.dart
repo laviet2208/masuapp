@@ -70,7 +70,7 @@ class _restaurant_directory_pageState extends State<restaurant_directory_page> {
                       child: item_restaurant_in_directory(shopId: widget.directory.restaurantList[index]),
                     ),
                     onTap: () {
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => restaurant_view_screen(shopId: widget.directory.restaurantList[index], beforeWidget: restaurant_main_screen())));
+                      // Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => restaurant_view_screen(shopId: widget.directory.restaurantList[index], beforeWidget: restaurant_main_screen())));
                     },
                   );
                 },

@@ -73,45 +73,6 @@ class _keeping_action_dialogState extends State<keeping_action_dialog> {
               },
             ),
 
-            GestureDetector(
-              child: Container(
-                height: 40,
-                child: Stack(
-                  children: <Widget>[
-                    Positioned(
-                      top: 10,
-                      bottom: 10,
-                      right: 10,
-                      left: 10,
-                      child: Container(
-                        child: AutoSizeText(
-                          'Xem chi tiết',
-                          style: TextStyle(
-                              fontSize: 100,
-                              color: Colors.black,
-                              fontFamily: 'muli'
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    Positioned(
-                      top: 10,
-                      bottom: 10,
-                      right: 10,
-                      child: Container(
-                        child: Icon(
-                          Icons.arrow_right,
-                          color: Colors.black,
-                          size: 20,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
             Container(height: 10,),
           ],
         ),

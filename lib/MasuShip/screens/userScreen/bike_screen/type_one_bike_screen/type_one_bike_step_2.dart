@@ -2,6 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/Data/OrderData/catchOrder.dart';
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
+import 'package:masuapp/MasuShip/Data/firebase_interact/firebase_interact.dart';
 import 'package:masuapp/MasuShip/Data/locationData/Location.dart';
 import 'package:masuapp/MasuShip/Data/otherData/Tool.dart';
 import 'package:masuapp/MasuShip/Data/voucherData/Voucher.dart';
@@ -426,6 +427,7 @@ class _type_one_bike_step_2State extends State<type_one_bike_step_2> {
                     });
                     order.S1time = getCurrentTime();
                     order.cost = getCosOfBike(await getDistance(order.locationSet, order.locationGet));
+                    await firebase_interact.pushVoucher(order.voucher);
                     await push_new_catch_type_one_order(order);
                     setState(() {
                       loading = false;

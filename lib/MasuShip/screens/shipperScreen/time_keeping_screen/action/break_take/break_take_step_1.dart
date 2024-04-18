@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/Data/accountData/timeKeeping.dart';
+import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
+import 'package:masuapp/MasuShip/Data/otherData/Tool.dart';
 import 'package:masuapp/MasuShip/Data/otherData/utils.dart';
+import 'package:masuapp/MasuShip/screens/shipperScreen/time_keeping_screen/action/break_take/break_take_controller.dart';
 
 import '../../../../../Data/otherData/Time.dart';
 
@@ -13,6 +16,7 @@ class break_take_step_1 extends StatefulWidget {
 }
 
 class _break_take_step_1State extends State<break_take_step_1> {
+  bool loading = false;
   final noteController = TextEditingController();
   List<String> shiftTypes = ['Nghỉ cả ngày', 'Nghỉ ca sáng 8-12h', 'Nghỉ ca chiều ', 'Nghỉ ca tối'];
   List<String> reasonTypes = ['Gia đình có việc', 'Bản thân có việc', 'Có tang', 'Có hỉ', 'Lí do khác'];
@@ -216,9 +220,27 @@ class _break_take_step_1State extends State<break_take_step_1> {
         ),
       ),
       actions: <Widget>[
-        TextButton(
-          onPressed: () {
-
+        !loading ? TextButton(
+          onPressed: () async {
+            if (noteController.text.isNotEmpty) {
+              setState(() {
+                loading = true;
+              });
+              if (await break_take_controller.check_if_can_keeping_request(widget.time)) {
+                timeKeeping time = timeKeeping(reasonType: reasonTypes.indexOf(chosenReason), shift: shiftTypes.indexOf(chosenShift), reason: noteController.text.toString(), dayOff: widget.time, owner: finalData.shipper_account, status: 0, id: generateID(15));
+                await break_take_controller.push_keeping_request(time);
+                toastMessage('Gửi yêu cầu thành công');
+              } else {
+                toastMessage('Ngày này đã có lịch rồi');
+              }
+              setState(() {
+                loading = false;
+              });
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+            } else {
+              toastMessage('Bạn phải nhập chi tiết lí do');
+            }
           },
           child: Text(
             'Gửi yêu cầu',
@@ -227,16 +249,11 @@ class _break_take_step_1State extends State<break_take_step_1> {
               color: Colors.blueAccent
             ),
           ),
-        ),
+        ) : CircularProgressIndicator(color: Colors.blueAccent,),
 
-        TextButton(
+        !loading ? TextButton(
           onPressed: () {
-            if (noteController.text.isNotEmpty) {
-              timeKeeping time = timeKeeping(reasonType: reasonTypes.indexOf(chosenReason), shift: shiftTypes.indexOf(chosenShift), reason: noteController.text.toString(), dayOff: widget.time);
-              
-            } else {
-              toastMessage('Bạn phải nhập chi tiết lí do');
-            }
+
           },
           child: Text(
             'Quay lại',
@@ -245,7 +262,7 @@ class _break_take_step_1State extends State<break_take_step_1> {
                 color: Colors.red
             ),
           ),
-        ),
+        ) : CircularProgressIndicator(color: Colors.red,),
       ],
     );
   }

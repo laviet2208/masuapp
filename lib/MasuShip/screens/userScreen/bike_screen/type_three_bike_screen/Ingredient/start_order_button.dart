@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/Data/OrderData/catch_order_type_3_data/catchOrderType3.dart';
 import 'package:masuapp/MasuShip/Data/OrderData/catch_order_type_3_data/motherOrder.dart';
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
+import 'package:masuapp/MasuShip/Data/firebase_interact/firebase_interact.dart';
 import 'package:masuapp/MasuShip/Data/otherData/Time.dart';
 import 'package:masuapp/MasuShip/Data/otherData/Tool.dart';
 import 'package:masuapp/MasuShip/Data/otherData/utils.dart';
@@ -119,7 +120,8 @@ class _start_order_buttonState extends State<start_order_button> {
               widget.order.orderList.add(orderType3.id);
             }
             widget.order.locationSet.mainText = await fetchLocationName(widget.order.locationSet);
-            start_order_button_controller.push_mother_order_data(widget.order);
+            await firebase_interact.pushVoucher(widget.order.voucher);
+            await start_order_button_controller.push_mother_order_data(widget.order);
             for (int i = 0; i < custom_order_list.length; i++) {
               await start_order_button_controller.push_child_order_data(custom_order_list[i]);
             }

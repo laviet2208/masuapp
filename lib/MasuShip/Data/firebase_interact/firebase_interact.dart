@@ -3,6 +3,8 @@ import 'package:masuapp/MasuShip/Data/OrderData/catchOrder.dart';
 import 'package:masuapp/MasuShip/Data/OrderData/foodOrder/foodOrder.dart';
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
 import 'package:masuapp/MasuShip/Data/historyData/historyTransactionData.dart';
+import 'package:masuapp/MasuShip/Data/voucherData/UserUse.dart';
+import 'package:masuapp/MasuShip/Data/voucherData/Voucher.dart';
 import 'package:masuapp/MasuShip/screens/shipperScreen/divide_order_for_driver/controller/order_have_dialog_controller.dart';
 import 'package:masuapp/MasuShip/screens/shipperScreen/history_order_page/controller/history_controller.dart';
 
@@ -30,5 +32,14 @@ class firebase_interact {
     await reference.child('Account').child(finalData.shipper_account.id).set(finalData.shipper_account.toJson());
     historyTransactionData data = historyTransactionData(id: generateID(30), senderId: '', receiverId: finalData.shipper_account.id, transactionTime: getCurrentTime(), type: 5, content: 'Chiết khấu đơn : ' + order.id, money: money, area: finalData.shipper_account.area);
     await order_have_dialog_controller.push_history_data(data);
+  }
+
+  static Future<void> pushVoucher(Voucher voucher) async {
+    if (voucher.id != '') {
+      voucher.useCount = voucher.useCount + 1;
+      voucher.CustomList.add(UserUse(id: finalData.user_account.id, count: 1));
+      final reference = FirebaseDatabase.instance.reference();
+      await reference.child('VoucherStorage').child(voucher.id).set(voucher.toJson());
+    }
   }
 }

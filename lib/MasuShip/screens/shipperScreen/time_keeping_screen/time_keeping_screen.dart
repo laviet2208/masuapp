@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/screens/shipperScreen/main_screen/shipper_main_screen.dart';
 import 'package:masuapp/MasuShip/screens/shipperScreen/time_keeping_screen/action/keeping_actions_dialog.dart';
@@ -23,8 +24,15 @@ class _time_keeping_screenState extends State<time_keeping_screen> {
     return list.any((timeKeeping) => timeKeeping.dayOff == time);
   }
 
+  Map<DateTime, List> _events = {
+    DateTime.utc(2024, 4, 10): ['Event 1'],
+    DateTime.utc(2024, 4, 15): ['Event 2'],
+    DateTime.utc(2024, 4, 20): ['Event 3'],
+  };
+
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     return WillPopScope(
       child: Scaffold(
         body: Container(
@@ -44,11 +52,41 @@ class _time_keeping_screenState extends State<time_keeping_screen> {
                 padding: EdgeInsets.only(left: 10, right: 10),
                 child: GestureDetector(
                   child: Container(
-                    alignment: Alignment.centerLeft,
-                    child: Icon(
-                      Icons.arrow_back_ios_new_rounded,
-                      color: Colors.black,
-                      size: 24,
+                    height: 25,
+                    decoration: BoxDecoration(
+                      color: Colors.transparent,
+                    ),
+                    child: Row(
+                      children: [
+                        Container(width: 10,),
+
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          child: Icon(
+                            Icons.arrow_back_ios_new_rounded,
+                            color: Colors.black,
+                            size: 25,
+                          ),
+                        ),
+
+                        Container(width: 10,),
+
+                        Padding(
+                          padding: EdgeInsets.only(top: 2, bottom: 2),
+                          child: Container(
+                            width: width - 80,
+                            child: AutoSizeText(
+                              'Chi tiết chấm công',
+                              style: TextStyle(
+                                fontSize: 100,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'muli'
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
                     ),
                   ),
                   onTap: () {
@@ -79,6 +117,9 @@ class _time_keeping_screenState extends State<time_keeping_screen> {
                     selectedDayPredicate: (day) {
                       return isSameDay(_selectedDay, day);
                     },
+                    eventLoader: (day) {
+                      return _events[day] ?? [];
+                    },
                     onDaySelected: (selectedDay, focusedDay) {
                       setState(() {
                         _selectedDay = selectedDay;
@@ -97,11 +138,19 @@ class _time_keeping_screenState extends State<time_keeping_screen> {
                         color: Colors.redAccent,
                       ),
                       isTodayHighlighted: false,
-                      defaultDecoration: BoxDecoration(
-
-                      )
+                      defaultDecoration: BoxDecoration(),
+                      markerSize: 20,
+                      markerDecoration: BoxDecoration(
+                        color: Colors.transparent,
+                      ),
                     ),
+                    // Chỉ cho người dùng chọn các ngày từ ngày hiện tại trở đi
+                    enabledDayPredicate: (DateTime day) {
+                      final now = DateTime.now();
+                      return !day.isBefore(DateTime(now.year, now.month, now.day));
+                    },
                   ),
+
                 ),
               )
             ],
