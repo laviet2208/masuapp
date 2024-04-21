@@ -32,30 +32,35 @@ class location_controller {
   static Future<Position> getCurrentLocation() async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      return Future.error('Chưa cho phép vị trí');
+      return Position(longitude: 106.4204177, latitude: 10.5375044, timestamp: DateTime(2024), accuracy: 1, altitude: 1, altitudeAccuracy: 1, heading: 1, headingAccuracy: 1, speed: 1, speedAccuracy: 1);
+      //return Future.error('Chưa cho phép vị trí');
     }
 
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        toastMessage('Để tiếp tục bạn cần cho phép truy cập vị trí của bạn');
-        exit(0);
-        return Future.error('Từ chối cho phép vị trí');
+        toastMessage('Nên cho phép vị trí để tăng cường trải nghiệm');
+        return Position(longitude: 106.4204177, latitude: 10.5375044, timestamp: DateTime(2024), accuracy: 1, altitude: 1, altitudeAccuracy: 1, heading: 1, headingAccuracy: 1, speed: 1, speedAccuracy: 1);
+        // exit(0);
+        // return Future.error('Từ chối cho phép vị trí');
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
-      toastMessage('Để tiếp tục bạn cần cho phép truy cập vị trí của bạn');
-      exit(0);
-      return Future.error('Bạn cần cho phép ứng dụng truy cập vào vị trí');
+      toastMessage('Nên cho phép vị trí để tăng cường trải nghiệm');
+      return Position(longitude: 106.4204177, latitude: 10.5375044, timestamp: DateTime(2024), accuracy: 1, altitude: 1, altitudeAccuracy: 1, heading: 1, headingAccuracy: 1, speed: 1, speedAccuracy: 1);
+      // exit(0);
+      // return Future.error('Bạn cần cho phép ứng dụng truy cập vào vị trí');
     }
 
-    Position position = await Geolocator.getCurrentPosition();
+    if (permission == LocationPermission.whileInUse || permission == LocationPermission.always) {
+      // Start tracking location changes
+      startLocationTracking();
+      return await Geolocator.getCurrentPosition();
+    }
 
-    // Start tracking location changes
-    startLocationTracking();
 
-    return position;
+    return Position(longitude: 106.4204177, latitude: 10.5375044, timestamp: DateTime(2024), accuracy: 1, altitude: 1, altitudeAccuracy: 1, heading: 1, headingAccuracy: 1, speed: 1, speedAccuracy: 1);
   }
 }

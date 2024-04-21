@@ -40,11 +40,11 @@ class _location_future_builderState extends State<location_future_builder> {
         }
 
         if (snapshot.hasError) {
-          return get_future_content_text('Có lỗi xảy ra, hãy thoát ra vào lại nhé!');
+          return get_future_content_text('Vui lòng chọn hoặc cho phép vị trí');
         }
 
         if (!snapshot.hasData) {
-          return get_future_content_text('Có lỗi xảy ra, hãy thoát ra vào lại nhé!');
+          return get_future_content_text('Vui lòng chọn hoặc cho phép vị trí');
         }
 
         return widget.type == 'start' ? get_future_content_text(snapshot.data!.locationSet.mainText + ' ' + snapshot.data!.locationSet.secondaryText) :

@@ -172,12 +172,12 @@ class _restaurant_main_screenState extends State<restaurant_main_screen> {
 
                             if (snapshot.hasError) {
                               print('Lỗi vị trí ' + snapshot.error.toString());
-                              return current_location_in_res_main(title: 'Lỗi vị trí hiện tại');
+                              return current_location_in_res_main(title: 'Vui lòng chọn hoặc cho phép vị trí');
                             }
 
                             if (!snapshot.hasData) {
                               print('Lỗi vị trí ' + snapshot.error.toString());
-                              return current_location_in_res_main(title: 'Lỗi vị trí hiện tại');
+                              return current_location_in_res_main(title: 'Vui lòng chọn hoặc cho phép vị trí');
                             }
 
                             return current_location_in_res_main(title: snapshot.data!.toString());

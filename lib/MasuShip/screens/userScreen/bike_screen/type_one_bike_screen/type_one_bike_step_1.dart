@@ -246,11 +246,11 @@ class _type_one_bike_step_1State extends State<type_one_bike_step_1> {
                                     }
 
                                     if (snapshot.hasError) {
-                                      return get_location_text('Lỗi vị trí, vui lòng thử lại');
+                                      return get_location_text('Vui lòng chọn hoặc cho phép vị trí');
                                     }
 
                                     if (!snapshot.hasData) {
-                                      return get_location_text('Lỗi vị trí, vui lòng thử lại');
+                                      return get_location_text('Vui lòng chọn hoặc cho phép vị trí');
                                     }
 
                                     return get_location_text(snapshot.data!.toString());

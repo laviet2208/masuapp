@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
 import 'package:masuapp/MasuShip/Data/otherData/Tool.dart';
+import 'package:masuapp/MasuShip/Data/otherData/utils.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_one_bike_screen/ingredient/type_one_wait_ingredient/location_title.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_three_bike_screen/type_three_bike_step_2.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/express_screen/ingredient/general_ingredient.dart';
@@ -25,7 +26,11 @@ class _type_three_bike_screen_step_1State extends State<type_three_bike_step_1> 
   Location start_location = Location(placeId: '', description: '', longitude: 0, latitude: 0, mainText: '', secondaryText: '');
 
   void change_to_next_step(int customer, int bike) {
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => type_three_bike_step_2(beforeWidget: type_three_bike_step_1(), customer_number: customer, bike_number: bike, start_location: start_location,),),);
+    if (start_location.latitude != 0 && start_location.longitude != 0) {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => type_three_bike_step_2(beforeWidget: type_three_bike_step_1(), customer_number: customer, bike_number: bike, start_location: start_location,),),);
+    } else {
+      toastMessage('Vui lòng chọn điểm đón');
+    }
   }
 
   @override
@@ -230,11 +235,11 @@ class _type_three_bike_screen_step_1State extends State<type_three_bike_step_1> 
                                     }
 
                                     if (snapshot.hasError) {
-                                      return general_ingredient.get_location_text('Lỗi vị trí hiện tại', Colors.black);
+                                      return general_ingredient.get_location_text('Vui lòng chọn hoặc cho phép vị trí', Colors.black);
                                     }
 
                                     if (!snapshot.hasData) {
-                                      return general_ingredient.get_location_text('Lỗi vị trí hiện tại', Colors.black);
+                                      return general_ingredient.get_location_text('Vui lòng chọn hoặc cho phép vị trí', Colors.black);
                                     }
 
                                     return general_ingredient.get_location_text(snapshot.data!.toString(), Colors.black);

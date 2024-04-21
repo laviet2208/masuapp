@@ -40,11 +40,11 @@ class _future_location_name_by_coordinatesState extends State<future_location_na
         }
 
         if (snapshot.hasError) {
-          return get_main_text('Có lỗi xảy ra, vui lòng thử lại');
+          return get_main_text('Vui lòng chọn hoặc cho phép vị trí');
         }
 
         if (!snapshot.hasData) {
-          return get_main_text('Có lỗi xảy ra, vui lòng thử lại');
+          return get_main_text('Vui lòng chọn hoặc cho phép vị trí');
         }
 
         return get_main_text(snapshot.data!);

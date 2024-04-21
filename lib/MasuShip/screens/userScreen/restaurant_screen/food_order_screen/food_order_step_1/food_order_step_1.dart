@@ -122,11 +122,11 @@ class _food_order_step_1State extends State<food_order_step_1> {
                                     }
 
                                     if (snapshot.hasError) {
-                                      return general_ingredient.get_location_text('Lỗi vị trí hiện tại, vui lòng thử lại', Colors.black);
+                                      return general_ingredient.get_location_text('Vui lòng chọn hoặc cho phép vị trí', Colors.black);
                                     }
 
                                     if (!snapshot.hasData) {
-                                      return general_ingredient.get_location_text('Lỗi vị trí hiện tại, vui lòng thử lại', Colors.black);
+                                      return general_ingredient.get_location_text('Vui lòng chọn hoặc cho phép vị trí', Colors.black);
                                     }
 
                                     return general_ingredient.get_location_text(snapshot.data!.toString(), Colors.black);

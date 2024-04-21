@@ -87,11 +87,11 @@ class price_list_type_2_wait_ingredient extends StatelessWidget {
 
                         if (snapshot.hasError) {
                           print(snapshot.error.toString());
-                          return Text('Lỗi vị trí, vui lòng thử lại', style: TextStyle(color: Colors.black, fontSize: 15),);
+                          return Text('Vui lòng chọn hoặc cho phép vị trí', style: TextStyle(color: Colors.black, fontSize: 15),);
                         }
 
                         if (!snapshot.hasData) {
-                          return Text('Lỗi vị trí, vui lòng thử lại', style: TextStyle(color: Colors.black, fontSize: 15),);
+                          return Text('Vui lòng chọn hoặc cho phép vị trí', style: TextStyle(color: Colors.black, fontSize: 15),);
                         }
 
                         return Container(

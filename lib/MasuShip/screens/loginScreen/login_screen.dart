@@ -25,31 +25,6 @@ class _login_screenState extends State<login_screen> {
   int index = 0;
   bool loading = false;
 
-  Future<Position> getCurrentLocation() async {
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return Future.error('Chưa cho phép vị trí');
-    }
-
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        toastMessage('Để tiếp tục bạn cần cho phép truy cập vị trí của bạn');
-        exit(0);
-        return Future.error('Từ chối cho phép vị trí');
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      toastMessage('Để tiếp tục bạn cần cho phép truy cập vị trí của bạn');
-      exit(0);
-      return Future.error('Bạn cần cho phép ứng dụng truy cập vào vị trí');
-    }
-
-    return await Geolocator.getCurrentPosition();
-  }
-
   @override
   void initState() {
     countryController.text = "+84";

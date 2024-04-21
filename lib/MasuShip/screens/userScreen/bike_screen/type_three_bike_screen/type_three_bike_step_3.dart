@@ -97,11 +97,11 @@ class _type_three_bike_step_3State extends State<type_three_bike_step_3> {
                                                 }
 
                                                 if (snapshot.hasError) {
-                                                  return general_ingredient.get_distance_text('Lỗi vị trí, vui lòng thử lại', width);
+                                                  return general_ingredient.get_distance_text('Vui lòng chọn hoặc cho phép vị trí', width);
                                                 }
 
                                                 if (!snapshot.hasData) {
-                                                  return general_ingredient.get_distance_text('Lỗi vị trí, vui lòng thử lại', width);
+                                                  return general_ingredient.get_distance_text('Vui lòng chọn hoặc cho phép vị trí', width);
                                                 }
 
                                                 return general_ingredient.get_distance_text('Chi phí đưa khách về ' + widget.customerLocations[index].mainText + ' (' + snapshot.data!.toStringAsFixed(1) + ' Km)', width);
@@ -210,11 +210,11 @@ class _type_three_bike_step_3State extends State<type_three_bike_step_3> {
                                                 }
 
                                                 if (snapshot.hasError) {
-                                                  return general_ingredient.get_distance_text('Lỗi vị trí, vui lòng thử lại', width);
+                                                  return general_ingredient.get_distance_text('Vui lòng chọn hoặc cho phép vị trí', width);
                                                 }
 
                                                 if (!snapshot.hasData) {
-                                                  return general_ingredient.get_distance_text('Lỗi vị trí, vui lòng thử lại', width);
+                                                  return general_ingredient.get_distance_text('Vui lòng chọn hoặc cho phép vị trí', width);
                                                 }
 
                                                 return general_ingredient.get_distance_text('Chi phí lái xe về ' + widget.bikeLocations[index].mainText + ' (' + snapshot.data!.toStringAsFixed(1) + ' Km)', width);

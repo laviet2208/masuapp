@@ -5,6 +5,7 @@ import 'package:masuapp/MasuShip/Data/accountData/shopData/shopAccount.dart';
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
 import 'package:masuapp/MasuShip/Data/firebase_interact/firebase_interact.dart';
 import 'package:masuapp/MasuShip/Data/locationData/Location.dart';
+import 'package:masuapp/MasuShip/Data/otherData/utils.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/restaurant_screen/food_order_screen/food_order_wait.dart';
 
 import '../../../../../Data/otherData/Tool.dart';
@@ -62,17 +63,21 @@ class _start_food_order_buttonState extends State<start_food_order_button> {
         ),
       ),
       onTap: () async {
-        setState(() {
-          loading = true;
-        });
-        widget.order.timeList[0] = getCurrentTime();
-        await firebase_interact.pushVoucher(widget.order.voucher);
-        await push_food_order_data(widget.order);
-        setState(() {
-          loading = false;
-        });
-        finalData.cartList.clear();
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => food_order_wait(id: widget.order.id),),);
+        if (widget.order.locationGet.longitude != 0 && widget.order.locationGet.latitude != 0) {
+          setState(() {
+            loading = true;
+          });
+          widget.order.timeList[0] = getCurrentTime();
+          await firebase_interact.pushVoucher(widget.order.voucher);
+          await push_food_order_data(widget.order);
+          setState(() {
+            loading = false;
+          });
+          finalData.cartList.clear();
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => food_order_wait(id: widget.order.id),),);
+        } else {
+          toastMessage('Vui lòng chọn điểm nhận');
+        }
       },
     );
   }
