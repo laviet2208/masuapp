@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/Data/costData/Cost.dart';
 import 'package:masuapp/MasuShip/Data/costData/restaurantCost.dart';
 import 'package:masuapp/MasuShip/Data/costData/weatherCost.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/main_screen/user_main_screen.dart';
 import '../../Data/accountData/shipperAccount.dart';
 import '../../Data/accountData/userAccount.dart';
 import '../../Data/finalData/finalData.dart';
@@ -23,26 +24,36 @@ class loading_screen extends StatefulWidget {
 
 class _loading_screenState extends State<loading_screen> {
 
+  String get_phoneNum(String phone) {
+    if (phone[0] == '0') {
+      return phone.substring(1);
+    }
+    return phone;
+  }
+
   Future<void> getData(String phoneNumber) async {
     final reference = FirebaseDatabase.instance.reference();
     await reference.child('Account').onValue.listen((event) {
       final dynamic account = event.snapshot.value;
-      account.forEach((key, value) {
-        if ('+84' + value['phone'].toString() == phoneNumber) {
+      account.forEach((key, value) async {
+        if ('+84' + get_phoneNum(value['phone'].toString()) == phoneNumber) {
           if (value['license'] == null) {
             finalData.account = UserAccount.fromJson(value);
-            if (finalData.account.name == '') {
+            finalData.user_account = UserAccount.fromJson(value);
+            if (finalData.user_account.name == '') {
+              await getCost();
               Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => enter_name_screen(),),);
-            } else if (finalData.account.lockStatus == 1) {
-
+            } else if (finalData.user_account.lockStatus == 1) {
+              await getCost();
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => user_main_screen(),),);
             } else {
               // tài khoản bị khóa
             }
-
           } else {
             finalData.account = shipperAccount.fromJson(value);
             finalData.shipper_account = shipperAccount.fromJson(value);
             if (finalData.account.lockStatus == 1) {
+              await getCost();
               Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => shipper_main_screen()));
             } else {
               //Tài khoản khách bị khóa
@@ -68,7 +79,6 @@ class _loading_screenState extends State<loading_screen> {
 
   void asyncMethod(String phone) async {
     await getData(phone);
-    await getCost();
   }
 
 

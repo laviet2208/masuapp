@@ -11,7 +11,10 @@ class location_controller {
 
   static Future<void> updateLocationToDatabase(Position position) async {
     final FirebaseDatabase database = FirebaseDatabase.instance;
-    DatabaseReference reference = database.reference().child('Account').child(finalData.account.id).child('location');
+    DatabaseReference reference = database.reference().child('Account').child(finalData.user_account.id).child('location');
+    if (finalData.user_account.id == '') {
+      reference = database.reference().child('Account').child(finalData.shipper_account.id).child('location');
+    }
 
     // Update location to database
     await reference.child('latitude').set(position.latitude);

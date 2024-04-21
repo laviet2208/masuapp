@@ -134,16 +134,17 @@ class _verify_screenState extends State<verify_screen> {
                             loading = false;
                           });
                         } else {
-                          finalData.account = UserAccount(
+                          finalData.user_account = UserAccount(
                             id: generateID(15),
                             createTime: getCurrentTime(),
                             lockStatus: 1,
                             name: '',
-                            area: '',
+                            area: 'ineSi92oGc1ZDlBBlddo',
                             phone: widget.phoneNum,
                             location: Location(placeId: '', description: '', longitude: 0, latitude: 0, mainText: '', secondaryText: ''),
                           );
-                          await loginController.pushData(finalData.account);
+
+                          await loginController.pushData(finalData.user_account);
                           setState(() {
                             loading = false;
                           });

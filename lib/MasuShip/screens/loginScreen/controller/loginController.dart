@@ -30,7 +30,7 @@ class loginController {
   }
 
   //Đẩy data account
-  static Future<void> pushData(Account account) async {
+  static Future<void> pushData(UserAccount account) async {
     final reference = FirebaseDatabase.instance.reference();
     await reference.child("Account/" + account.id).set(account.toJson());
   }

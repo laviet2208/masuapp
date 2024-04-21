@@ -18,7 +18,7 @@ class _enter_name_screenState extends State<enter_name_screen> {
 
   Future<void> pushData(String name) async {
     final reference = FirebaseDatabase.instance.reference();
-    await reference.child("Account").child(finalData.account.id).child('name').set(name);
+    await reference.child("Account").child(finalData.user_account.id).child('name').set(name);
   }
 
 
@@ -37,7 +37,7 @@ class _enter_name_screenState extends State<enter_name_screen> {
               child: Text(
                 'Bắt đầu',
                 style: TextStyle(
-                  fontFamily: "arial",
+                  fontFamily: "muli",
                   fontSize: screenWidth / 20,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
@@ -65,7 +65,7 @@ class _enter_name_screenState extends State<enter_name_screen> {
                     style: TextStyle(
                         color: Color.fromARGB(255, 0, 0, 0),
                         fontSize: screenWidth/22,
-                        fontFamily: 'arial',
+                        fontFamily: 'muli',
                         fontWeight: FontWeight.bold
                     ),
                   ),
@@ -93,7 +93,7 @@ class _enter_name_screenState extends State<enter_name_screen> {
                         controller: nameController,
                         style: TextStyle(
                           color: Colors.black,
-                          fontFamily: 'arial',
+                          fontFamily: 'muli',
                         ),
 
                         decoration: InputDecoration(
@@ -101,7 +101,7 @@ class _enter_name_screenState extends State<enter_name_screen> {
                           hintText: 'Bạn thích mọi người gọi bằng tên gì?',
                           hintStyle: TextStyle(
                             color: Colors.grey,
-                            fontFamily: 'arial',
+                            fontFamily: 'muli',
                           ),
                         ),
                       ),
@@ -123,7 +123,7 @@ class _enter_name_screenState extends State<enter_name_screen> {
                           style: TextStyle(
                             color: Color.fromARGB(255, 115, 115, 115),
                             fontSize: screenWidth / 26,
-                            fontFamily: 'arial',
+                            fontFamily: 'muli',
                             fontWeight: FontWeight.normal,
                           ),
                         ),
@@ -132,7 +132,7 @@ class _enter_name_screenState extends State<enter_name_screen> {
                           style: TextStyle(
                             color: Colors.blue,
                             fontSize: screenWidth / 26,
-                            fontFamily: 'arial',
+                            fontFamily: 'muli',
                             fontWeight: FontWeight.normal,
                             decoration: TextDecoration.underline,
                           ),
@@ -146,7 +146,7 @@ class _enter_name_screenState extends State<enter_name_screen> {
                           style: TextStyle(
                             color: Color.fromARGB(255, 115, 115, 115),
                             fontSize: screenWidth / 26,
-                            fontFamily: 'arial',
+                            fontFamily: 'muli',
                             fontWeight: FontWeight.normal,
                           ),
                         ),
@@ -155,7 +155,7 @@ class _enter_name_screenState extends State<enter_name_screen> {
                           style: TextStyle(
                             color: Colors.blue,
                             fontSize: screenWidth / 26,
-                            fontFamily: 'arial',
+                            fontFamily: 'muli',
                             fontWeight: FontWeight.normal,
                             decoration: TextDecoration.underline,
                           ),
@@ -169,7 +169,7 @@ class _enter_name_screenState extends State<enter_name_screen> {
                           style: TextStyle(
                             color: Color.fromARGB(255, 115, 115, 115),
                             fontSize: screenWidth / 24,
-                            fontFamily: 'arial',
+                            fontFamily: 'muli',
                             fontWeight: FontWeight.normal,
                           ),
                         ),
@@ -194,7 +194,7 @@ class _enter_name_screenState extends State<enter_name_screen> {
                         child: !loading ? Text(
                           'Tôi chọn tên này',
                           style: TextStyle(
-                            fontFamily: 'arial',
+                            fontFamily: 'muli',
                             color: Colors.black,
                             fontWeight: FontWeight.bold
                           ),

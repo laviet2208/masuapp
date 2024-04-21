@@ -31,8 +31,8 @@ class order_have_dialog_controller {
       await change_order_time('S2time', order.id);
       await push_history_data(historyTransactionData(id: generateID(30), senderId: '', receiverId: finalData.shipper_account.id, transactionTime: getCurrentTime(), type: 5, content: 'Chiết khấu đơn xe ôm' + order.id, money: money, area: finalData.shipper_account.area));
       print('Trừ tiền tài khoản, đẩy lịch sử lên');
-      final player = AudioPlayer();
-      await player.play(AssetSource('volume/ting.mp3'), volume: 200);
+      // final player = AudioPlayer();
+      // await player.play(AssetSource('volume/ting.mp3'), volume: 200);
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -55,8 +55,8 @@ class order_have_dialog_controller {
       await change_shipper_money();
       await change_order_time('S2time', order.id);
       print('Trừ tiền tài khoản, đẩy lịch sử lên');
-      final player = AudioPlayer();
-      await player.play(AssetSource('volume/ting.mp3'), volume: 200);
+      // final player = AudioPlayer();
+      // await player.play(AssetSource('volume/ting.mp3'), volume: 200);
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -80,8 +80,8 @@ class order_have_dialog_controller {
       await change_order_time('S2time', order.id);
       await push_history_data(historyTransactionData(id: generateID(30), senderId: '', receiverId: finalData.shipper_account.id, transactionTime: getCurrentTime(), type: 5, content: 'Chiết khấu đơn xe ôm' + order.id, money: money, area: finalData.shipper_account.area));
       print('Trừ tiền tài khoản, đẩy lịch sử lên');
-      final player = AudioPlayer();
-      await player.play(AssetSource('volume/ting.mp3'), volume: 200);
+      // final player = AudioPlayer();
+      // await player.play(AssetSource('volume/ting.mp3'), volume: 200);
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -105,8 +105,8 @@ class order_have_dialog_controller {
       await change_order_time('S2time', order.id);
       await push_history_data(historyTransactionData(id: generateID(30), senderId: '', receiverId: finalData.shipper_account.id, transactionTime: getCurrentTime(), type: 5, content: 'Chiết khấu đơn xe ôm' + order.id, money: money, area: finalData.shipper_account.area));
       print('Trừ tiền tài khoản, đẩy lịch sử lên');
-      final player = AudioPlayer();
-      await player.play(AssetSource('volume/ting.mp3'), volume: 200);
+      // final player = AudioPlayer();
+      // await player.play(AssetSource('volume/ting.mp3'), volume: 200);
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -132,8 +132,8 @@ class order_have_dialog_controller {
       await push_history_data(historyTransactionData(id: generateID(30), senderId: '', receiverId: finalData.shipper_account.id, transactionTime: getCurrentTime(), type: 9, content: 'Chiết khấu nhà hàng ' + order.id, money: res_discount_money, area: finalData.shipper_account.area));
       await push_history_data(historyTransactionData(id: generateID(30), senderId: '', receiverId: finalData.shipper_account.id, transactionTime: getCurrentTime(), type: 5, content: 'Chiết khấu đơn nhà hàng ' + order.id, money: money, area: finalData.shipper_account.area));
       print('Trừ tiền tài khoản, đẩy lịch sử lên');
-      final player = AudioPlayer();
-      await player.play(AssetSource('volume/ting.mp3'), volume: 200);
+      // final player = AudioPlayer();
+      // await player.play(AssetSource('volume/ting.mp3'), volume: 200);
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -157,8 +157,8 @@ class order_have_dialog_controller {
       await change_order_time('S2time', order.id);
       await push_history_data(historyTransactionData(id: generateID(30), senderId: '', receiverId: finalData.shipper_account.id, transactionTime: getCurrentTime(), type: 5, content: 'Chiết khấu đơn xe ôm' + order.id, money: money, area: finalData.shipper_account.area));
       print('Trừ tiền tài khoản, đẩy lịch sử lên');
-      final player = AudioPlayer();
-      await player.play(AssetSource('volume/ting.mp3'), volume: 200);
+      // final player = AudioPlayer();
+      // await player.play(AssetSource('volume/ting.mp3'), volume: 200);
       showDialog(
         context: context,
         builder: (BuildContext context) {
