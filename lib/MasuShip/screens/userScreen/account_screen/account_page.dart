@@ -3,8 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
+import 'package:masuapp/MasuShip/Data/otherData/utils.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/account_screen/policy_screen/policy_and_services_screen.dart';
-
 import '../../../Data/areaData/Area.dart';
 import '../../loginScreen/loading_screen.dart';
 import 'change_account_user_info/change_account_user_info.dart';
@@ -688,164 +688,164 @@ class _account_pageState extends State<account_page> {
                     //   ),
                     // ),
 
-                    Container(height: 10,),
-
-                    Padding(
-                      padding: EdgeInsets.only(left: 10, right: 10),
-                      child: GestureDetector(
-                        child: Container(
-                          height: 60,
-                          decoration: BoxDecoration(
-                            color: Colors.transparent,
-                          ),
-                          child: Stack(
-                            children: <Widget>[
-                              Positioned(
-                                top: 15,
-                                left: 0,
-                                child: Container(
-                                  height: 29,
-                                  width: 29,
-                                  decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          fit: BoxFit.cover,
-                                          image: AssetImage('assets/image/iconaccinfo/6.png')
-                                      )
-                                  ),
-                                ),
-                              ),
-
-                              Positioned(
-                                top: 0,
-                                left: 60,
-                                child: Container(
-                                    width: (screenWidth-30)/3*2,
-                                    height: 60,
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      'Trung tâm trợ giúp',
-                                      style: TextStyle(
-                                          fontFamily: 'arial',
-                                          fontSize: 15,
-                                          color: Color.fromARGB(255, 32, 32, 32),
-                                          fontWeight: FontWeight.bold
-                                      ),
-                                    )
-                                ),
-                              ),
-
-                              Positioned(
-                                top: 0,
-                                right: 0,
-                                bottom: 0,
-                                child: Container(
-                                  width: 20,
-                                  alignment: Alignment.center,
-                                  child: Icon(
-                                    Icons.chevron_right,
-                                    color: Colors.black,
-                                    size: 20,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    Padding(
-                      padding: EdgeInsets.only(left: 10, right: 10),
-                      child: Container(
-                        height: 2,
-                        decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(20)
-                        ),
-                      ),
-                    ),
-
-                    Container(height: 10,),
-
-                    Padding(
-                      padding: EdgeInsets.only(left: 10, right: 10),
-                      child: GestureDetector(
-                        child: Container(
-                          height: 60,
-                          decoration: BoxDecoration(
-                            color: Colors.transparent,
-                          ),
-                          child: Stack(
-                            children: <Widget>[
-                              Positioned(
-                                top: 15,
-                                left: 0,
-                                child: Container(
-                                  height: 29,
-                                  width: 29,
-                                  decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          fit: BoxFit.cover,
-                                          image: AssetImage('assets/image/iconaccinfo/8.png')
-                                      )
-                                  ),
-                                ),
-                              ),
-
-                              Positioned(
-                                top: 0,
-                                left: 60,
-                                child: GestureDetector(
-                                  child: Container(
-                                      width: (screenWidth-30)/3*2,
-                                      height: 60,
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        'Điều khoản và phiên bản',
-                                        style: TextStyle(
-                                            fontFamily: 'arial',
-                                            fontSize: 15,
-                                            color: Color.fromARGB(255, 32, 32, 32),
-                                            fontWeight: FontWeight.bold
-                                        ),
-                                      )
-                                  ),
-                                ),
-                              ),
-
-                              Positioned(
-                                top: 0,
-                                right: 0,
-                                bottom: 0,
-                                child: Container(
-                                  width: 20,
-                                  alignment: Alignment.center,
-                                  child: Icon(
-                                    Icons.chevron_right,
-                                    color: Colors.black,
-                                    size: 20,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        onTap: () {
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => policy_and_services_screen(),),);
-                        },
-                      ),
-                    ),
-
-                    Padding(
-                      padding: EdgeInsets.only(left: 10, right: 10),
-                      child: Container(
-                        height: 2,
-                        decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(20)
-                        ),
-                      ),
-                    ),
+                    // Container(height: 10,),
+                    //
+                    // Padding(
+                    //   padding: EdgeInsets.only(left: 10, right: 10),
+                    //   child: GestureDetector(
+                    //     child: Container(
+                    //       height: 60,
+                    //       decoration: BoxDecoration(
+                    //         color: Colors.transparent,
+                    //       ),
+                    //       child: Stack(
+                    //         children: <Widget>[
+                    //           Positioned(
+                    //             top: 15,
+                    //             left: 0,
+                    //             child: Container(
+                    //               height: 29,
+                    //               width: 29,
+                    //               decoration: BoxDecoration(
+                    //                   image: DecorationImage(
+                    //                       fit: BoxFit.cover,
+                    //                       image: AssetImage('assets/image/iconaccinfo/6.png')
+                    //                   )
+                    //               ),
+                    //             ),
+                    //           ),
+                    //
+                    //           Positioned(
+                    //             top: 0,
+                    //             left: 60,
+                    //             child: Container(
+                    //                 width: (screenWidth-30)/3*2,
+                    //                 height: 60,
+                    //                 alignment: Alignment.centerLeft,
+                    //                 child: Text(
+                    //                   'Trung tâm trợ giúp',
+                    //                   style: TextStyle(
+                    //                       fontFamily: 'arial',
+                    //                       fontSize: 15,
+                    //                       color: Color.fromARGB(255, 32, 32, 32),
+                    //                       fontWeight: FontWeight.bold
+                    //                   ),
+                    //                 )
+                    //             ),
+                    //           ),
+                    //
+                    //           Positioned(
+                    //             top: 0,
+                    //             right: 0,
+                    //             bottom: 0,
+                    //             child: Container(
+                    //               width: 20,
+                    //               alignment: Alignment.center,
+                    //               child: Icon(
+                    //                 Icons.chevron_right,
+                    //                 color: Colors.black,
+                    //                 size: 20,
+                    //               ),
+                    //             ),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                    //
+                    // Padding(
+                    //   padding: EdgeInsets.only(left: 10, right: 10),
+                    //   child: Container(
+                    //     height: 2,
+                    //     decoration: BoxDecoration(
+                    //         color: Colors.grey,
+                    //         borderRadius: BorderRadius.circular(20)
+                    //     ),
+                    //   ),
+                    // ),
+                    //
+                    // Container(height: 10,),
+                    //
+                    // Padding(
+                    //   padding: EdgeInsets.only(left: 10, right: 10),
+                    //   child: GestureDetector(
+                    //     child: Container(
+                    //       height: 60,
+                    //       decoration: BoxDecoration(
+                    //         color: Colors.transparent,
+                    //       ),
+                    //       child: Stack(
+                    //         children: <Widget>[
+                    //           Positioned(
+                    //             top: 15,
+                    //             left: 0,
+                    //             child: Container(
+                    //               height: 29,
+                    //               width: 29,
+                    //               decoration: BoxDecoration(
+                    //                   image: DecorationImage(
+                    //                       fit: BoxFit.cover,
+                    //                       image: AssetImage('assets/image/iconaccinfo/8.png')
+                    //                   )
+                    //               ),
+                    //             ),
+                    //           ),
+                    //
+                    //           Positioned(
+                    //             top: 0,
+                    //             left: 60,
+                    //             child: GestureDetector(
+                    //               child: Container(
+                    //                   width: (screenWidth-30)/3*2,
+                    //                   height: 60,
+                    //                   alignment: Alignment.centerLeft,
+                    //                   child: Text(
+                    //                     'Điều khoản và phiên bản',
+                    //                     style: TextStyle(
+                    //                         fontFamily: 'arial',
+                    //                         fontSize: 15,
+                    //                         color: Color.fromARGB(255, 32, 32, 32),
+                    //                         fontWeight: FontWeight.bold
+                    //                     ),
+                    //                   )
+                    //               ),
+                    //             ),
+                    //           ),
+                    //
+                    //           Positioned(
+                    //             top: 0,
+                    //             right: 0,
+                    //             bottom: 0,
+                    //             child: Container(
+                    //               width: 20,
+                    //               alignment: Alignment.center,
+                    //               child: Icon(
+                    //                 Icons.chevron_right,
+                    //                 color: Colors.black,
+                    //                 size: 20,
+                    //               ),
+                    //             ),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //     onTap: () {
+                    //       Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => policy_and_services_screen(),),);
+                    //     },
+                    //   ),
+                    // ),
+                    //
+                    // Padding(
+                    //   padding: EdgeInsets.only(left: 10, right: 10),
+                    //   child: Container(
+                    //     height: 2,
+                    //     decoration: BoxDecoration(
+                    //         color: Colors.grey,
+                    //         borderRadius: BorderRadius.circular(20)
+                    //     ),
+                    //   ),
+                    // ),
 
                     Container(height: 10,),
 
@@ -853,7 +853,9 @@ class _account_pageState extends State<account_page> {
                       padding: EdgeInsets.only(left: 10, right: 10),
                       child: GestureDetector(
                         onTap: () async {
-
+                          await _auth.signOut();
+                          toastMessage('Yêu cầu xóa tài khoản thành công, vui lòng đợi hệ thống xét duyệt');
+                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => loading_screen()), (route) => false,);
                         },
                         child: Container(
                           height: 60,

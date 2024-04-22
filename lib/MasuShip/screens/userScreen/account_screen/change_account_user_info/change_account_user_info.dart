@@ -2,7 +2,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
-
 import '../../../../Data/otherData/utils.dart';
 import '../../main_screen/user_main_screen.dart';
 
@@ -306,7 +305,7 @@ class _change_account_user_infoState extends State<change_account_user_info> {
                             await change_data(namecontroller.text.toString());
                             toastMessage('Cập nhật tên thành công');
                             setState(() {
-                              loading = true;
+                              loading = false;
                             });
                           } else {
                             toastMessage('Bạn chưa nhập tên mới');
