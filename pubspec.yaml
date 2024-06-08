@@ -88,6 +88,7 @@ flutter:
 
   assets:
     - assets/image/icontrang1/
+    - assets/image/icontrang2/
     - assets/image/iconhoatdong/
     - assets/image/iconaccinfo/
     - assets/volume/ting.mp3

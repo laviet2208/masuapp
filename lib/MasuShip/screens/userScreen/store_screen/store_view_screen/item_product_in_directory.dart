@@ -2,33 +2,33 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:masuapp/GENERAL/utils/utils.dart';
-import 'package:masuapp/MasuShip/Data/accountData/shopData/Product.dart';
-import 'package:masuapp/MasuShip/Data/accountData/shopData/productDirectory.dart';
-import 'package:masuapp/MasuShip/Data/otherData/Tool.dart';
-import 'package:masuapp/MasuShip/screens/userScreen/restaurant_screen/restaurant_view_screen/view_food_detail_dialog.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/store_screen/store_view_screen/view_product_detail_dialog.dart';
 
-class item_food_in_directory extends StatefulWidget {
+import '../../../../Data/accountData/shopData/Product.dart';
+import '../../../../Data/otherData/Tool.dart';
+import '../../../../Data/otherData/utils.dart';
+
+class item_product_in_directory extends StatefulWidget {
   final String foodID;
   final VoidCallback ontap;
-  const item_food_in_directory({super.key, required this.foodID, required this.ontap});
+  const item_product_in_directory({super.key, required this.foodID, required this.ontap});
 
   @override
-  State<item_food_in_directory> createState() => _item_food_in_directoryState();
+  State<item_product_in_directory> createState() => _item_product_in_directoryState();
 }
 
-class _item_food_in_directoryState extends State<item_food_in_directory> {
+class _item_product_in_directoryState extends State<item_product_in_directory> {
   Product product = Product(id: '', cost: 0, name: '', describle: '', owner: '', status: 1, createTime: getCurrentTime());
 
   Future<String> _getImageURL() async {
-    final ref = FirebaseStorage.instance.ref().child('Food').child(widget.foodID + '.png');
+    final ref = FirebaseStorage.instance.ref().child('Product').child(widget.foodID + '.png');
     final url = await ref.getDownloadURL();
     return url;
   }
 
   void get_food_data() {
     final reference = FirebaseDatabase.instance.reference();
-    reference.child("Food/" + widget.foodID).onValue.listen((event) {
+    reference.child("Product/" + widget.foodID).onValue.listen((event) {
       final dynamic food = event.snapshot.value;
       if (food != null) {
         product = Product.fromJson(food);
@@ -218,7 +218,7 @@ class _item_food_in_directoryState extends State<item_food_in_directory> {
       ),
       onTap: () {
         if (product.status == 0) {
-          toastMessage('Món ăn đang tạm hết');
+          toastMessage('Sản phẩm đang tạm hết');
         } else {
           showModalBottomSheet(
             context: context,
@@ -227,7 +227,7 @@ class _item_food_in_directoryState extends State<item_food_in_directory> {
             ),
             isScrollControlled: true,
             builder: (context) {
-              return view_food_detail_dialog(product: product, event: widget.ontap);
+              return view_product_detail_dialog(product: product, event: widget.ontap);
             },
           );
         }

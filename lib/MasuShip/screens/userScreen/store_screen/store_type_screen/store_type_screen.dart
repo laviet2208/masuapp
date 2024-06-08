@@ -1,27 +1,27 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:masuapp/MasuShip/screens/userScreen/restaurant_screen/restaurant_directory_page/item_restaurant_in_directory.dart';
-import 'package:masuapp/MasuShip/screens/userScreen/restaurant_screen/restaurant_main_screen/restaurant_main_screen.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/store_screen/store_main_screen/store_main_screen.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/store_screen/store_view_screen/store_view_screen.dart';
 
 import '../../../../Data/accountData/shopData/shopAccount.dart';
-import '../restaurant_view_screen/restaurant_view_screen.dart';
+import '../../restaurant_screen/restaurant_directory_page/item_restaurant_in_directory.dart';
 
-class restaurant_type_screen extends StatefulWidget {
+class store_type_screen extends StatefulWidget {
   final String title;
   final int index;
-  const restaurant_type_screen({super.key, required this.title, required this.index});
+  const store_type_screen({super.key, required this.title, required this.index});
 
   @override
-  State<restaurant_type_screen> createState() => _restaurant_type_screenState();
+  State<store_type_screen> createState() => _store_type_screenState();
 }
 
-class _restaurant_type_screenState extends State<restaurant_type_screen> {
+class _store_type_screenState extends State<store_type_screen> {
   List<ShopAccount> shopList = [];
 
   void get_shop_data() {
     final reference = FirebaseDatabase.instance.reference();
-    reference.child("Restaurant").orderByChild('type').equalTo(widget.index).onValue.listen((event) {
+    reference.child("Store").orderByChild('type').equalTo(widget.index).onValue.listen((event) {
       shopList.clear();
       final dynamic orders = event.snapshot.value;
       orders.forEach((key, value) {
@@ -84,7 +84,7 @@ class _restaurant_type_screenState extends State<restaurant_type_screen> {
                           ),
                         ),
                         onTap: () {
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => restaurant_main_screen()));
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => store_main_screen()));
                         },
                       ),
 
@@ -98,7 +98,7 @@ class _restaurant_type_screenState extends State<restaurant_type_screen> {
                             color: Colors.transparent,
                           ),
                           child: AutoSizeText(
-                            'Danh sách nhà hàng ' + widget.title,
+                            'Danh sách shop ' + widget.title,
                             style: TextStyle(
                                 fontFamily: 'muli',
                                 color: Colors.black,
@@ -144,7 +144,7 @@ class _restaurant_type_screenState extends State<restaurant_type_screen> {
                           child: GestureDetector(
                             child: item_restaurant_in_directory(shopId: shopList[index].id),
                             onTap: () {
-                              Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => restaurant_view_screen(shopId: shopList[index].id, beforeWidget: this.widget)));
+                              Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => store_view_screen(shopId: shopList[index].id, beforeWidget: this.widget)));
                             },
                           ),
                         );
@@ -157,9 +157,8 @@ class _restaurant_type_screenState extends State<restaurant_type_screen> {
           ),
         ),
         onWillPop: () {
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => restaurant_main_screen(),),);
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => store_main_screen(),),);
           return Future.value(false);
         }
-    );
-  }
+    );  }
 }

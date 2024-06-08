@@ -25,8 +25,9 @@ class finalData {
   static DateTime lastOrderTime = DateTime(0,0,0,0,0,0);
 
   static List<String> restaurant_type_images = ['assets/image/icontrang1/icon_5sao.png', 'assets/image/icontrang1/icon_anvat.png', 'assets/image/icontrang1/icon_bun.png', 'assets/image/icontrang1/icon_com.png', 'assets/image/icontrang1/icon_khuyenmai.png', 'assets/image/icontrang1/icon_monnhau.png', 'assets/image/icontrang1/icon_nuocuong.png', 'assets/image/icontrang1/icon_thucannhanh.png', 'assets/image/icontrang1/icon_trasua.png',];
-
+  static List<String> store_type_images = ['assets/image/icontrang2/iconthucpham.png', 'assets/image/icontrang2/iconraucu.png', 'assets/image/icontrang2/iconmebe.png', 'assets/image/icontrang2/icongiavi.png', 'assets/image/icontrang2/icongiadung.png', 'assets/image/icontrang2/icondokho.png', 'assets/image/icontrang2/icondohop.png', 'assets/image/icontrang2/icontrungsua.png', 'assets/image/icontrang2/iconbiaruou.png',];
   static List<String> restaurant_type_names = ['Năm sao', 'Ăn vặt', 'Bún phở', 'Cơm', 'Khuyến mãi', 'Món nhậu', 'Nước uống', 'Fast food', 'Trà sữa',];
+  static List<String> store_type_names = ['Thực phẩm', 'Rau củ', 'Mẹ và bé', 'Gia vị', 'Gia dụng', 'Đồ khô', 'Đồ hộp', 'Trứng sữa', 'Đồ nhậu',];
 
   static Cost bikeShipCost = Cost(departKM: 0, departCost: 0, milestoneKM1: 0, milestoneKM2: 0, perKMcost1: 0, perKMcost2: 0, perKMcost3: 0, discountLimit: 0, discountMoney: 0, discountPercent: 0);
   static Cost expressShipCost = Cost(departKM: 0, departCost: 0, milestoneKM1: 0, milestoneKM2: 0, perKMcost1: 0, perKMcost2: 0, perKMcost3: 0, discountLimit: 0, discountMoney: 0, discountPercent: 0);
@@ -38,6 +39,7 @@ class finalData {
   static restaurantCost restaurantcost = restaurantCost(discount: 0);
 
   static List<cartProduct> cartList = [];
+  static List<cartProduct> storeCartList = [];
 
   static Temporary shipperIndexTempotary = Temporary(stringData: '', intData: 0, doubleData: 0);
 }

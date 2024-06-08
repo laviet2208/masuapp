@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/main_page/ingredient/buy_request_order_ingredient/request_buy_order_ingredient_controller.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/main_page/ingredient/catch_order_ingredient/catch_order_ingredient_controller.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/main_page/ingredient/feature_button_in_main_page.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/request_buy_screen/request_buy_wait.dart';
 import 'buy_request_order_ingredient_dialog.dart';
 
@@ -20,63 +21,7 @@ class _buy_request_buttonState extends State<buy_request_button> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return GestureDetector(
-      child: Container(
-        width: (width - 90)/2,
-        height: (width - 90)/2,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(width: 1),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.2), // màu của shadow
-              spreadRadius: 5, // bán kính của shadow
-              blurRadius: 7, // độ mờ của shadow
-              offset: Offset(0, 3), // vị trí của shadow
-            ),
-          ],
-        ),
-        child: Stack(
-          children: <Widget>[
-            Positioned(
-              top: 20,
-              left: 0,
-              right: 0,
-              bottom: (width - 90)/6,
-              child: Padding(
-                padding: EdgeInsets.all(10),
-                child: Container(
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          fit: BoxFit.fitHeight,
-                          image: AssetImage('assets/image/iconbag.png')
-                      )
-                  ),
-                ),
-              ),
-            ),
-
-            Positioned(
-              bottom: 10,
-              left: 10,
-              right: 10,
-              child: Container(
-                height: (width - 90)/8 - 20,
-                alignment: Alignment.center,
-                child: !loading ? AutoSizeText(
-                  'Mua hàng hộ',
-                  style: TextStyle(
-                      fontFamily: 'muli',
-                      fontSize: 100,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold
-                  ),
-                ) : Container(width: (width - 90)/8 - 20, alignment: Alignment.center, child: CircularProgressIndicator(color: Colors.black,),),
-              ),
-            ),
-          ],
-        ),
-      ),
+      child: feature_button_in_main_page(title: 'Mua hàng hộ', imageUrl: 'assets/image/iconbag.png'),
       onTap: () async {
         setState(() {
           loading = true;

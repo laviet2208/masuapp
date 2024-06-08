@@ -4,14 +4,15 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
-import 'package:masuapp/MasuShip/screens/userScreen/express_screen/express_step_1.dart';
-import 'package:masuapp/MasuShip/screens/userScreen/main_page/ingredient/buy_request_order_ingredient/buy_request_button.dart';
-import 'package:masuapp/MasuShip/screens/userScreen/main_page/ingredient/catch_order_ingredient/catch_order_button.dart';
-import 'package:masuapp/MasuShip/screens/userScreen/main_screen/user_main_screen.dart';
-import 'package:masuapp/MasuShip/screens/userScreen/restaurant_screen/restaurant_main_screen/restaurant_main_screen.dart';
-
+import 'package:masuapp/MasuShip/screens/userScreen/main_page/ingredient/feature_button_in_main_page.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/store_screen/store_main_screen/store_main_screen.dart';
 import '../../../Data/adsData/restaurantAdsData.dart';
+import '../express_screen/express_step_1.dart';
+import '../main_screen/user_main_screen.dart';
+import '../restaurant_screen/restaurant_main_screen/restaurant_main_screen.dart';
 import '../restaurant_screen/restaurant_view_screen/restaurant_view_screen.dart';
+import 'ingredient/buy_request_order_ingredient/buy_request_button.dart';
+import 'ingredient/catch_order_ingredient/catch_order_button.dart';
 
 class main_page extends StatefulWidget {
   const main_page({super.key});
@@ -222,18 +223,18 @@ class _main_pageState extends State<main_page> {
             Container(height: 30,),
 
             Container(
-              height: (width - 90)/2,
+              height: (width - 60)/3,
               child: Stack(
                 children: <Widget>[
                   Positioned(
                     top: 0,
-                    left: 30,
+                    left: 15 + (((width - 60)/3))/2,
                     child: catch_order_button(),
                   ),
 
                   Positioned(
                     top: 0,
-                    right: 30,
+                    right: 15 + (((width - 60)/3))/2,
                     child: buy_request_button(),
                   ),
                 ],
@@ -243,70 +244,14 @@ class _main_pageState extends State<main_page> {
             Container(height: 30,),
 
             Container(
-              height: (width - 90)/2,
+              height: (width - 60)/3,
               child: Stack(
                 children: <Widget>[
                   Positioned(
                     top: 0,
-                    left: 30,
+                    left: 15,
                     child: GestureDetector(
-                      child: Container(
-                        width: (width - 90)/2,
-                        height: (width - 90)/2,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(width: 1),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.2), // màu của shadow
-                              spreadRadius: 5, // bán kính của shadow
-                              blurRadius: 7, // độ mờ của shadow
-                              offset: Offset(0, 3), // vị trí của shadow
-                            ),
-                          ],
-                        ),
-                        child: Stack(
-                          children: <Widget>[
-                            Positioned(
-                              top: 20,
-                              left: 0,
-                              right: 0,
-                              bottom: (width - 90)/6,
-                              child: Padding(
-                                padding: EdgeInsets.all(10),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          fit: BoxFit.fitHeight,
-                                          image: AssetImage('assets/image/iconmart.png')
-                                      )
-                                  ),
-                                ),
-                              ),
-                            ),
-
-                            Positioned(
-                              bottom: 10,
-                              left: 10,
-                              right: 10,
-                              child: Container(
-                                height: (width - 90)/8 - 20,
-                                alignment: Alignment.center,
-                                child: AutoSizeText(
-                                  'Giao hàng nhanh',
-                                  style: TextStyle(
-                                      fontFamily: 'muli',
-                                      fontSize: 100,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      child: feature_button_in_main_page(title: 'Giao hàng nhanh', imageUrl: 'assets/image/iconmart.png'),
                       onTap: () {
                         Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => express_step_1(),),);
                       },
@@ -315,65 +260,20 @@ class _main_pageState extends State<main_page> {
 
                   Positioned(
                     top: 0,
-                    right: 30,
+                    left: (width - ((width - 60)/3))/2,
                     child: GestureDetector(
-                      child: Container(
-                        width: (width - 90)/2,
-                        height: (width - 90)/2,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(width: 1),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.2), // màu của shadow
-                              spreadRadius: 5, // bán kính của shadow
-                              blurRadius: 7, // độ mờ của shadow
-                              offset: Offset(0, 3), // vị trí của shadow
-                            ),
-                          ],
-                        ),
-                        child: Stack(
-                          children: <Widget>[
-                            Positioned(
-                              top: 20,
-                              left: 0,
-                              right: 0,
-                              bottom: (width - 90)/6,
-                              child: Padding(
-                                padding: EdgeInsets.all(10),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          fit: BoxFit.fitHeight,
-                                          image: AssetImage('assets/image/iconfood.png')
-                                      )
-                                  ),
-                                ),
-                              ),
-                            ),
+                      child: feature_button_in_main_page(title: 'Mua sắm', imageUrl: 'assets/image/iconstore.png'),
+                      onTap: () {
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => store_main_screen(),),);
+                      },
+                    ),
+                  ),
 
-                            Positioned(
-                              bottom: 10,
-                              left: 10,
-                              right: 10,
-                              child: Container(
-                                height: (width - 90)/8 - 20,
-                                alignment: Alignment.center,
-                                child: AutoSizeText(
-                                  'Mua đồ ăn',
-                                  style: TextStyle(
-                                      fontFamily: 'muli',
-                                      fontSize: 100,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                  Positioned(
+                    top: 0,
+                    right: 15,
+                    child: GestureDetector(
+                      child: feature_button_in_main_page(title: 'Mua đồ ăn', imageUrl: 'assets/image/iconfood.png'),
                       onTap: () {
                         Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => restaurant_main_screen(),),);
                       },

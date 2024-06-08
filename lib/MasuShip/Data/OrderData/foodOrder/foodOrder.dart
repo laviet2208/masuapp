@@ -4,9 +4,7 @@ import 'package:masuapp/MasuShip/Data/accountData/shopData/shopAccount.dart';
 import 'package:masuapp/MasuShip/Data/costData/Cost.dart';
 import 'package:masuapp/MasuShip/Data/costData/restaurantCost.dart';
 import 'package:masuapp/MasuShip/Data/otherData/Time.dart';
-
 import '../../accountData/shipperAccount.dart';
-import '../../accountData/shopData/Product.dart';
 import '../../accountData/userAccount.dart';
 import '../../locationData/Location.dart';
 import '../../voucherData/Voucher.dart';

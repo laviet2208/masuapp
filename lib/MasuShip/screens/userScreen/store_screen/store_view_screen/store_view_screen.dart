@@ -1,30 +1,27 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:masuapp/MasuShip/Data/accountData/shopData/Product.dart';
-import 'package:masuapp/MasuShip/Data/accountData/shopData/productDirectory.dart';
-import 'package:masuapp/MasuShip/Data/accountData/shopData/shopAccount.dart';
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
-import 'package:masuapp/MasuShip/screens/userScreen/restaurant_screen/food_order_screen/cart_screen/view_cart_screen.dart';
-import 'package:masuapp/MasuShip/screens/userScreen/restaurant_screen/restaurant_view_screen/food_directory_page.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/store_screen/product_order_screen/cart_screen/view_store_cart_screen.dart';
 
+import '../../../../Data/accountData/shopData/Product.dart';
+import '../../../../Data/accountData/shopData/productDirectory.dart';
+import '../../../../Data/accountData/shopData/shopAccount.dart';
 import '../../../../Data/locationData/Location.dart';
 import '../../../../Data/otherData/Tool.dart';
 import '../../../../Data/otherData/utils.dart';
+import 'product_directory_page.dart';
 
-class restaurant_view_screen extends StatefulWidget {
+class store_view_screen extends StatefulWidget {
   final String shopId;
   final Widget beforeWidget;
-  const restaurant_view_screen({super.key, required this.shopId, required this.beforeWidget});
+  const store_view_screen({super.key, required this.shopId, required this.beforeWidget});
 
   @override
-  State<restaurant_view_screen> createState() => _restaurant_view_screenState();
+  State<store_view_screen> createState() => _store_view_screenState();
 }
 
-class _restaurant_view_screenState extends State<restaurant_view_screen> {
+class _store_view_screenState extends State<store_view_screen> {
   ShopAccount account = ShopAccount(id: '', createTime: getCurrentTime(), lockStatus: 0, name: '', phone: '', money: 0, type: 0, password: '', closeTime: getCurrentTime(), openTime: getCurrentTime(), openStatus: 0, discount_type: 0, area: '', location: Location(placeId: '', description: '', longitude: 0, latitude: 0, mainText: '', secondaryText: ''), listDirectory: []);
   productDirectory chosenDirectory = productDirectory(id: '', mainName: '', foodList: [], ownerID: '');
   List<Product> productList = [];
@@ -33,7 +30,7 @@ class _restaurant_view_screenState extends State<restaurant_view_screen> {
 
   void get_restaurant_data() {
     final reference = FirebaseDatabase.instance.reference();
-    reference.child("Restaurant").child(widget.shopId).onValue.listen((event) {
+    reference.child("Store").child(widget.shopId).onValue.listen((event) {
       final dynamic restaurant = event.snapshot.value;
       if (restaurant != null) {
         account = ShopAccount.fromJson(restaurant);
@@ -44,30 +41,6 @@ class _restaurant_view_screenState extends State<restaurant_view_screen> {
 
       }
     });
-  }
-
-  Future<double> getDistance(double startLatitude, double startLongitude, double endLatitude, double endLongitude) async {
-    final url = Uri.parse("https://rsapi.goong.io/DistanceMatrix?origins=$startLatitude,$startLongitude&destinations=$endLatitude,$endLongitude&vehicle=bike&api_key=npcYThxwWdlxPTuGGZ8Tu4QAF7IyO3u2vYyWlV5Z");
-    try {
-      final response = await http.get(url);
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        final distance = data['rows'][0]['elements'][0]['distance']['value'];
-        return distance.toDouble()/1000;
-      } else {
-        throw Exception('Lỗi khi gửi yêu cầu tới Goong API: ${response.statusCode}');
-      }
-    } catch (e) {
-      throw Exception('Lỗi khi xử lý dữ liệu: $e');
-    }
-  }
-
-  Future<String> _getImageURL(String imagePath) async {
-    final ref = FirebaseStorage.instance.ref().child('Restaurant').child(imagePath);
-    final url = await ref.getDownloadURL();
-    print(url);
-    return url;
   }
 
   void dropdownCallback(productDirectory? selectedValue) {
@@ -116,7 +89,7 @@ class _restaurant_view_screenState extends State<restaurant_view_screen> {
 
   void get_directory_data() {
     final reference = FirebaseDatabase.instance.reference();
-    reference.child("FoodDirectory").orderByChild('ownerID').equalTo(widget.shopId).onValue.listen((event) {
+    reference.child("ProductDirectory").orderByChild('ownerID').equalTo(widget.shopId).onValue.listen((event) {
       foodDirecList.clear();
       chosenList.clear();
       foodDirecList.add(productDirectory(id: 'all', mainName: 'Tất cả', foodList: [], ownerID: ''));
@@ -132,7 +105,14 @@ class _restaurant_view_screenState extends State<restaurant_view_screen> {
 
     });
   }
-  
+
+  Future<String> _getImageURL(String imagePath) async {
+    final ref = FirebaseStorage.instance.ref().child('Store').child(imagePath);
+    final url = await ref.getDownloadURL();
+    print(url);
+    return url;
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -285,7 +265,7 @@ class _restaurant_view_screenState extends State<restaurant_view_screen> {
                         padding: EdgeInsets.only(left: 10,right: 10),
                         child: Container(
                           child: FutureBuilder(
-                            future: getDistance(finalData.user_account.location.latitude, finalData.user_account.location.longitude, account.location.latitude, account.location.longitude),
+                            future: getDistance(finalData.user_account.location, account.location),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState == ConnectionState.waiting) {
                                 return Text('...', style: TextStyle(color: Colors.black, fontSize: 15),);
@@ -346,10 +326,10 @@ class _restaurant_view_screenState extends State<restaurant_view_screen> {
                             itemCount: chosenList.length,
                             physics: NeverScrollableScrollPhysics(),
                             itemBuilder: (context, index) {
-                              return food_directory_page(directory: chosenList[index], callback: () { setState(() {
+                              return product_directory_page(directory: chosenList[index], callback: () { setState(() {
 
                               });
-                                }, account: account,);
+                              }, account: account,);
                             },
                           ),
                         ),
@@ -416,7 +396,7 @@ class _restaurant_view_screenState extends State<restaurant_view_screen> {
                                               text: 'Giỏ hàng   |  ',
                                             ),
                                             TextSpan(
-                                              text: finalData.cartList.length.toString() + ' món',
+                                              text: finalData.storeCartList.length.toString() + ' món',
                                               style: TextStyle(
                                                 fontWeight: FontWeight.normal, // Cài đặt FontWeight.normal cho "món"
                                               ),
@@ -454,10 +434,10 @@ class _restaurant_view_screenState extends State<restaurant_view_screen> {
                     ),
                   ),
                   onTap: () {
-                    if (finalData.cartList.length == 0) {
+                    if (finalData.storeCartList.length == 0) {
                       toastMessage('Giỏ hàng chưa có sản phẩm nào');
                     } else {
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => view_cart_screen(beforewidget: restaurant_view_screen(shopId: widget.shopId, beforeWidget: widget.beforeWidget)),),);
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => view_store_cart_screen(beforewidget: store_view_screen(shopId: widget.shopId, beforeWidget: widget.beforeWidget)),),);
                     }
                   },
                 ),

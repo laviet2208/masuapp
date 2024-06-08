@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:masuapp/MasuShip/Data/accountData/shopData/shopDirectory.dart';
-import 'package:masuapp/MasuShip/screens/userScreen/restaurant_screen/restaurant_directory_page/item_restaurant_in_directory.dart';
-import 'package:masuapp/MasuShip/screens/userScreen/restaurant_screen/restaurant_main_screen/restaurant_main_screen.dart';
-import 'package:masuapp/MasuShip/screens/userScreen/restaurant_screen/restaurant_view_screen/restaurant_view_screen.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/store_screen/store_directory_page/item_store_in_directory.dart';
 
-class restaurant_directory_page extends StatefulWidget {
+import '../../../../Data/accountData/shopData/shopDirectory.dart';
+
+class store_directory_page extends StatefulWidget {
   final shopDirectory directory;
-  const restaurant_directory_page({super.key, required this.directory});
+  const store_directory_page({super.key, required this.directory});
 
   @override
-  State<restaurant_directory_page> createState() => _restaurant_directory_pageState();
+  State<store_directory_page> createState() => _store_directory_pageState();
 }
 
-class _restaurant_directory_pageState extends State<restaurant_directory_page> {
+class _store_directory_pageState extends State<store_directory_page> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -27,10 +26,10 @@ class _restaurant_directory_pageState extends State<restaurant_directory_page> {
               child: Text(
                 widget.directory.mainName,
                 style: TextStyle(
-                  fontFamily: 'arial',
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                  fontSize: 18
+                    fontFamily: 'muli',
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                    fontSize: 18
                 ),
               ),
             ),
@@ -45,7 +44,7 @@ class _restaurant_directory_pageState extends State<restaurant_directory_page> {
               child: Text(
                 widget.directory.subName,
                 style: TextStyle(
-                    fontFamily: 'arial',
+                    fontFamily: 'muli',
                     fontWeight: FontWeight.normal,
                     color: Colors.grey,
                     fontSize: 14
@@ -67,7 +66,7 @@ class _restaurant_directory_pageState extends State<restaurant_directory_page> {
                   return GestureDetector(
                     child: Padding(
                       padding: EdgeInsets.only(right: 15),
-                      child: item_restaurant_in_directory(shopId: widget.directory.restaurantList[index]),
+                      child: item_store_in_directory(shopId: widget.directory.restaurantList[index]),
                     ),
                     onTap: () {
 
