@@ -226,7 +226,7 @@ class _un_catch_order_itemState extends State<un_catch_order_item> {
                         top: 0,
                         right: 0,
                         child: Text(
-                          getStringNumber((widget.order.cost) * (widget.order.costFee.discount/100)) + '.đ',
+                          getStringNumber(getShipDiscount(widget.order.cost, widget.order.costFee)) + '.đ',
                           textAlign: TextAlign.end,
                           style: TextStyle(
                               fontSize: 14,
@@ -268,7 +268,7 @@ class _un_catch_order_itemState extends State<un_catch_order_item> {
                         top: 0,
                         right: 0,
                         child: Text(
-                          getStringNumber(widget.order.cost - (widget.order.cost * (widget.order.costFee.discount/100))) + '.đ',
+                          getStringNumber(widget.order.cost - getShipDiscount(widget.order.cost, widget.order.costFee)) + '.đ',
                           textAlign: TextAlign.end,
                           style: TextStyle(
                               fontSize: 14,

@@ -69,7 +69,10 @@ class _loading_screenState extends State<loading_screen> {
     final reference = FirebaseDatabase.instance.reference();
     await reference.child('CostFee').child(finalData.user_account.area).onValue.listen((event) {
       final dynamic data = event.snapshot.value;
-      finalData.bikeCost = Cost.fromJson(data['Bike']);
+      finalData.bikeShipCost = Cost.fromJson(data['bikeShipCost']);
+      finalData.expressShipCost = Cost.fromJson(data['expressShipCost']);
+      finalData.requestBuyShipCost = Cost.fromJson(data['requestBuyShipCost']);
+      finalData.foodShipCost = Cost.fromJson(data['foodShipCost']);
       finalData.weathercost = weatherCost.fromJson(data['weatherCost']);
       finalData.restaurantcost = restaurantCost.fromJson(data['restaurantCost']);
     });
@@ -108,34 +111,49 @@ class _loading_screenState extends State<loading_screen> {
       height: screenHeight,
       child: Stack(
         children: <Widget>[
+          // Positioned(
+          //   top: screenHeight/3,
+          //   left: (screenWidth-screenWidth/2.5)/2,
+          //   child: Container(
+          //     width: screenWidth/2.5,
+          //     height: screenWidth/2.5,
+          //     decoration: BoxDecoration(
+          //         borderRadius: BorderRadius.circular(10),
+          //         image: DecorationImage(
+          //           fit: BoxFit.cover,
+          //           image: AssetImage("assets/image/mainLogo.png"),
+          //         )
+          //     ),
+          //   ),
+          // ),
+          //
+          // Positioned(
+          //   top: screenHeight/3 + screenWidth/1.5,
+          //   left: (screenWidth - MediaQuery.of(context).size.height * 0.05)/2,
+          //   child: Container(
+          //     width: MediaQuery.of(context).size.height * 0.03,
+          //     height: MediaQuery.of(context).size.height * 0.03,
+          //     child: CircularProgressIndicator(
+          //       value: null,
+          //       color: Color.fromARGB(255, 250, 241, 76),
+          //     ),
+          //   ),
+          // ),
+
           Positioned(
-            top: screenHeight/3,
-            left: (screenWidth-screenWidth/2.5)/2,
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
             child: Container(
-              width: screenWidth/2.5,
-              height: screenWidth/2.5,
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
                   image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: AssetImage("assets/image/mainLogo.png"),
+                    image: AssetImage('assets/image/background.png'),
+                    fit: BoxFit.fitHeight,
                   )
               ),
             ),
           ),
-
-          Positioned(
-            top: screenHeight/3 + screenWidth/1.5,
-            left: (screenWidth - MediaQuery.of(context).size.height * 0.05)/2,
-            child: Container(
-              width: MediaQuery.of(context).size.height * 0.03,
-              height: MediaQuery.of(context).size.height * 0.03,
-              child: CircularProgressIndicator(
-                value: null,
-                color: Color.fromARGB(255, 250, 241, 76),
-              ),
-            ),
-          )
         ],
       ),
     );

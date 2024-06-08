@@ -13,7 +13,7 @@ class food_order_controller {
     double maxcost = 0;
     for (ShopAccount shop in order.shopList) {
       double l = 0;
-      double cost = await getCost(order.locationGet, shop.location, l);
+      double cost = await getShipCostByAPI(order.locationGet, shop.location, l, order.costFee);
       if (cost > maxcost) {
         maxcost = cost;
       }
@@ -47,7 +47,7 @@ class food_order_controller {
   }
 
   static Future<void> cancel_food_order_discount(foodOrder order, shipperAccount shipper_account) async {
-    double money = order.cost * (order.costFee.discount/100);
+    double money = getShipDiscount(order.cost, order.costFee);
     double res_discount_money = history_controller.get_discount_cost_of_restaurant(order.shopList, order.productList, order.resCost.discount);
     shipper_account.money = shipper_account.money + money;
     shipper_account.money = shipper_account.money + res_discount_money;

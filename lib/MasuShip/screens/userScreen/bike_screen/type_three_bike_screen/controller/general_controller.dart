@@ -6,31 +6,19 @@ import 'package:masuapp/MasuShip/screens/shipperScreen/divide_order_for_driver/c
 import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_one_bike_screen/controller/type_one_wait_controller.dart';
 
 import '../../../../../Data/accountData/shipperAccount.dart';
+import '../../../../../Data/costData/Cost.dart';
 import '../../../../../Data/historyData/historyTransactionData.dart';
 import '../../../../../Data/locationData/Location.dart';
 import '../../../../../Data/otherData/Tool.dart';
 
 class general_controller {
-  static Future<double> getCost(Location startLocation, Location endLocation) async {
-    double cost = 0;
-    double distance = await getDistance(startLocation, endLocation);
-    if (distance >= finalData.bikeCost.departKM) {
-      cost += finalData.bikeCost.departKM.toInt() * finalData.bikeCost.departCost.toInt(); // Giá cước cho 2km đầu tiên (10.000 VND/km * 2km)
-      distance -= finalData.bikeCost.departKM; // Trừ đi 2km đã tính giá cước
-      cost = cost + ((distance - finalData.bikeCost.departKM) * finalData.bikeCost.perKMcost);
-    } else {
-      cost += (distance * finalData.bikeCost.departCost); // Giá cước cho khoảng cách dưới 2km
-    }
-    return cost;
-  }
-
-  static Future<double> get_total(List<Location> customerLocations, List<Location> bikeLocations, Location startLocation) async {
+  static Future<double> get_total(List<Location> customerLocations, List<Location> bikeLocations, Location startLocation, Cost fee) async {
     double cost = 0;
     for (Location location in customerLocations) {
-      cost = cost + await getCost(startLocation,location);
+      cost = cost + await getShipCostByAPI(startLocation, location, 0, fee);
     }
     for (Location location in bikeLocations) {
-      cost = cost + await getCost(startLocation,location);
+      cost = cost + await getShipCostByAPI(startLocation, location, 0, fee);
     }
     return cost;
   }
@@ -47,7 +35,7 @@ class general_controller {
   }
 
   static Future<void> cancel_catch_order_discount(catchOrderType3 order, shipperAccount shipper_account) async {
-    double money = order.cost * (order.costFee.discount/100);
+    double money = getShipDiscount(order.cost, order.costFee);
     shipper_account.money = shipper_account.money + money;
     shipper_account.orderHaveStatus = shipper_account.orderHaveStatus - 1;
     final reference = FirebaseDatabase.instance.reference();

@@ -27,7 +27,7 @@ class price_list_order_type_3 extends StatelessWidget {
                   height: 17,
                   child: Stack(
                     children: <Widget>[
-                      cost_ingredient.left_title_cost('Chi phí di chuyển(' + getDistanceOfBike(order.cost).toStringAsFixed(1) + 'Km)', Colors.red, FontWeight.bold),
+                      cost_ingredient.left_title_cost('Chi phí di chuyển(' + getDistanceOfBike(order.cost, order.costFee).toStringAsFixed(1) + 'Km)', Colors.red, FontWeight.bold),
                       cost_ingredient.right_title_cost((getStringNumber(order.cost) + '.đ'), Colors.red, FontWeight.bold),
                     ],
                   )

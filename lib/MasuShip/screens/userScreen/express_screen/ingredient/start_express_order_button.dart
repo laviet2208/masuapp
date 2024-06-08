@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/Data/OrderData/expressOrder/expressOrder.dart';
+import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
 import 'package:masuapp/MasuShip/Data/firebase_interact/firebase_interact.dart';
 import 'package:masuapp/MasuShip/Data/otherData/Tool.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/express_screen/express_wait.dart';
@@ -62,7 +63,7 @@ class _start_express_order_buttonState extends State<start_express_order_button>
           });
           widget.order.S1time = getCurrentTime();
           widget.order.locationSet.mainText = await fetchLocationName(widget.order.locationSet);
-          widget.order.cost = getCosOfBike(await getDistance(widget.order.locationSet, widget.order.locationGet));
+          widget.order.cost = getShipCost(await getDistance(widget.order.locationSet, widget.order.locationGet), finalData.expressShipCost);
           await firebase_interact.pushVoucher(widget.order.voucher);
           await push_express_order_data();
           setState(() {

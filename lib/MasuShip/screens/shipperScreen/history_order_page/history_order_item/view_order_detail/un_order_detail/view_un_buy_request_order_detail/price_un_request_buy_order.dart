@@ -48,7 +48,7 @@ class price_un_request_buy_order extends StatelessWidget {
                     child: Container(
                       height: 30,
                       width: (width - 40 - 20)/2,
-                      child: general_ingredient.get_cost_title('Chi phí di chuyển(' + getDistanceOfBike(order.cost).toStringAsFixed(1) + 'Km)', Colors.black, FontWeight.bold, width),
+                      child: general_ingredient.get_cost_title('Chi phí di chuyển(' + getDistanceOfBike(order.cost, order.costFee).toStringAsFixed(1) + 'Km)', Colors.black, FontWeight.bold, width),
                     ),
                   ),
 
@@ -171,7 +171,7 @@ class price_un_request_buy_order extends StatelessWidget {
 
                   Padding(
                     padding: EdgeInsets.only(top: 7, bottom: 7),
-                    child: general_ingredient.get_cost_content(getStringNumber(order.cost + order.subFee - (order.cost * order.costFee.discount/100) + (10000 * ((order.productList.length/3).toInt()).toDouble())) + '.đ', Colors.black, FontWeight.bold, width),
+                    child: general_ingredient.get_cost_content(getStringNumber(order.cost + order.subFee - getShipDiscount(order.cost, order.costFee) + (10000 * ((order.productList.length/3).toInt()).toDouble())) + '.đ', Colors.black, FontWeight.bold, width),
                   ),
                 ],
               ),

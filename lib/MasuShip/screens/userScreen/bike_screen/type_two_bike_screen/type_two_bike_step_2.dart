@@ -18,19 +18,6 @@ class type_two_bike_step_2 extends StatefulWidget {
 }
 
 class _type_two_bike_step_2State extends State<type_two_bike_step_2> {
-
-  double getCost(double distance) {
-    double cost = 0;
-    if (distance >= finalData.bikeCost.departKM) {
-      cost += finalData.bikeCost.departKM.toInt() * finalData.bikeCost.departCost.toInt(); // Giá cước cho 2km đầu tiên (10.000 VND/km * 2km)
-      distance -= finalData.bikeCost.departKM; // Trừ đi 2km đã tính giá cước
-      cost = cost + ((distance - finalData.bikeCost.departKM) * finalData.bikeCost.perKMcost);
-    } else {
-      cost += (distance * finalData.bikeCost.departCost); // Giá cước cho khoảng cách dưới 2km
-    }
-    return cost;
-  }
-
   Container get_cost_text(double distance, double width) {
     return Container(
       height: 30,
@@ -67,7 +54,7 @@ class _type_two_bike_step_2State extends State<type_two_bike_step_2> {
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text: getStringNumber(getCost(distance)) + ".đ",
+                      text: getStringNumber(getShipCost(distance, finalData.bikeShipCost)) + ".đ",
                       style: TextStyle(
                         fontFamily: 'muli',
                         color: Colors.black,

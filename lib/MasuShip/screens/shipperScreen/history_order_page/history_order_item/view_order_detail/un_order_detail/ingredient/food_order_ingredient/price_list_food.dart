@@ -85,7 +85,7 @@ class price_list_food extends StatelessWidget {
                 child: Stack(
                   children: <Widget>[
                     cost_ingredient.left_title_cost('Tài xế thực nhận', Colors.black, FontWeight.bold),
-                    cost_ingredient.right_title_cost(getStringNumber(order.cost * (1 - order.costFee.discount/100) + order.waitFee + order.weatherFee) + '.đ', Colors.black, FontWeight.normal),
+                    cost_ingredient.right_title_cost(getStringNumber(order.cost - getShipDiscount(order.cost, order.costFee) + order.waitFee + order.weatherFee) + '.đ', Colors.black, FontWeight.normal),
                   ],
                 ),
               ),

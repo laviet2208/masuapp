@@ -35,13 +35,7 @@ class delete_food_controller {
   static Future<double> getCostFuture(Location startLocation, Location endLocation, Cost bikeCost) async {
     double cost = 0;
     double distance = await getDistance(startLocation, endLocation);
-    if (distance >= bikeCost.departKM) {
-      cost += bikeCost.departKM.toInt() * bikeCost.departCost.toInt(); // Giá cước cho 2km đầu tiên (10.000 VND/km * 2km)
-      distance -= bikeCost.departKM; // Trừ đi 2km đã tính giá cước
-      cost = cost + ((distance - bikeCost.departKM) * bikeCost.perKMcost);
-    } else {
-      cost += (distance * bikeCost.departCost); // Giá cước cho khoảng cách dưới 2km
-    }
+    cost = getShipCost(distance, bikeCost);
     return cost;
   }
 

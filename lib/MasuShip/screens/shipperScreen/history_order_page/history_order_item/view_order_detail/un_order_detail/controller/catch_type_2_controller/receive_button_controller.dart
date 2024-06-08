@@ -23,11 +23,11 @@ class receive_button_controller {
     await change_end_location(finalData.shipper_account.location, order.id);
     await change_order_status('D', order.id);
     double distance = await getDistance(order.locationSet, finalData.shipper_account.location);
-    await change_order_cost(getCosOfBike(distance), order.id);
+    await change_order_cost(getShipCost(distance, order.costFee), order.id);
     await change_order_time('S4time', order.id);
     finalData.lastOrderTime = DateTime.now().add(Duration(seconds: Random().nextInt(21) + 30));
     finalData.shipper_account.orderHaveStatus = 0;
-    await order_have_dialog_controller.push_history_data(historyTransactionData(id: generateID(30), senderId: '', receiverId: finalData.shipper_account.id, transactionTime: getCurrentTime(), type: 5, content: 'Chiết khấu đơn ' + order.id, money: (getCosOfBike(distance)) * (order.costFee.discount/100), area: finalData.shipper_account.area));
+    await order_have_dialog_controller.push_history_data(historyTransactionData(id: generateID(30), senderId: '', receiverId: finalData.shipper_account.id, transactionTime: getCurrentTime(), type: 5, content: 'Chiết khấu đơn ' + order.id, money: getShipCost(distance, order.costFee), area: finalData.shipper_account.area));
     await order_have_dialog_controller.change_Have_Order_Status(0);
     toastMessage('Đã hoàn thành đơn');
   }

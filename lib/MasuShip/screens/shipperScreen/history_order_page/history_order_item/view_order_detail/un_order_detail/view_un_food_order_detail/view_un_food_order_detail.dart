@@ -32,7 +32,7 @@ class _view_un_food_order_detailState extends State<view_un_food_order_detail> {
     productList: [],
     shopList: [],
     timeList: [],
-    costFee: finalData.bikeCost,
+    costFee: finalData.foodShipCost,
     note: '',
     waitFee: 0,
     weatherFee: 0,

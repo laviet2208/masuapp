@@ -37,7 +37,7 @@ class _type_two_bike_waitState extends State<type_two_bike_wait> {
     S2time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
     S3time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
     S4time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
-    costFee: finalData.bikeCost,
+    costFee: finalData.bikeShipCost,
     subFee: 0,
   );
 

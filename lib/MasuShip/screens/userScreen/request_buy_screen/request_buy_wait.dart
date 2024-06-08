@@ -40,7 +40,7 @@ class _request_buy_waitState extends State<request_buy_wait> {
       S3time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
       S4time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
       productList: [],
-      costFee: finalData.bikeCost,
+      costFee: finalData.requestBuyShipCost,
       buyLocation: [],
     subFee: 0,
   );
@@ -253,7 +253,7 @@ class _request_buy_waitState extends State<request_buy_wait> {
                                       child: Container(
                                         height: 30,
                                         width: (width - 40 - 20)/2,
-                                        child: general_ingredient.get_cost_title('Chi phí di chuyển(' + getDistanceOfBike(order.cost).toStringAsFixed(1) + 'Km)', Colors.black, FontWeight.bold, width),
+                                        child: general_ingredient.get_cost_title('Chi phí di chuyển(' + getDistanceOfBike(order.cost, finalData.requestBuyShipCost).toStringAsFixed(1) + 'Km)', Colors.black, FontWeight.bold, width),
                                       ),
                                     ),
 

@@ -75,7 +75,7 @@ class price_list_order_type_2 extends StatelessWidget {
                   height: 15,
                   child: Stack(
                     children: <Widget>[
-                      cost_ingredient.left_title_cost(order.locationGet.longitude == 0 ? 'Chi phí vận chuyển' : 'Chi phí vận chuyển(' + getDistanceOfBike(order.cost).toStringAsFixed(1) + 'Km)', Colors.red, FontWeight.bold),
+                      cost_ingredient.left_title_cost(order.locationGet.longitude == 0 ? 'Chi phí vận chuyển' : 'Chi phí vận chuyển(' + getDistanceOfBike(order.cost, order.costFee).toStringAsFixed(1) + 'Km)', Colors.red, FontWeight.bold),
                       cost_ingredient.right_title_cost(order.locationGet.longitude != 0 ? (getStringNumber(order.cost) + 'đ') : 'Chưa tới nơi', Colors.red, FontWeight.bold),
                     ],
                   )
@@ -108,7 +108,7 @@ class price_list_order_type_2 extends StatelessWidget {
                   child: Stack(
                     children: <Widget>[
                       cost_ingredient.left_title_cost('Chiết khấu đơn', Colors.black, FontWeight.normal),
-                      cost_ingredient.right_title_cost(order.locationGet.longitude != 0 ? (getStringNumber((order.cost+getVoucherSale(order.voucher, order.cost)) * (order.costFee.discount/100)) + 'đ') : 'Chưa tới nơi', Colors.black, FontWeight.normal),
+                      cost_ingredient.right_title_cost(order.locationGet.longitude != 0 ? (getStringNumber(getShipDiscount(order.cost, order.costFee)) + 'đ') : 'Chưa tới nơi', Colors.black, FontWeight.normal),
                     ],
                   )
               ),
@@ -140,7 +140,7 @@ class price_list_order_type_2 extends StatelessWidget {
                   child: Stack(
                     children: <Widget>[
                       cost_ingredient.left_title_cost('Tài xế thực nhận', Colors.black, FontWeight.normal),
-                      cost_ingredient.right_title_cost(order.locationGet.longitude != 0 ? (getStringNumber(order.cost + order.subFee - ((order.cost) * (order.costFee.discount/100))) + 'đ') : 'Chưa tới nơi' , Colors.black, FontWeight.normal),
+                      cost_ingredient.right_title_cost(order.locationGet.longitude != 0 ? (getStringNumber(order.cost + order.subFee - getShipDiscount(order.cost, order.costFee)) + 'đ') : 'Chưa tới nơi' , Colors.black, FontWeight.normal),
                     ],
                   )
               ),

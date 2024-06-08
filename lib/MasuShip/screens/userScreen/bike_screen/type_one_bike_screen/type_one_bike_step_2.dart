@@ -43,20 +43,14 @@ class _type_one_bike_step_2State extends State<type_one_bike_step_2> {
     S2time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
     S3time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
     S4time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
-    costFee: finalData.bikeCost,
+    costFee: finalData.bikeShipCost,
     subFee: 0,
   );
 
   Future<double> getCost() async {
     double cost = 0;
     double distance = await getDistance(widget.start_location, widget.end_location);
-    if (distance >= finalData.bikeCost.departKM) {
-      cost += finalData.bikeCost.departKM.toInt() * finalData.bikeCost.departCost.toInt(); // Giá cước cho 2km đầu tiên (10.000 VND/km * 2km)
-      distance -= finalData.bikeCost.departKM; // Trừ đi 2km đã tính giá cước
-      cost = cost + ((distance - finalData.bikeCost.departKM) * finalData.bikeCost.perKMcost);
-    } else {
-      cost += (distance * finalData.bikeCost.departCost); // Giá cước cho khoảng cách dưới 2km
-    }
+    cost = getShipCost(distance, order.costFee);
     order.cost = cost;
     return cost;
   }
@@ -426,7 +420,7 @@ class _type_one_bike_step_2State extends State<type_one_bike_step_2> {
                       loading = true;
                     });
                     order.S1time = getCurrentTime();
-                    order.cost = getCosOfBike(await getDistance(order.locationSet, order.locationGet));
+                    order.cost = getShipCost(await getDistance(order.locationSet, order.locationGet), order.costFee);
                     await firebase_interact.pushVoucher(order.voucher);
                     await push_new_catch_type_one_order(order);
                     setState(() {

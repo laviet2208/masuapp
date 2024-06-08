@@ -117,7 +117,7 @@ class _type_three_bike_step_3State extends State<type_three_bike_step_3> {
                                             width: (width - 40 - 20)/2,
                                             alignment: Alignment.centerRight,
                                             child: FutureBuilder(
-                                              future: general_controller.getCost(widget.startLocation, widget.customerLocations[index]),
+                                              future: getShipCostByAPI(widget.startLocation, widget.customerLocations[index], 0, finalData.bikeShipCost),
                                               builder: (context, snapshot) {
                                                 if (snapshot.connectionState == ConnectionState.waiting) {
                                                   return general_ingredient.get_loading(width);
@@ -230,7 +230,7 @@ class _type_three_bike_step_3State extends State<type_three_bike_step_3> {
                                             width: (width - 40 - 20)/2,
                                             alignment: Alignment.centerRight,
                                             child: FutureBuilder(
-                                              future: general_controller.getCost(widget.startLocation,widget.bikeLocations[index]),
+                                              future: getShipCostByAPI(widget.startLocation, widget.bikeLocations[index], 0, finalData.bikeShipCost),
                                               builder: (context, snapshot) {
                                                 if (snapshot.connectionState == ConnectionState.waiting) {
                                                   return general_ingredient.get_loading(width);
@@ -315,7 +315,7 @@ class _type_three_bike_step_3State extends State<type_three_bike_step_3> {
                                         width: (width - 40 - 20)/2,
                                         alignment: Alignment.centerRight,
                                         child: FutureBuilder(
-                                          future: general_controller.get_total(widget.customerLocations, widget.bikeLocations, widget.startLocation),
+                                          future: general_controller.get_total(widget.customerLocations, widget.bikeLocations, widget.startLocation, finalData.bikeShipCost),
                                           builder: (context, snapshot) {
                                             if (snapshot.connectionState == ConnectionState.waiting) {
                                               return general_ingredient.get_loading(width);
@@ -447,7 +447,7 @@ class _type_three_bike_step_3State extends State<type_three_bike_step_3> {
                                         width: (width - 40 - 20)/2,
                                         alignment: Alignment.centerRight,
                                         child: FutureBuilder(
-                                          future: general_controller.get_total(widget.customerLocations, widget.bikeLocations, widget.startLocation),
+                                          future: general_controller.get_total(widget.customerLocations, widget.bikeLocations, widget.startLocation, finalData.bikeShipCost),
                                           builder: (context, snapshot) {
                                             if (snapshot.connectionState == ConnectionState.waiting) {
                                               return general_ingredient.get_loading(width);

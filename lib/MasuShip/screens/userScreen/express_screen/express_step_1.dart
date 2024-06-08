@@ -50,7 +50,7 @@ class _express_step_1State extends State<express_step_1> {
     S2time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
     S3time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
     S4time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
-    costFee: finalData.bikeCost,
+    costFee: finalData.expressShipCost,
     subFee: 0,
     codMoney: 0,
     sender: personInfo(name: '', phone: ''),

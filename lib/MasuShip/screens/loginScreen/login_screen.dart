@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:masuapp/MasuShip/screens/loginScreen/controller/loginController.dart';
 import 'package:masuapp/MasuShip/screens/loginScreen/verify_screen.dart';
@@ -189,6 +190,9 @@ class _login_screenState extends State<login_screen> {
                         decoration: InputDecoration(
                           border: InputBorder.none,
                         ),
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                        ],
                       ),
                     ),
                     Text(
@@ -203,6 +207,9 @@ class _login_screenState extends State<login_screen> {
                         onChanged: (value) {
                           phone = value;
                         },
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                        ],
                         keyboardType: TextInputType.phone,
                         decoration: InputDecoration(
                           border: InputBorder.none,

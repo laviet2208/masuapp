@@ -316,7 +316,7 @@ class _express_step_2State extends State<express_step_2> {
                                         children: [
                                           Container(width: 10,),
                                           general_ingredient.get_cost_title('Chi phí di chuyển(' + snapshot.data!.toStringAsFixed(1) + 'Km)', Colors.black, FontWeight.bold, width),
-                                          general_ingredient.get_cost_content(getStringNumber(getCosOfBike(snapshot.data!)) + '.đ', Colors.black, FontWeight.bold, width)
+                                          general_ingredient.get_cost_content(getStringNumber(getShipCost(snapshot.data!, widget.order.costFee)) + '.đ', Colors.black, FontWeight.bold, width)
                                         ],
                                       );
                                     },
@@ -474,7 +474,7 @@ class _express_step_2State extends State<express_step_2> {
                                               return general_ingredient.get_cost_content('Lỗi tính toán', Colors.black, FontWeight.bold, width);
                                             }
 
-                                            return general_ingredient.get_cost_content(getStringNumber(getCosOfBike(snapshot.data!) - getVoucherSale(widget.order.voucher, widget.order.cost) + weightFee + widget.order.subFee) + '.đ', Colors.black, FontWeight.bold, width);
+                                            return general_ingredient.get_cost_content(getStringNumber(getShipCost(snapshot.data!, widget.order.costFee) - getVoucherSale(widget.order.voucher, widget.order.cost) + weightFee + widget.order.subFee) + '.đ', Colors.black, FontWeight.bold, width);
                                             },
                                         ),
                                       ),

@@ -39,7 +39,7 @@ class _view_un_express_orderState extends State<view_un_express_order> {
     S2time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
     S3time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
     S4time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
-    costFee: finalData.bikeCost,
+    costFee: finalData.expressShipCost,
     subFee: 0,
     codMoney: 0,
     sender: personInfo(name: '', phone: ''),
@@ -198,7 +198,7 @@ class _view_un_express_orderState extends State<view_un_express_order> {
 
                             Padding(
                               padding: EdgeInsets.only(top: 7, bottom: 7),
-                              child: general_ingredient.get_cost_title('Chi phí di chuyển(' + getDistanceOfBike(order.cost).toStringAsFixed(1) + ' Km)', Colors.black, FontWeight.bold, width),
+                              child: general_ingredient.get_cost_title('Chi phí di chuyển(' + getDistanceOfBike(order.cost, order.costFee).toStringAsFixed(1) + ' Km)', Colors.black, FontWeight.bold, width),
                             ),
 
                             Padding(
@@ -335,7 +335,7 @@ class _view_un_express_orderState extends State<view_un_express_order> {
 
                             Padding(
                               padding: EdgeInsets.only(top: 7, bottom: 7),
-                              child: general_ingredient.get_cost_content(getStringNumber(order.cost - (order.cost * (order.costFee.discount/100)) + order.subFee + weightFee) +'.đ', Colors.black, FontWeight.bold, width),
+                              child: general_ingredient.get_cost_content(getStringNumber(order.cost - getShipDiscount(order.cost, order.costFee) + order.subFee + weightFee) +'.đ', Colors.black, FontWeight.bold, width),
                             ),
                           ],
                         ),

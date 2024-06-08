@@ -277,7 +277,7 @@ class _un_request_buy_order_itemState extends State<un_request_buy_order_item> {
                         top: 0,
                         right: 0,
                         child: Text(
-                          getStringNumber(widget.order.cost + widget.order.subFee + (10000 * ((widget.order.productList.length/3).toInt()).toDouble()) - ((widget.order.cost + getVoucherSale(widget.order.voucher, widget.order.cost)) * (widget.order.costFee.discount/100))) + '.đ',
+                          getStringNumber(widget.order.cost + widget.order.subFee + (10000 * ((widget.order.productList.length/3).toInt()).toDouble()) - getShipDiscount(widget.order.cost, widget.order.costFee)) + '.đ',
                           textAlign: TextAlign.end,
                           style: TextStyle(
                               fontSize: 14,

@@ -71,7 +71,7 @@ class _start_order_buttonState extends State<start_order_button> {
             List<catchOrderType3> bike_order_list = [];
             //thêm đơn chở người
             for (int i = 0; i < widget.customerLocations.length; i++) {
-              double money = await general_controller.getCost(widget.startLocation, widget.customerLocations[i]);
+              double money = await getShipCostByAPI(widget.startLocation, widget.customerLocations[i], 0, finalData.bikeShipCost);
               catchOrderType3 orderType3 = catchOrderType3(
                   id: generateID(25),
                   locationSet: widget.startLocation,
@@ -85,7 +85,7 @@ class _start_order_buttonState extends State<start_order_button> {
                   S2time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
                   S3time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
                   S4time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
-                  costFee: finalData.bikeCost,
+                  costFee: finalData.bikeShipCost,
                   subFee: 0,
                   type: 1,
                   motherOrder: widget.order.id
@@ -96,7 +96,7 @@ class _start_order_buttonState extends State<start_order_button> {
 
             //thêm đơn lái xe hộ
             for (int i = 0; i < widget.bikeLocations.length; i++) {
-              double money = await general_controller.getCost(widget.startLocation, widget.bikeLocations[i]);
+              double money = await getShipCostByAPI(widget.startLocation, widget.bikeLocations[i], 0, finalData.bikeShipCost);
               catchOrderType3 orderType3 = catchOrderType3(
                   id: generateID(25),
                   locationSet: widget.startLocation,
@@ -110,7 +110,7 @@ class _start_order_buttonState extends State<start_order_button> {
                   S2time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
                   S3time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
                   S4time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
-                  costFee: finalData.bikeCost,
+                  costFee: finalData.bikeShipCost,
                   subFee: 0,
                   type: 2,
                   motherOrder: widget.order.id

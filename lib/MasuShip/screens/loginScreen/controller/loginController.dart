@@ -63,7 +63,6 @@ class loginController {
             finalData.account = shipperAccount.fromJson(value);
             finalData.shipper_account = shipperAccount.fromJson(value);
             getCost();
-            print(finalData.bikeCost.toJson().toString());
             if (finalData.account.lockStatus == 1) {
               Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => shipper_main_screen()));
             }
@@ -80,7 +79,10 @@ class loginController {
     final reference = FirebaseDatabase.instance.reference();
     reference.child('CostFee').child(finalData.account.area).onValue.listen((event) {
       final dynamic data = event.snapshot.value;
-      finalData.bikeCost = Cost.fromJson(data['Bike']);
+      finalData.bikeShipCost = Cost.fromJson(data['bikeShipCost']);
+      finalData.expressShipCost = Cost.fromJson(data['expressShipCost']);
+      finalData.requestBuyShipCost = Cost.fromJson(data['requestBuyShipCost']);
+      finalData.foodShipCost = Cost.fromJson(data['foodShipCost']);
       finalData.weathercost = weatherCost.fromJson(data['weatherCost']);
       finalData.restaurantcost = restaurantCost.fromJson(data['restaurantCost']);
     });

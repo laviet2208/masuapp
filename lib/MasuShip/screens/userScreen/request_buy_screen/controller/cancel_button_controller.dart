@@ -19,7 +19,7 @@ class cancel_order_button_controller {
   }
 
   static Future<void> cancel_catch_order_discount(requestBuyOrder order, shipperAccount shipper_account) async {
-    double money = order.cost * (order.costFee.discount/100);
+    double money = getShipDiscount(order.cost, order.costFee);
     shipper_account.money = shipper_account.money + money;
     shipper_account.orderHaveStatus = shipper_account.orderHaveStatus - 1;
     final reference = FirebaseDatabase.instance.reference();

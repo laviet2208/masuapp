@@ -36,7 +36,7 @@ class _food_order_waitState extends State<food_order_wait> {
     productList: [],
     shopList: [],
     timeList: [],
-    costFee: finalData.bikeCost,
+    costFee: finalData.foodShipCost,
     note: '',
     waitFee: 0,
     weatherFee: 0,

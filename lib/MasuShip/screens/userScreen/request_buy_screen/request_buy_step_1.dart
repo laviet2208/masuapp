@@ -43,7 +43,7 @@ class _request_buy_step_1State extends State<request_buy_step_1> {
       S3time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
       S4time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
       productList: [],
-      costFee: finalData.bikeCost,
+      costFee: finalData.requestBuyShipCost,
       buyLocation: [],
     subFee: 0,
   );
@@ -517,7 +517,7 @@ class _request_buy_step_1State extends State<request_buy_step_1> {
 
                                           general_ingredient.get_cost_title('Chi phí di chuyển(' + snapshot.data!.toStringAsFixed(1) + 'Km)', Colors.black, FontWeight.bold, width),
 
-                                          general_ingredient.get_cost_content(getStringNumber(getCosOfBike(snapshot.data!)) + '.đ', Colors.black, FontWeight.normal, width),
+                                          general_ingredient.get_cost_content(getStringNumber(getShipCost(snapshot.data!, order.costFee)) + '.đ', Colors.black, FontWeight.normal, width),
                                         ],
                                       );
                                     },
@@ -670,7 +670,7 @@ class _request_buy_step_1State extends State<request_buy_step_1> {
                                               return general_ingredient.get_cost_content('Lỗi tính toán', Colors.redAccent, FontWeight.normal, width);
                                             }
 
-                                            return general_ingredient.get_cost_content(getStringNumber(getCosOfBike(snapshot.data!) - getVoucherSale(order.voucher, getCosOfBike(snapshot.data!)) + 10000 * ((order.productList.length/3).toInt()).toDouble()) + '.đ', Colors.black, FontWeight.bold, width);
+                                            return general_ingredient.get_cost_content(getStringNumber(getShipCost(snapshot.data!, order.costFee) - getVoucherSale(order.voucher, getShipCost(snapshot.data!, order.costFee)) + 10000 * ((order.productList.length/3).toInt()).toDouble()) + '.đ', Colors.black, FontWeight.bold, width);
                                           },
                                         ) : general_ingredient.get_cost_content('Chưa tính toán', Colors.black, FontWeight.bold, width),
                                       ),

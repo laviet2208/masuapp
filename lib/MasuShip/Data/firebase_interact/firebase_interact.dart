@@ -12,7 +12,7 @@ import '../otherData/Tool.dart';
 
 class firebase_interact {
   static Future<void> cancel_food_order_discount(foodOrder order) async {
-    double money = order.cost * (order.costFee.discount/100);
+    double money = getShipDiscount(order.cost, order.costFee);
     double res_discount_money = history_controller.get_discount_cost_of_restaurant(order.shopList, order.productList, order.resCost.discount);
     finalData.shipper_account.money = finalData.shipper_account.money + money + res_discount_money;
     finalData.shipper_account.orderHaveStatus = finalData.shipper_account.orderHaveStatus - 1;
@@ -25,7 +25,7 @@ class firebase_interact {
   }
 
   static Future<void> apart_food_order_discount(foodOrder order) async {
-    double money = order.cost * (order.costFee.discount/100);
+    double money = getShipDiscount(order.cost, order.costFee);
     finalData.shipper_account.money = finalData.shipper_account.money - money;
 
     final reference = FirebaseDatabase.instance.reference();

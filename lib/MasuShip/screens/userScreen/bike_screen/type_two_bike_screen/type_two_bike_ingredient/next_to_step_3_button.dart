@@ -70,7 +70,7 @@ class _next_to_step_3_buttonState extends State<next_to_step_3_button> {
               S2time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
               S3time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
               S4time: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0),
-              costFee: finalData.bikeCost,
+              costFee: finalData.bikeShipCost,
               subFee: 0
           );
           setState(() {
