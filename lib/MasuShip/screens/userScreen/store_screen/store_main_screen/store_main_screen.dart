@@ -4,12 +4,14 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
+import 'package:masuapp/MasuShip/screens/userScreen/store_screen/product_order_screen/cart_screen/view_store_cart_screen.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/store_screen/store_directory_page/store_directory_page.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/store_screen/store_type_screen/store_type_screen.dart';
 
 import '../../../../Data/accountData/shopData/shopDirectory.dart';
 import '../../../../Data/adsData/restaurantAdsData.dart';
 import '../../../../Data/otherData/Tool.dart';
+import '../../../../Data/otherData/utils.dart';
 import '../../main_screen/user_main_screen.dart';
 import '../../restaurant_screen/restaurant_main_screen/current_location_in_res_main.dart';
 import '../../restaurant_screen/restaurant_main_screen/shop_type_item.dart';
@@ -310,6 +312,74 @@ class _store_main_screenState extends State<store_main_screen> {
                   ),
                 ),
               ),
+
+              Positioned(
+                bottom: 10,
+                right: 10,
+                child: GestureDetector(
+                  child: Container(
+                    height: width/6,
+                    width: width/6,
+                    decoration: BoxDecoration(
+                      color: Colors.yellow,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.4), // màu của shadow
+                          spreadRadius: 5, // bán kính của shadow
+                          blurRadius: 7, // độ mờ của shadow
+                          offset: Offset(0, 3), // vị trí của shadow
+                        ),
+                      ],
+                    ),
+                    child: Stack(
+                      children: <Widget>[
+                        Positioned(
+                          top: 0,
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          child: Icon(
+                            Icons.shopping_cart_outlined,
+                            color: Colors.black,
+                          ),
+                        ),
+
+                        Positioned(
+                          top: 5,
+                          right: 5,
+                          child: Container(
+                            height: 15,
+                            width: 15,
+                            decoration: BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.circular(100)
+                            ),
+                            child: Center(
+                              child: Text(
+                                finalData.cartList.length.toString(),
+                                style: TextStyle(
+                                  fontFamily: 'muli',
+                                  color: Colors.white,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  onTap: () {
+                    if (finalData.storeCartList.length == 0) {
+                      toastMessage('Giỏ hàng trống');
+                    } else {
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => view_store_cart_screen(beforewidget: store_main_screen(),),),);
+                    }
+                  },
+                ),
+              )
             ],
           ),
         ),

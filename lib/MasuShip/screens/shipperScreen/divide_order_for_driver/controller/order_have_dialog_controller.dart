@@ -268,9 +268,13 @@ class order_have_dialog_controller {
   static double get_commission(dynamic order) {
     double commissionMoney = 0;
     double cost = double.parse(order['cost'].toString());
-    double discount = double.parse(order['costFee']['discount'].toString());
-    commissionMoney = (cost + getVoucherSale(order)) * (discount/100);
-
+    double discountLimit = double.parse(order['costFee']['discountLimit'].toString());
+    double discountMoney = double.parse(order['costFee']['discountMoney'].toString());
+    double discountPercent = double.parse(order['costFee']['discountPercent'].toString());
+    commissionMoney = discountMoney;
+    if (cost > discountLimit) {
+      commissionMoney = cost * discountPercent/100;
+    }
     return commissionMoney;
   }
 

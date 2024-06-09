@@ -49,6 +49,13 @@ class _item_store_in_directoryState extends State<item_store_in_directory> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    get_restaurant_data();
+  }
+
+  @override
   Widget build(BuildContext context) {
     double width = (MediaQuery.of(context).size.width)/2.5;
     double height = width * 1.5;
