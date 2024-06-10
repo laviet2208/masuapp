@@ -235,7 +235,12 @@ class _main_pageState extends State<main_page> {
                   Positioned(
                     top: 0,
                     right: 15 + (((width - 60)/3))/2,
-                    child: buy_request_button(),
+                    child: GestureDetector(
+                      child: feature_button_in_main_page(title: 'Mua đồ ăn', imageUrl: 'assets/image/iconfood.png'),
+                      onTap: () {
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => restaurant_main_screen(),),);
+                      },
+                    ),
                   ),
                 ],
               ),
@@ -272,12 +277,7 @@ class _main_pageState extends State<main_page> {
                   Positioned(
                     top: 0,
                     right: 15,
-                    child: GestureDetector(
-                      child: feature_button_in_main_page(title: 'Mua đồ ăn', imageUrl: 'assets/image/iconfood.png'),
-                      onTap: () {
-                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => restaurant_main_screen(),),);
-                      },
-                    ),
+                    child: buy_request_button(),
                   ),
                 ],
               ),

@@ -1,15 +1,13 @@
 import 'dart:async';
-import 'dart:io';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:masuapp/MasuShip/screens/loginScreen/login_screen.dart';
-
 import '../../../GENERAL/utils/utils.dart';
 import '../../Data/adsData/restaurantAdsData.dart';
+import '../userScreen/main_page/ingredient/feature_button_in_main_page.dart';
 
 class preview_screen extends StatefulWidget {
   const preview_screen({Key? key}) : super(key: key);
@@ -62,31 +60,6 @@ class _preview_screenState extends State<preview_screen> {
     final url = await ref.getDownloadURL();
     return url;
   }
-
-  // Future<Position> getCurrentLocation() async {
-  //   bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-  //   if (!serviceEnabled) {
-  //     return Future.error('Chưa cho phép vị trí');
-  //   }
-  //
-  //   LocationPermission permission = await Geolocator.checkPermission();
-  //   if (permission == LocationPermission.denied) {
-  //     permission = await Geolocator.requestPermission();
-  //     if (permission == LocationPermission.denied) {
-  //       toastMessage('Để tiếp tục bạn cần cho phép truy cập vị trí của bạn');
-  //       exit(0);
-  //       return Future.error('Từ chối cho phép vị trí');
-  //     }
-  //   }
-  //
-  //   if (permission == LocationPermission.deniedForever) {
-  //     toastMessage('Để tiếp tục bạn cần cho phép truy cập vị trí của bạn');
-  //     exit(0);
-  //     return Future.error('Bạn cần cho phép ứng dụng truy cập vào vị trí');
-  //   }
-  //
-  //   return await Geolocator.getCurrentPosition();
-  // }
 
   static Future<Position> getCurrentLocation() async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -291,70 +264,14 @@ class _preview_screenState extends State<preview_screen> {
                       Container(height: 30,),
 
                       Container(
-                        height: (width - 90)/2,
+                        height: (width - 60)/3,
                         child: Stack(
                           children: <Widget>[
                             Positioned(
                               top: 0,
-                              left: 30,
+                              left: 15 + (((width - 60)/3))/2,
                               child: GestureDetector(
-                                child: Container(
-                                  width: (width - 90)/2,
-                                  height: (width - 90)/2,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(20),
-                                    border: Border.all(width: 1, color: Colors.black),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(0.2), // màu của shadow
-                                        spreadRadius: 5, // bán kính của shadow
-                                        blurRadius: 7, // độ mờ của shadow
-                                        offset: Offset(0, 3), // vị trí của shadow
-                                      ),
-                                    ],
-                                  ),
-                                  child: Stack(
-                                    children: <Widget>[
-                                      Positioned(
-                                        top: 20,
-                                        left: 0,
-                                        right: 0,
-                                        bottom: (width - 90)/6,
-                                        child: Padding(
-                                          padding: EdgeInsets.all(10),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                image: DecorationImage(
-                                                    fit: BoxFit.fitHeight,
-                                                    image: AssetImage('assets/image/iconbike.png')
-                                                )
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-
-                                      Positioned(
-                                        bottom: 10,
-                                        left: 10,
-                                        right: 10,
-                                        child: Container(
-                                          height: (width - 90)/8 - 20,
-                                          alignment: Alignment.center,
-                                          child: AutoSizeText(
-                                            'Gọi xe ôm',
-                                            style: TextStyle(
-                                                fontFamily: 'muli',
-                                                fontSize: 100,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                                child: feature_button_in_main_page(title: 'Gọi xe ôm', imageUrl: 'assets/image/iconbike.png'),
                                 onTap: () {
                                   getCurrentLocation().then((value) {
 
@@ -366,65 +283,9 @@ class _preview_screenState extends State<preview_screen> {
 
                             Positioned(
                               top: 0,
-                              right: 30,
+                              right: 15 + (((width - 60)/3))/2,
                               child: GestureDetector(
-                                child: Container(
-                                  width: (width - 90)/2,
-                                  height: (width - 90)/2,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(20),
-                                    border: Border.all(width: 1),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(0.2), // màu của shadow
-                                        spreadRadius: 5, // bán kính của shadow
-                                        blurRadius: 7, // độ mờ của shadow
-                                        offset: Offset(0, 3), // vị trí của shadow
-                                      ),
-                                    ],
-                                  ),
-                                  child: Stack(
-                                    children: <Widget>[
-                                      Positioned(
-                                        top: 20,
-                                        left: 0,
-                                        right: 0,
-                                        bottom: (width - 90)/6,
-                                        child: Padding(
-                                          padding: EdgeInsets.all(10),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                image: DecorationImage(
-                                                    fit: BoxFit.fitHeight,
-                                                    image: AssetImage('assets/image/iconbag.png')
-                                                )
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-
-                                      Positioned(
-                                        bottom: 10,
-                                        left: 10,
-                                        right: 10,
-                                        child: Container(
-                                          height: (width - 90)/8 - 20,
-                                          alignment: Alignment.center,
-                                          child: AutoSizeText(
-                                            'Mua hàng hộ',
-                                            style: TextStyle(
-                                                fontFamily: 'muli',
-                                                fontSize: 100,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                                child: feature_button_in_main_page(title: 'Mua đồ ăn', imageUrl: 'assets/image/iconfood.png'),
                                 onTap: () {
                                   getCurrentLocation().then((value) {
 
@@ -440,149 +301,55 @@ class _preview_screenState extends State<preview_screen> {
                       Container(height: 30,),
 
                       Container(
-                        height: (width - 90)/2,
+                        height: (width - 60)/3,
                         child: Stack(
                           children: <Widget>[
                             Positioned(
                               top: 0,
-                              left: 30,
+                              left: 15,
                               child: GestureDetector(
-                                child: Container(
-                                  width: (width - 90)/2,
-                                  height: (width - 90)/2,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(20),
-                                    border: Border.all(width: 1),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(0.2), // màu của shadow
-                                        spreadRadius: 5, // bán kính của shadow
-                                        blurRadius: 7, // độ mờ của shadow
-                                        offset: Offset(0, 3), // vị trí của shadow
-                                      ),
-                                    ],
-                                  ),
-                                  child: Stack(
-                                    children: <Widget>[
-                                      Positioned(
-                                        top: 20,
-                                        left: 0,
-                                        right: 0,
-                                        bottom: (width - 90)/6,
-                                        child: Padding(
-                                          padding: EdgeInsets.all(10),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                image: DecorationImage(
-                                                    fit: BoxFit.fitHeight,
-                                                    image: AssetImage('assets/image/iconmart.png')
-                                                )
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-
-                                      Positioned(
-                                        bottom: 10,
-                                        left: 10,
-                                        right: 10,
-                                        child: Container(
-                                          height: (width - 90)/8 - 20,
-                                          alignment: Alignment.center,
-                                          child: AutoSizeText(
-                                            'Giao hàng nhanh',
-                                            style: TextStyle(
-                                                fontFamily: 'muli',
-                                                fontSize: 100,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                                child: feature_button_in_main_page(title: 'Giao hàng nhanh', imageUrl: 'assets/image/iconmart.png'),
                                 onTap: () {
                                   getCurrentLocation().then((value) {
 
                                   });
-                                  Navigator.push(context, MaterialPageRoute(builder:(context) => login_screen()));                                },
+                                  Navigator.push(context, MaterialPageRoute(builder:(context) => login_screen()));
+                                },
                               ),
                             ),
 
                             Positioned(
                               top: 0,
-                              right: 30,
+                              left: (width - ((width - 60)/3))/2,
                               child: GestureDetector(
-                                child: Container(
-                                  width: (width - 90)/2,
-                                  height: (width - 90)/2,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(20),
-                                    border: Border.all(width: 1),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(0.2), // màu của shadow
-                                        spreadRadius: 5, // bán kính của shadow
-                                        blurRadius: 7, // độ mờ của shadow
-                                        offset: Offset(0, 3), // vị trí của shadow
-                                      ),
-                                    ],
-                                  ),
-                                  child: Stack(
-                                    children: <Widget>[
-                                      Positioned(
-                                        top: 20,
-                                        left: 0,
-                                        right: 0,
-                                        bottom: (width - 90)/6,
-                                        child: Padding(
-                                          padding: EdgeInsets.all(10),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                image: DecorationImage(
-                                                    fit: BoxFit.fitHeight,
-                                                    image: AssetImage('assets/image/iconfood.png')
-                                                )
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-
-                                      Positioned(
-                                        bottom: 10,
-                                        left: 10,
-                                        right: 10,
-                                        child: Container(
-                                          height: (width - 90)/8 - 20,
-                                          alignment: Alignment.center,
-                                          child: AutoSizeText(
-                                            'Mua đồ ăn',
-                                            style: TextStyle(
-                                                fontFamily: 'muli',
-                                                fontSize: 100,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                                child: feature_button_in_main_page(title: 'Mua sắm', imageUrl: 'assets/image/iconstore.png'),
                                 onTap: () {
                                   getCurrentLocation().then((value) {
 
                                   });
-                                  Navigator.push(context, MaterialPageRoute(builder:(context) => login_screen()));                                },
+                                  Navigator.push(context, MaterialPageRoute(builder:(context) => login_screen()));
+                                },
+                              ),
+                            ),
+
+                            Positioned(
+                              top: 0,
+                              right: 15,
+                              child: GestureDetector(
+                                child: feature_button_in_main_page(title: 'Mua hàng hộ', imageUrl: 'assets/image/iconbag.png'),
+                                onTap: () {
+                                  getCurrentLocation().then((value) {
+
+                                  });
+                                  Navigator.push(context, MaterialPageRoute(builder:(context) => login_screen()));
+                                },
                               ),
                             ),
                           ],
                         ),
                       ),
+
+                      Container(height: 30,),
                     ],
                   ),
                 ),

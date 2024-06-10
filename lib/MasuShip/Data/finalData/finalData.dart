@@ -41,5 +41,7 @@ class finalData {
   static List<cartProduct> cartList = [];
   static List<cartProduct> storeCartList = [];
 
+  static bool jumpAds = true;
+
   static Temporary shipperIndexTempotary = Temporary(stringData: '', intData: 0, doubleData: 0);
 }

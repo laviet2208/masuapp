@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
 import 'package:masuapp/MasuShip/screens/shipperScreen/main_screen/controller/location_controller.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/history_page/history_page.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/main_page/ingredient/jump_in_ads/jump_in_ads_dialog.dart';
@@ -37,14 +38,17 @@ class _user_main_screenState extends State<user_main_screen> {
     // TODO: implement initState
     super.initState();
     location_controller.getCurrentLocation();
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return jump_in_ads_dialog();
-        },
-      );
-    });
+    if (finalData.jumpAds) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return jump_in_ads_dialog();
+          },
+        );
+      });
+      finalData.jumpAds = false;
+    }
   }
 
   @override
