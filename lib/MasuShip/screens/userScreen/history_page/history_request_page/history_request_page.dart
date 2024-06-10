@@ -137,7 +137,8 @@ class _history_request_pageState extends State<history_request_page> {
           Container(height: 20,),
 
           Container(
-            child: ListView.builder(
+            alignment: Alignment.center,
+            child: chosenList.length != 0 ? ListView.builder(
               itemCount: chosenList.length,
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
@@ -147,7 +148,7 @@ class _history_request_pageState extends State<history_request_page> {
                   child: history_request_item(order: chosenList[index]),
                 );
               },
-            ),
+            ) : Text('Hiện chưa có đơn nào'),
           ),
         ],
       ),

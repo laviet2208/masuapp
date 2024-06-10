@@ -136,7 +136,7 @@ class _history_food_order_pageState extends State<history_food_order_page> {
           Container(height: 20,),
 
           Container(
-            child: ListView.builder(
+            child: chosenList.length != 0 ? ListView.builder(
               itemCount: chosenList.length,
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
@@ -146,7 +146,7 @@ class _history_food_order_pageState extends State<history_food_order_page> {
                   child: history_food_order_item(order: chosenList[index]),
                 );
               },
-            ),
+            ) : Text('Hiện chưa có đơn nào'),
           ),
 
           Container(height: 30,),

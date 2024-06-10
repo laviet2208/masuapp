@@ -128,7 +128,8 @@ class _history_catch_order_bike_pageState extends State<history_catch_order_bike
           ),
 
           Container(
-            child: ListView.builder(
+            alignment: Alignment.center,
+            child: chosenList.length != 0 ? ListView.builder(
               itemCount: chosenList.length,
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
@@ -138,7 +139,7 @@ class _history_catch_order_bike_pageState extends State<history_catch_order_bike
                   child: history_catch_order_bike_item(order: chosenList[index]),
                 );
               },
-            ),
+            ) : Text("Hiện chưa có đơn nào"),
           ),
 
           Container(height: 50,),
