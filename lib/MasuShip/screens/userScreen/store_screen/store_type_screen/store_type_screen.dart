@@ -124,10 +124,10 @@ class _store_type_screenState extends State<store_type_screen> {
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2, // số phần tử trên mỗi hàng
-                        mainAxisSpacing: 10, // khoảng cách giữa các hàng
-                        crossAxisSpacing: (width - 20 - 2*(width/2.5)), // khoảng cách giữa các cột
-                        childAspectRatio: (width/2.5)/(width/2.5 * 1.4), // tỷ lệ chiều rộng và chiều cao
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 10,
+                        crossAxisSpacing: (width - 20 - 2*(width/2.5)),
+                        childAspectRatio: (width/2.5)/(width/2.5 * 1.4),
                       ),
                       itemBuilder: (context, index) {
                         return Container(

@@ -1,17 +1,21 @@
 import 'dart:async';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/Data/costData/Cost.dart';
 import 'package:masuapp/MasuShip/Data/costData/restaurantCost.dart';
 import 'package:masuapp/MasuShip/Data/costData/weatherCost.dart';
+import 'package:masuapp/MasuShip/screens/loginScreen/controller/loginController.dart';
+import 'package:masuapp/MasuShip/screens/loginScreen/login_screen.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/main_screen/user_main_screen.dart';
 import '../../Data/accountData/shipperAccount.dart';
 import '../../Data/accountData/userAccount.dart';
 import '../../Data/finalData/finalData.dart';
+import '../../Data/locationData/Location.dart';
 import '../../Data/otherData/Tool.dart';
+import '../../Data/otherData/utils.dart';
 import '../../screens/loginScreen/preview_screen.dart';
-
 import '../shipperScreen/main_screen/shipper_main_screen.dart';
 import 'enter_name_screen.dart';
 
@@ -33,35 +37,76 @@ class _loading_screenState extends State<loading_screen> {
 
   Future<void> getData(String phoneNumber) async {
     final reference = FirebaseDatabase.instance.reference();
-    await reference.child('Account').onValue.listen((event) {
+    await reference.child('Account').orderByChild('phone').equalTo(phoneNumber.substring(3)).onValue.listen((event) async {
       final dynamic account = event.snapshot.value;
-      account.forEach((key, value) async {
-        if ('+84' + get_phoneNum(value['phone'].toString()) == phoneNumber) {
-          if (value['license'] == null) {
-            finalData.account = UserAccount.fromJson(value);
-            finalData.user_account = UserAccount.fromJson(value);
-            if (finalData.user_account.name == '') {
-              await getCost();
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => enter_name_screen(),),);
-            } else if (finalData.user_account.lockStatus == 1) {
-              await getCost();
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => user_main_screen(),),);
-            } else {
-              // tài khoản bị khóa
-            }
+      if (account != null) {
+        if (account['license'] == null) {
+          finalData.account = UserAccount.fromJson(account);
+          finalData.user_account = UserAccount.fromJson(account);
+          if (finalData.user_account.name == '') {
+            await getCost();
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => enter_name_screen(),),);
+          } else if (finalData.user_account.lockStatus == 1) {
+            await getCost();
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => user_main_screen(),),);
           } else {
-            finalData.account = shipperAccount.fromJson(value);
-            finalData.shipper_account = shipperAccount.fromJson(value);
-            if (finalData.account.lockStatus == 1) {
-              await getCost();
-              Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => shipper_main_screen()));
-            } else {
-              //Tài khoản khách bị khóa
-            }
+            toastMessage('Tài khoản bị khóa, vui lòng kiểm tra lại');
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => login_screen(),),);
+          }
+        } else {
+          finalData.account = shipperAccount.fromJson(account);
+          finalData.shipper_account = shipperAccount.fromJson(account);
+          if (finalData.account.lockStatus == 1) {
+            await getCost();
+            Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => shipper_main_screen()));
+          } else {
+            toastMessage('Tài khoản bị khóa, vui lòng kiểm tra lại');
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => login_screen(),),);
           }
         }
+      } else {
+        print(phoneNumber.substring(3));
+        finalData.user_account = UserAccount(
+          id: generateID(15),
+          createTime: getCurrentTime(),
+          lockStatus: 1,
+          name: '',
+          area: 'ineSi92oGc1ZDlBBlddo',
+          phone: phoneNumber.substring(3),
+          location: Location(placeId: '', description: '', longitude: 0, latitude: 0, mainText: '', secondaryText: ''),
+        );
+
+        await loginController.pushData(finalData.user_account);
+        await getCost();
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => enter_name_screen(),),);
       }
-      );
+
+      // account.forEach((key, value) async {
+      //   if ('+84' + get_phoneNum(value['phone'].toString()) == phoneNumber) {
+      //     if (value['license'] == null) {
+      //       finalData.account = UserAccount.fromJson(value);
+      //       finalData.user_account = UserAccount.fromJson(value);
+      //       if (finalData.user_account.name == '') {
+      //         await getCost();
+      //         Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => enter_name_screen(),),);
+      //       } else if (finalData.user_account.lockStatus == 1) {
+      //         await getCost();
+      //         Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => user_main_screen(),),);
+      //       } else {
+      //         // tài khoản bị khóa
+      //       }
+      //     } else {
+      //       finalData.account = shipperAccount.fromJson(value);
+      //       finalData.shipper_account = shipperAccount.fromJson(value);
+      //       if (finalData.account.lockStatus == 1) {
+      //         await getCost();
+      //         Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => shipper_main_screen()));
+      //       } else {
+      //         //Tài khoản khách bị khóa
+      //       }
+      //     }
+      //   }
+      // });
     });
   }
 

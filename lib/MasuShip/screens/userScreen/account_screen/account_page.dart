@@ -125,7 +125,7 @@ class _account_pageState extends State<account_page> {
                                   height: 30,
                                   alignment: Alignment.centerLeft,
                                   child: AutoSizeText(
-                                    finalData.user_account.name,
+                                    finalData.account.name,
                                     style: TextStyle(
                                         fontSize: 160,
                                         fontWeight: FontWeight.bold,

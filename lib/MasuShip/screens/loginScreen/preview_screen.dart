@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -100,6 +101,8 @@ class _preview_screenState extends State<preview_screen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    final player = AudioPlayer();
+    player.play(AssetSource('volume/chaomung.mp3'), volume: 200);
     get_area_name();
     get_ads_main_page_data();
     _timer = Timer.periodic(Duration(seconds: 5), (timer) {

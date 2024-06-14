@@ -30,7 +30,7 @@ class order_have_dialog_controller {
       await push_history_data(historyTransactionData(id: generateID(30), senderId: '', receiverId: finalData.shipper_account.id, transactionTime: getCurrentTime(), type: 5, content: 'Chiết khấu đơn xe ôm' + order.id, money: money, area: finalData.shipper_account.area));
       print('Trừ tiền tài khoản, đẩy lịch sử lên');
       final player = AudioPlayer();
-      await player.play(AssetSource('volume/ting.mp3'), volume: 200);
+      await player.play(AssetSource('volume/shippercodon.mp3'), volume: 200);
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -54,7 +54,7 @@ class order_have_dialog_controller {
       await change_order_time('S2time', order.id);
       print('Trừ tiền tài khoản, đẩy lịch sử lên');
       final player = AudioPlayer();
-      await player.play(AssetSource('volume/ting.mp3'), volume: 200);
+      await player.play(AssetSource('volume/shippercodon.mp3'), volume: 200);
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -79,7 +79,7 @@ class order_have_dialog_controller {
       await push_history_data(historyTransactionData(id: generateID(30), senderId: '', receiverId: finalData.shipper_account.id, transactionTime: getCurrentTime(), type: 5, content: 'Chiết khấu đơn xe ôm' + order.id, money: money, area: finalData.shipper_account.area));
       print('Trừ tiền tài khoản, đẩy lịch sử lên');
       final player = AudioPlayer();
-      await player.play(AssetSource('volume/ting.mp3'), volume: 200);
+      await player.play(AssetSource('volume/shippercodon.mp3'), volume: 200);
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -104,7 +104,7 @@ class order_have_dialog_controller {
       await push_history_data(historyTransactionData(id: generateID(30), senderId: '', receiverId: finalData.shipper_account.id, transactionTime: getCurrentTime(), type: 5, content: 'Chiết khấu đơn xe ôm' + order.id, money: money, area: finalData.shipper_account.area));
       print('Trừ tiền tài khoản, đẩy lịch sử lên');
       final player = AudioPlayer();
-      await player.play(AssetSource('volume/ting.mp3'), volume: 200);
+      await player.play(AssetSource('volume/shippercodon.mp3'), volume: 200);
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -131,7 +131,7 @@ class order_have_dialog_controller {
       await push_history_data(historyTransactionData(id: generateID(30), senderId: '', receiverId: finalData.shipper_account.id, transactionTime: getCurrentTime(), type: 5, content: 'Chiết khấu đơn nhà hàng ' + order.id, money: money, area: finalData.shipper_account.area));
       print('Trừ tiền tài khoản, đẩy lịch sử lên');
       final player = AudioPlayer();
-      await player.play(AssetSource('volume/ting.mp3'), volume: 200);
+      await player.play(AssetSource('volume/shippercodon.mp3'), volume: 200);
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -155,8 +155,8 @@ class order_have_dialog_controller {
       await change_order_time('S2time', order.id);
       await push_history_data(historyTransactionData(id: generateID(30), senderId: '', receiverId: finalData.shipper_account.id, transactionTime: getCurrentTime(), type: 5, content: 'Chiết khấu đơn xe ôm' + order.id, money: money, area: finalData.shipper_account.area));
       print('Trừ tiền tài khoản, đẩy lịch sử lên');
-      // final player = AudioPlayer();
-      // await player.play(AssetSource('volume/ting.mp3'), volume: 200);
+      final player = AudioPlayer();
+      await player.play(AssetSource('volume/shippercodon.mp3'), volume: 200);
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -283,7 +283,7 @@ class order_have_dialog_controller {
       final dynamic orders = event.snapshot.value;
       if (orders != null) {
         orders.forEach((key, value) async {
-          if (DateTime.now().difference(finalData.lastOrderTime).inMilliseconds >= 40500) {
+          if (DateTime.now().difference(finalData.lastOrderTime).inMilliseconds >= 40500 && value['costFee']['discountPercent'] != null) {
             if (finalData.shipper_account.orderHaveStatus == 0) {
               if (get_commission(value) <= finalData.shipper_account.money) {
                 print('Đủ tiền nhận đơn');

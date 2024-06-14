@@ -92,6 +92,8 @@ flutter:
     - assets/image/iconhoatdong/
     - assets/image/iconaccinfo/
     - assets/volume/ting.mp3
+    - assets/volume/shippercodon.mp3
+    - assets/volume/chaomung.mp3
     - assets/image/
 
   fonts:

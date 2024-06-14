@@ -107,14 +107,14 @@ class _verify_screenState extends State<verify_screen> {
                       color: Colors.yellow,
                     ),
                     child: Center(
-                      child: Text(
+                      child: !loading ? Text(
                         'Xác minh số điện thoại',
                         style: TextStyle(
                             fontFamily: 'roboto',
                             color: Colors.black,
                             fontWeight: FontWeight.bold
                         ),
-                      ),
+                      ) : CircularProgressIndicator(color: Colors.black,),
                     ),
                   ),
                   onTap: () async {
