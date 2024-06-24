@@ -21,7 +21,7 @@ class _buy_request_buttonState extends State<buy_request_button> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return GestureDetector(
-      child: feature_button_in_main_page(title: 'Mua hàng hộ', imageUrl: 'assets/image/iconbag.png'),
+      child: feature_button_in_main_page(title: 'Mua hàng hộ theo yêu cầu', imageUrl: 'assets/image/iconbag1.png'),
       onTap: () async {
         setState(() {
           loading = true;

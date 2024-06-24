@@ -77,11 +77,11 @@ class price_list_type_1_wait_ingredient extends StatelessWidget {
 
                         if (snapshot.hasError) {
                           print(snapshot.error.toString());
-                          return Text('Vui lòng chọn hoặc cho phép vị trí', style: TextStyle(color: Colors.black, fontSize: 15),);
+                          return Text('Lỗi tính toán km', style: TextStyle(color: Colors.black, fontSize: 15),);
                         }
 
                         if (!snapshot.hasData) {
-                          return Text('Vui lòng chọn hoặc cho phép vị trí', style: TextStyle(color: Colors.black, fontSize: 15),);
+                          return Text('Lỗi tính toán km', style: TextStyle(color: Colors.black, fontSize: 15),);
                         }
 
                         return general_ingredient.get_cost_title('Chi phí di chuyển(' + snapshot.data!.toStringAsFixed(1) + 'Km)', width, 0);

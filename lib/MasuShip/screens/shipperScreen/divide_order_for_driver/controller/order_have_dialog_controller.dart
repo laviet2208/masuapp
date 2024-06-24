@@ -48,9 +48,9 @@ class order_have_dialog_controller {
   static Future<void> show_catch_order_type_2_have_dialog(BuildContext context, CatchOrder order) async {
     if (await check_get_order_success(order.id)) {
       print('5. check thành công lần 3');
-      double money = get_commission(order.toJson());
-      finalData.shipper_account.money = finalData.shipper_account.money - money;
-      await change_shipper_money();
+      // double money = get_commission(order.toJson());
+      // finalData.shipper_account.money = finalData.shipper_account.money - money;
+      // await change_shipper_money();
       await change_order_time('S2time', order.id);
       print('Trừ tiền tài khoản, đẩy lịch sử lên');
       final player = AudioPlayer();
@@ -269,7 +269,9 @@ class order_have_dialog_controller {
     double discountLimit = double.parse(order['costFee']['discountLimit'].toString());
     double discountMoney = double.parse(order['costFee']['discountMoney'].toString());
     double discountPercent = double.parse(order['costFee']['discountPercent'].toString());
-    commissionMoney = discountMoney;
+    if (cost > 0) {
+      commissionMoney = discountMoney;
+    }
     if (cost > discountLimit) {
       commissionMoney = cost * discountPercent/100;
     }

@@ -274,7 +274,7 @@ class _preview_screenState extends State<preview_screen> {
                               top: 0,
                               left: 15 + (((width - 60)/3))/2,
                               child: GestureDetector(
-                                child: feature_button_in_main_page(title: 'Gọi xe ôm', imageUrl: 'assets/image/iconbike.png'),
+                                child: feature_button_in_main_page(title: 'Gọi xe máy, lái xe hộ', imageUrl: 'assets/image/iconbike10.png'),
                                 onTap: () {
                                   getCurrentLocation().then((value) {
 
@@ -288,7 +288,7 @@ class _preview_screenState extends State<preview_screen> {
                               top: 0,
                               right: 15 + (((width - 60)/3))/2,
                               child: GestureDetector(
-                                child: feature_button_in_main_page(title: 'Mua đồ ăn', imageUrl: 'assets/image/iconfood.png'),
+                                child: feature_button_in_main_page(title: 'Nhà hàng, ăn uống', imageUrl: 'assets/image/iconfood1.png'),
                                 onTap: () {
                                   getCurrentLocation().then((value) {
 
@@ -311,7 +311,7 @@ class _preview_screenState extends State<preview_screen> {
                               top: 0,
                               left: 15,
                               child: GestureDetector(
-                                child: feature_button_in_main_page(title: 'Giao hàng nhanh', imageUrl: 'assets/image/iconmart.png'),
+                                child: feature_button_in_main_page(title: 'Giao Express Hỏa tốc', imageUrl: 'assets/image/iconmart1.png'),
                                 onTap: () {
                                   getCurrentLocation().then((value) {
 
@@ -325,7 +325,7 @@ class _preview_screenState extends State<preview_screen> {
                               top: 0,
                               left: (width - ((width - 60)/3))/2,
                               child: GestureDetector(
-                                child: feature_button_in_main_page(title: 'Mua sắm', imageUrl: 'assets/image/iconstore.png'),
+                                child: feature_button_in_main_page(title: 'Cửa hàng, Mua sắm', imageUrl: 'assets/image/iconstore1.png'),
                                 onTap: () {
                                   getCurrentLocation().then((value) {
 
@@ -339,7 +339,7 @@ class _preview_screenState extends State<preview_screen> {
                               top: 0,
                               right: 15,
                               child: GestureDetector(
-                                child: feature_button_in_main_page(title: 'Mua hàng hộ', imageUrl: 'assets/image/iconbag.png'),
+                                child: feature_button_in_main_page(title: 'Mua hàng hộ theo yêu cầu', imageUrl: 'assets/image/iconbag1.png'),
                                 onTap: () {
                                   getCurrentLocation().then((value) {
 

@@ -278,7 +278,7 @@ class _restaurant_main_screenState extends State<restaurant_main_screen> {
                                     return GestureDetector(
                                       child: shop_type_item(imagePath: finalData.restaurant_type_images[index], title: finalData.restaurant_type_names[index]),
                                       onTap: () {
-                                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => restaurant_type_screen(title: finalData.restaurant_type_names[index], index: index),),);
+                                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => restaurant_type_screen(title: finalData.restaurant_type_names[index], index: index - 1),),);
                                       },
                                     );
                                   },

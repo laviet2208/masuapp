@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_one_bike_screen/type_one_bike_step_1.dart';
 import 'package:masuapp/MasuShip/screens/userScreen/bike_screen/type_three_bike_screen/type_three_bike_step_1.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../bike_screen/type_two_bike_screen/type_two_bike_step_1.dart';
 
@@ -14,6 +15,15 @@ class catch_order_ingredient_dialog extends StatefulWidget {
 }
 
 class _catch_order_ingredient_dialogState extends State<catch_order_ingredient_dialog> {
+
+  Future<void> _makePhoneCall(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    await launchUrl(launchUri);
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -33,11 +43,12 @@ class _catch_order_ingredient_dialogState extends State<catch_order_ingredient_d
           children: <Widget>[
             Positioned(
               top: 0,
-              bottom: (width - 90)/2 + 30,
+              // bottom: (width - 90)/2 + 30,
               left: 0,
               child: GestureDetector(
                 child: Container(
                   width: (width - 60 - 30)/2,
+                  height: (width - 60 - 30)/2,
                   child: Stack(
                     children: <Widget>[
                       Positioned(
@@ -59,18 +70,19 @@ class _catch_order_ingredient_dialogState extends State<catch_order_ingredient_d
                       ),
 
                       Positioned(
-                        bottom: 0,
-                        left: 20,
-                        right: 20,
+                        bottom: 10,
+                        left: 0,
+                        right: 0,
                         child: Container(
-                          height: (width - 90)/7 - 10,
                           child: Text(
                             'Đã biết điểm đến',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontFamily: 'muli',
                               fontWeight: FontWeight.bold,
-                              fontSize: 13,
+                              fontSize: width/28,
                             ),
                           ),
                         ),
@@ -86,11 +98,11 @@ class _catch_order_ingredient_dialogState extends State<catch_order_ingredient_d
 
             Positioned(
               top: 0,
-              bottom: (width - 90)/2 + 30,
               right: 0,
               child: GestureDetector(
                 child: Container(
                   width: (width - 60 - 30)/2,
+                  height: (width - 60 - 30)/2,
                   child: Stack(
                     children: <Widget>[
                       Positioned(
@@ -112,18 +124,19 @@ class _catch_order_ingredient_dialogState extends State<catch_order_ingredient_d
                       ),
 
                       Positioned(
-                        bottom: 0,
-                        left: 20,
-                        right: 20,
+                        bottom: 10,
+                        left: 0,
+                        right: 0,
                         child: Container(
-                          height: (width - 90)/7 - 10,
                           child: Text(
                             'Tự chỉ đường',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontFamily: 'muli',
                               fontWeight: FontWeight.bold,
-                              fontSize: 13,
+                              fontSize: width/28,
                             ),
                           ),
                         ),
@@ -165,18 +178,19 @@ class _catch_order_ingredient_dialogState extends State<catch_order_ingredient_d
                       ),
 
                       Positioned(
-                        bottom: 0,
-                        left: 20,
-                        right: 20,
+                        bottom: 10,
+                        left: 0,
+                        right: 0,
                         child: Container(
-                          height: (width - 90)/7 - 10,
                           child: Text(
                             'Lái xe về hộ',
                             textAlign: TextAlign.center,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               fontFamily: 'muli',
                               fontWeight: FontWeight.bold,
-                              fontSize: 13,
+                              fontSize: width/28,
                             ),
                           ),
                         ),
@@ -218,18 +232,19 @@ class _catch_order_ingredient_dialogState extends State<catch_order_ingredient_d
                       ),
 
                       Positioned(
-                        bottom: 0,
-                        left: 20,
-                        right: 20,
+                        bottom: 10,
+                        left: 0,
+                        right: 0,
                         child: Container(
-                          height: (width - 90)/7 - 10,
                           child: Text(
-                            'Gọi hotline đặt xe',
+                            'Gọi hotline',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontFamily: 'muli',
                               fontWeight: FontWeight.bold,
-                              fontSize: 13,
+                              fontSize: width/28,
                             ),
                           ),
                         ),
@@ -237,8 +252,8 @@ class _catch_order_ingredient_dialogState extends State<catch_order_ingredient_d
                     ],
                   ),
                 ),
-                onTap: () {
-
+                onTap: () async {
+                  await _makePhoneCall('0822353838');
                 },
               ),
             ),

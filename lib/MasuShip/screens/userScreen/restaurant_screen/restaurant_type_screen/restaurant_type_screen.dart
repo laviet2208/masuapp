@@ -21,19 +21,35 @@ class _restaurant_type_screenState extends State<restaurant_type_screen> {
 
   void get_shop_data() {
     final reference = FirebaseDatabase.instance.reference();
-    reference.child("Restaurant").orderByChild('type').equalTo(widget.index).onValue.listen((event) {
-      shopList.clear();
-      final dynamic orders = event.snapshot.value;
-      orders.forEach((key, value) {
-        ShopAccount account = ShopAccount.fromJson(value);
-        if (account.lockStatus == 1) {
-          shopList.add(account);
-        }
-      });
-      setState(() {
+    if (widget.index == -1) {
+      reference.child("Restaurant").onValue.listen((event) {
+        shopList.clear();
+        final dynamic orders = event.snapshot.value;
+        orders.forEach((key, value) {
+          ShopAccount account = ShopAccount.fromJson(value);
+          if (account.lockStatus == 1) {
+            shopList.add(account);
+          }
+        });
+        setState(() {
 
+        });
       });
-    });
+    } else {
+      reference.child("Restaurant").orderByChild('type').equalTo(widget.index).onValue.listen((event) {
+        shopList.clear();
+        final dynamic orders = event.snapshot.value;
+        orders.forEach((key, value) {
+          ShopAccount account = ShopAccount.fromJson(value);
+          if (account.lockStatus == 1) {
+            shopList.add(account);
+          }
+        });
+        setState(() {
+
+        });
+      });
+    }
   }
 
   @override

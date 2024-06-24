@@ -2,7 +2,10 @@ import 'dart:math';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:masuapp/MasuShip/Data/OrderData/catch_order_type_3_data/motherOrder.dart';
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
+import 'package:masuapp/MasuShip/Data/otherData/Time.dart';
+import 'package:masuapp/MasuShip/Data/voucherData/Voucher.dart';
 import 'package:masuapp/MasuShip/screens/shipperScreen/divide_order_for_driver/controller/order_have_dialog_controller.dart';
 import 'package:masuapp/MasuShip/screens/shipperScreen/history_order_page/history_order_item/view_order_detail/controller/view_catch_order_controller.dart';
 
@@ -30,9 +33,21 @@ class receive_button_controller {
       historyTransactionData his = historyTransactionData(id: generateID(30), senderId: '', receiverId: finalData.shipper_account.id, transactionTime: getCurrentTime(), type: 7, content: order.id, money: getVoucherSale(order.voucher, order.cost), area: order.owner.area);
       await order_have_dialog_controller.push_history_data(his);
     }
+
     finalData.shipper_account.orderHaveStatus = 0;
     await order_have_dialog_controller.change_Have_Order_Status(0);
     toastMessage('Đã hoàn thành đơn');
+  }
+
+  static Future<motherOrder> getMother(String id) async {
+    final reference = FirebaseDatabase.instance.reference();
+    motherOrder order = motherOrder(id: '', locationSet: Location(placeId: '', description: '', longitude: 0, latitude: 0, mainText: '', secondaryText: ''), locationGet: Location(placeId: '', description: '', longitude: 0, latitude: 0, mainText: '', secondaryText: ''), cost: 0, owner: finalData.user_account, shipper: finalData.shipper_account, status: '', voucher: Voucher(id: '', Money: 0, mincost: 0, startTime: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0), endTime: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0), useCount: 0, maxCount: 0, eventName: '', LocationId: '', type: 1, Otype: '', perCustom: 1, CustomList: [], maxSale: 0, area: ''), createTime: Time(second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0), orderList: []);
+    await reference.child('Order').child(id).onValue.listen((event) {
+      final dynamic data = event.snapshot.value;
+      order = motherOrder.fromJson(data);
+
+    });
+    return order;
   }
 
   static Future<void> change_order_status(String status, String id) async {

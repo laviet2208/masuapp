@@ -25,7 +25,7 @@ class _shop_type_itemState extends State<shop_type_item> {
               top: 0,
               left: 0,
               right: 0,
-              bottom: 20,
+              bottom: 30,
               child: Container(
                 decoration: BoxDecoration(
                     image: DecorationImage(
@@ -41,15 +41,18 @@ class _shop_type_itemState extends State<shop_type_item> {
               left: 0,
               right: 0,
               child: Container(
-                height: 15,
+                height: 30,
                 alignment: Alignment.center,
-                child: AutoSizeText(
+                child: Text(
                   widget.title,
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                      fontSize: 100,
-                      fontFamily: 'arial',
+                      fontSize: MediaQuery.of(context).size.width/30,
+                      fontFamily: 'muli',
                       fontWeight: FontWeight.bold,
-                      color: Colors.grey
+                      color: Colors.black
                   ),
                 ),
               ),

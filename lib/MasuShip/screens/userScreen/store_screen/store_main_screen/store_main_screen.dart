@@ -265,7 +265,7 @@ class _store_main_screenState extends State<store_main_screen> {
                               child: Container(
                                 height: (width - 20 - 90)/4*3 + 20,
                                 child: GridView.builder(
-                                  itemCount: finalData.restaurant_type_images.length,
+                                  itemCount: finalData.store_type_names.length,
                                   padding: EdgeInsets.zero,
                                   physics: NeverScrollableScrollPhysics(),
                                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -278,7 +278,7 @@ class _store_main_screenState extends State<store_main_screen> {
                                     return GestureDetector(
                                       child: shop_type_item(imagePath: finalData.store_type_images[index], title: finalData.store_type_names[index]),
                                       onTap: () {
-                                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => store_type_screen(title: finalData.store_type_names[index], index: index),),);
+                                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => store_type_screen(title: finalData.store_type_names[index], index: index - 1),),);
                                       },
                                     );
                                   },

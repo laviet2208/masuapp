@@ -24,10 +24,13 @@ class receive_button_controller {
     await change_order_status('D', order.id);
     double distance = await getDistance(order.locationSet, finalData.shipper_account.location);
     await change_order_cost(getShipCost(distance, order.costFee), order.id);
+    double money = getShipDiscount(getShipCost(distance, order.costFee), order.costFee);
+    finalData.shipper_account.money = finalData.shipper_account.money - money;
+    await order_have_dialog_controller.change_shipper_money();
     await change_order_time('S4time', order.id);
     finalData.lastOrderTime = DateTime.now().add(Duration(seconds: Random().nextInt(21) + 30));
     finalData.shipper_account.orderHaveStatus = 0;
-    await order_have_dialog_controller.push_history_data(historyTransactionData(id: generateID(30), senderId: '', receiverId: finalData.shipper_account.id, transactionTime: getCurrentTime(), type: 5, content: 'Chiết khấu đơn ' + order.id, money: getShipCost(distance, order.costFee), area: finalData.shipper_account.area));
+    await order_have_dialog_controller.push_history_data(historyTransactionData(id: generateID(30), senderId: '', receiverId: finalData.shipper_account.id, transactionTime: getCurrentTime(), type: 5, content: 'Chiết khấu đơn ' + order.id, money: money, area: finalData.shipper_account.area));
     await order_have_dialog_controller.change_Have_Order_Status(0);
     toastMessage('Đã hoàn thành đơn');
   }

@@ -236,7 +236,7 @@ class _main_pageState extends State<main_page> {
                     top: 0,
                     right: 15 + (((width - 60)/3))/2,
                     child: GestureDetector(
-                      child: feature_button_in_main_page(title: 'Mua đồ ăn', imageUrl: 'assets/image/iconfood.png'),
+                      child: feature_button_in_main_page(title: 'Nhà hàng, ăn uống', imageUrl: 'assets/image/iconfood1.png'),
                       onTap: () {
                         Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => restaurant_main_screen(),),);
                       },
@@ -256,7 +256,7 @@ class _main_pageState extends State<main_page> {
                     top: 0,
                     left: 15,
                     child: GestureDetector(
-                      child: feature_button_in_main_page(title: 'Giao hàng nhanh', imageUrl: 'assets/image/iconmart.png'),
+                      child: feature_button_in_main_page(title: 'Giao Express Hỏa tốc', imageUrl: 'assets/image/iconmart1.png'),
                       onTap: () {
                         Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => express_step_1(),),);
                       },
@@ -267,7 +267,7 @@ class _main_pageState extends State<main_page> {
                     top: 0,
                     left: (width - ((width - 60)/3))/2,
                     child: GestureDetector(
-                      child: feature_button_in_main_page(title: 'Mua sắm', imageUrl: 'assets/image/iconstore.png'),
+                      child: feature_button_in_main_page(title: 'Cửa hàng, mua sắm', imageUrl: 'assets/image/iconstore1.png'),
                       onTap: () {
                         Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => store_main_screen(),),);
                       },

@@ -32,15 +32,35 @@ class _feature_button_in_main_pageState extends State<feature_button_in_main_pag
       ),
       child: Stack(
         children: <Widget>[
+          // Positioned(
+          //   top: 10,
+          //   left: 0,
+          //   right: 0,
+          //   bottom: (width - 100)/6,
+          //   child: Padding(
+          //     padding: EdgeInsets.all(0),
+          //     child: Container(
+          //       decoration: BoxDecoration(
+          //         image: DecorationImage(
+          //             fit: BoxFit.fitHeight,
+          //             image: AssetImage(widget.imageUrl)
+          //         ),
+          //         // color: Colors.redAccent
+          //       ),
+          //     ),
+          //   ),
+          // ),
+
           Positioned(
-            top: 10,
+            top: 0,
             left: 0,
             right: 0,
-            bottom: (width - 100)/6,
+            bottom: 25,
             child: Padding(
               padding: EdgeInsets.all(0),
               child: Container(
                 decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
                   image: DecorationImage(
                       fit: BoxFit.fitHeight,
                       image: AssetImage(widget.imageUrl)
@@ -52,20 +72,29 @@ class _feature_button_in_main_pageState extends State<feature_button_in_main_pag
           ),
 
           Positioned(
-            bottom: 10,
+            bottom: 0,
+            top: (width - 100)/6 + 27,
             left: 10,
             right: 10,
             child: Container(
-              height: (width - 90)/8 - 20,
               alignment: Alignment.center,
-              child: AutoSizeText(
+              child: Text(
                 widget.title,
                 textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                    fontFamily: 'muli',
-                    fontSize: 100,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold
+                  fontFamily: 'muli',
+                  fontSize: width/33,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  shadows: [
+                    Shadow(
+                      blurRadius: 10.0,
+                      color: Colors.white.withOpacity(0.7), // Đặt màu bóng là màu trắng
+                      offset: Offset(2.0, 2.0),
+                    ),
+                  ],
                 ),
               ),
             ),

@@ -2,6 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:masuapp/MasuShip/Data/OrderData/catch_order_type_3_data/catchOrderType3.dart';
 import 'package:masuapp/MasuShip/Data/finalData/finalData.dart';
+import 'package:masuapp/MasuShip/screens/shipperScreen/history_order_page/history_order_item/view_order_detail/un_order_detail/ingredient/catch_type_3_ingredient/receive_type_3_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../../../Data/costData/Cost.dart';
@@ -138,7 +139,7 @@ class _view_un_catch_order_type_3_detail_screenState extends State<view_un_catch
 
                 Container(height: 20,),
 
-                receive_button(order: order),
+                receive_type_3_button(order: order,),
 
                 Container(height: 10,),
 

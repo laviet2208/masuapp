@@ -6,6 +6,7 @@ import 'package:masuapp/MasuShip/screens/userScreen/store_screen/store_view_scre
 
 import '../../../../Data/accountData/shopData/shopAccount.dart';
 import '../../restaurant_screen/restaurant_directory_page/item_restaurant_in_directory.dart';
+import '../store_directory_page/item_store_in_directory.dart';
 
 class store_type_screen extends StatefulWidget {
   final String title;
@@ -21,19 +22,36 @@ class _store_type_screenState extends State<store_type_screen> {
 
   void get_shop_data() {
     final reference = FirebaseDatabase.instance.reference();
-    reference.child("Store").orderByChild('type').equalTo(widget.index).onValue.listen((event) {
-      shopList.clear();
-      final dynamic orders = event.snapshot.value;
-      orders.forEach((key, value) {
-        ShopAccount account = ShopAccount.fromJson(value);
-        if (account.lockStatus == 1) {
-          shopList.add(account);
-        }
-      });
-      setState(() {
+    if (widget.index == -1) {
+      reference.child("Store").onValue.listen((event) {
+        shopList.clear();
+        final dynamic orders = event.snapshot.value;
+        orders.forEach((key, value) {
+          ShopAccount account = ShopAccount.fromJson(value);
+          if (account.lockStatus == 1) {
+            shopList.add(account);
+          }
+        });
+        setState(() {
 
+        });
       });
-    });
+    } else {
+      reference.child("Store").orderByChild('type').equalTo(widget.index).onValue.listen((event) {
+        shopList.clear();
+        final dynamic orders = event.snapshot.value;
+        orders.forEach((key, value) {
+          ShopAccount account = ShopAccount.fromJson(value);
+          if (account.lockStatus == 1) {
+            shopList.add(account);
+          }
+        });
+        setState(() {
+
+        });
+      });
+    }
+
   }
 
   @override
@@ -142,7 +160,7 @@ class _store_type_screenState extends State<store_type_screen> {
                             ],
                           ),
                           child: GestureDetector(
-                            child: item_restaurant_in_directory(shopId: shopList[index].id),
+                            child: item_store_in_directory(shopId: shopList[index].id),
                             onTap: () {
                               Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => store_view_screen(shopId: shopList[index].id, beforeWidget: this.widget)));
                             },

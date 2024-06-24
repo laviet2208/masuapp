@@ -27,7 +27,25 @@ class price_list_order_type_3 extends StatelessWidget {
                   height: 17,
                   child: Stack(
                     children: <Widget>[
-                      cost_ingredient.left_title_cost('Chi phí di chuyển(' + getDistanceOfBike(order.cost, order.costFee).toStringAsFixed(1) + 'Km)', Colors.red, FontWeight.bold),
+                      FutureBuilder(
+                        future: getDistance(order.locationSet, order.locationGet),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return cost_ingredient.left_title_cost('Chi phí di chuyển(...Km)', Colors.red, FontWeight.bold);
+                          }
+
+                          if (snapshot.hasError) {
+                            return cost_ingredient.left_title_cost('Lỗi tính toán khoảng cách', Colors.red, FontWeight.bold);
+                          }
+
+                          if (!snapshot.hasData) {
+                            return cost_ingredient.left_title_cost('Lỗi tính toán khoảng cách', Colors.red, FontWeight.bold);
+                          }
+
+                          return cost_ingredient.left_title_cost('Chi phí di chuyển(' + snapshot.data!.toStringAsFixed(1) + 'Km)', Colors.red, FontWeight.bold);
+                        },
+                      ),
+                      // cost_ingredient.left_title_cost('Chi phí di chuyển(' + getDistanceOfBike(order.cost, order.costFee).toStringAsFixed(1) + 'Km)', Colors.red, FontWeight.bold),
                       cost_ingredient.right_title_cost((getStringNumber(order.cost) + '.đ'), Colors.red, FontWeight.bold),
                     ],
                   )

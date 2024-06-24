@@ -35,8 +35,8 @@ class _shipper_main_screenState extends State<shipper_main_screen> {
   void initState() {
     super.initState();
     finalData.lastOrderTime = DateTime.now().add(Duration(seconds: Random().nextInt(21) + 30));
-    getData();
     location_controller.getCurrentLocation();
+    getData();
     _timer = Timer.periodic(Duration(seconds: 1), (Timer timer) async {
       if (finalData.shipper_account.orderHaveStatus == 0 && finalData.shipper_account.onlineStatus == 1  && finalData.shipper_account.debt == 0 && DateTime.now().difference(finalData.lastOrderTime).inMilliseconds >= 40500 && DateTime.now().difference(finalData.lastOrderTime).inSeconds % 10 == 0) {
         print('Gọi hàm lấy đơn tự động ' + finalData.lastOrderTime.millisecond.toString());

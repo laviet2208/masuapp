@@ -75,7 +75,25 @@ class price_list_order_type_2 extends StatelessWidget {
                   height: 15,
                   child: Stack(
                     children: <Widget>[
-                      cost_ingredient.left_title_cost(order.locationGet.longitude == 0 ? 'Chi phí vận chuyển' : 'Chi phí vận chuyển(' + getDistanceOfBike(order.cost, order.costFee).toStringAsFixed(1) + 'Km)', Colors.red, FontWeight.bold),
+                      order.locationGet.longitude != 0 ? FutureBuilder(
+                        future: getDistance(order.locationSet,order.locationGet),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return cost_ingredient.left_title_cost('Đang tính toán quãng đường', Colors.red, FontWeight.bold);
+                          }
+
+                          if (snapshot.hasError) {
+                            return cost_ingredient.left_title_cost('Lỗi khi tính toán quãng đường', Colors.red, FontWeight.bold);
+                          }
+
+                          if (!snapshot.hasData) {
+                            return cost_ingredient.left_title_cost('Lỗi khi tính toán quãng đường', Colors.red, FontWeight.bold);
+                          }
+
+                          return cost_ingredient.left_title_cost(order.locationGet.longitude == 0 ? 'Chi phí vận chuyển' : 'Chi phí vận chuyển(' + snapshot.data!.toStringAsFixed(1) + 'Km)', Colors.red, FontWeight.bold);
+                        },
+                      ) : cost_ingredient.left_title_cost(order.locationGet.longitude == 0 ? 'Chi phí vận chuyển' : 'Chi phí vận chuyển(' + getDistanceOfBike(order.cost, order.costFee).toStringAsFixed(1) + 'Km)', Colors.red, FontWeight.bold),
+
                       cost_ingredient.right_title_cost(order.locationGet.longitude != 0 ? (getStringNumber(order.cost) + 'đ') : 'Chưa tới nơi', Colors.red, FontWeight.bold),
                     ],
                   )

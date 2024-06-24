@@ -13,6 +13,8 @@ class location_info_order_type_2 extends StatelessWidget {
       alignment: Alignment.centerLeft,
       child: Text(
         title,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
         style: TextStyle(
             fontFamily: 'muli',
             color: Colors.black,
@@ -36,8 +38,17 @@ class location_info_order_type_2 extends StatelessWidget {
     }
   }
 
+  Future<void> _makePhoneCall(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    await launchUrl(launchUri);
+  }
+
   @override
   Widget build(BuildContext context) {
+    Uri uriPhone = Uri.parse('tel:0886163653');
     return Padding(
       padding: EdgeInsets.only(left: 10, right: 10),
       child: Container(
@@ -76,6 +87,9 @@ class location_info_order_type_2 extends StatelessWidget {
                           size: 15,
                         )
                     ),
+                    onTap: () async {
+                      await _makePhoneCall('0' + order.owner.phone);
+                    },
                     //onTap: () => _launchPhone(order.owner.phone[0] == '0' ? order.owner.phone : '0' + order.owner.phone),
                   )
                 ],

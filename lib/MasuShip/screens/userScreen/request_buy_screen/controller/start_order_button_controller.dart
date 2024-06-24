@@ -21,7 +21,7 @@ class start_order_request_buy_button_controller {
     double maxcost = 0;
     for (Location location in list) {
       double l = 0;
-      double cost = await getShipCostByAPI(start, location, 0, finalData.requestBuyShipCost);
+      double cost = await getShipCostByAPI(start, location, l, finalData.requestBuyShipCost);
       if (cost > maxcost) {
         maxcost = cost;
       }

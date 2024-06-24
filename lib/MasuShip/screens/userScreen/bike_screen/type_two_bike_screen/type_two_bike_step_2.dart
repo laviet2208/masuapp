@@ -124,6 +124,8 @@ class _type_two_bike_step_2State extends State<type_two_bike_step_2> {
                                   child: Text(
                                     widget.start_location.mainText,
                                     textAlign: TextAlign.start,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                         fontFamily: 'muli',
                                         color: Colors.black,

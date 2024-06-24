@@ -28,6 +28,8 @@ class _type_one_bike_step_1State extends State<type_one_bike_step_1> {
       child: Text(
         title,
         textAlign: TextAlign.start,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
         style: TextStyle(
             fontFamily: 'muli',
             color: Colors.black,

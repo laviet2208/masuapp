@@ -245,7 +245,7 @@ Future<String> fetchLocationName(Location location) async {
 Future<double> getShipCostByAPI(Location start, Location end, double ordercost, Cost fee) async {
   double cost = 0;
   double distance = await getDistance(start, end);
-  getShipCost(distance, fee);
+  cost = getShipCost(distance, fee);
   ordercost = cost;
   return cost;
 }
