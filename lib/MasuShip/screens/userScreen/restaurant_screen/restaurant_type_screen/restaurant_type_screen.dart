@@ -134,7 +134,8 @@ class _restaurant_type_screenState extends State<restaurant_type_screen> {
                 Padding(
                   padding: EdgeInsets.only(left: 10, right: 10),
                   child: Container(
-                    child: GridView.builder(
+                    alignment: Alignment.center,
+                    child: shopList.length == 0 ? Text('Chưa có nhà hàng mục này') : GridView.builder(
                       itemCount: shopList.length,
                       padding: EdgeInsets.zero,
                       shrinkWrap: true,

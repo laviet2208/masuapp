@@ -133,40 +133,43 @@ class _store_type_screenState extends State<store_type_screen> {
 
                 Container(height: 20,),
 
-                Padding(
-                  padding: EdgeInsets.only(left: 10, right: 10),
-                  child: Container(
-                    child: GridView.builder(
-                      itemCount: shopList.length,
-                      padding: EdgeInsets.zero,
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 10,
-                        crossAxisSpacing: (width - 20 - 2*(width/2.5)),
-                        childAspectRatio: (width/2.5)/(width/2.5 * 1.4),
+                Container(
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 10, right: 10),
+                    child: shopList.length == 0 ? Text('Chưa có cửa hàng mục này') : Container(
+                      child: GridView.builder(
+                        itemCount: shopList.length,
+                        padding: EdgeInsets.zero,
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 10,
+                          crossAxisSpacing: (width - 20 - 2*(width/2.5)),
+                          childAspectRatio: (width/2.5)/(width/2.5 * 1.4),
+                        ),
+                        itemBuilder: (context, index) {
+                          return Container(
+                            decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.4), // màu của shadow
+                                  spreadRadius: 5, // bán kính của shadow
+                                  blurRadius: 7, // độ mờ của shadow
+                                  offset: Offset(0, 3), // vị trí của shadow
+                                ),
+                              ],
+                            ),
+                            child: GestureDetector(
+                              child: item_store_in_directory(shopId: shopList[index].id),
+                              onTap: () {
+                                Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => store_view_screen(shopId: shopList[index].id, beforeWidget: this.widget)));
+                              },
+                            ),
+                          );
+                        },
                       ),
-                      itemBuilder: (context, index) {
-                        return Container(
-                          decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.4), // màu của shadow
-                                spreadRadius: 5, // bán kính của shadow
-                                blurRadius: 7, // độ mờ của shadow
-                                offset: Offset(0, 3), // vị trí của shadow
-                              ),
-                            ],
-                          ),
-                          child: GestureDetector(
-                            child: item_store_in_directory(shopId: shopList[index].id),
-                            onTap: () {
-                              Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => store_view_screen(shopId: shopList[index].id, beforeWidget: this.widget)));
-                            },
-                          ),
-                        );
-                      },
                     ),
                   ),
                 )
