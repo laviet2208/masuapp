@@ -40,30 +40,33 @@ class _loading_screenState extends State<loading_screen> {
     await reference.child('Account').orderByChild('phone').equalTo(phoneNumber.substring(3)).onValue.listen((event) async {
       final dynamic account = event.snapshot.value;
       if (account != null) {
-        if (account['license'] == null) {
-          finalData.account = UserAccount.fromJson(account);
-          finalData.user_account = UserAccount.fromJson(account);
-          if (finalData.user_account.name == '') {
-            await getCost();
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => enter_name_screen(),),);
-          } else if (finalData.user_account.lockStatus == 1) {
-            await getCost();
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => user_main_screen(),),);
+        account.forEach((key, value) async {
+          if (value['license'] == null) {
+            print('Data của user: ' + value['id'].toString());
+            finalData.account = UserAccount.fromJson(value);
+            finalData.user_account = UserAccount.fromJson(value);
+            if (finalData.user_account.name == '') {
+              await getCost();
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => enter_name_screen(),),);
+            } else if (finalData.user_account.lockStatus == 1) {
+              await getCost();
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => user_main_screen(),),);
+            } else {
+              toastMessage('Tài khoản bị khóa, vui lòng kiểm tra lại');
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => login_screen(),),);
+            }
           } else {
-            toastMessage('Tài khoản bị khóa, vui lòng kiểm tra lại');
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => login_screen(),),);
+            finalData.account = shipperAccount.fromJson(value);
+            finalData.shipper_account = shipperAccount.fromJson(value);
+            if (finalData.account.lockStatus == 1) {
+              await getCost();
+              Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => shipper_main_screen()));
+            } else {
+              toastMessage('Tài khoản bị khóa, vui lòng kiểm tra lại');
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => login_screen(),),);
+            }
           }
-        } else {
-          finalData.account = shipperAccount.fromJson(account);
-          finalData.shipper_account = shipperAccount.fromJson(account);
-          if (finalData.account.lockStatus == 1) {
-            await getCost();
-            Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => shipper_main_screen()));
-          } else {
-            toastMessage('Tài khoản bị khóa, vui lòng kiểm tra lại');
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => login_screen(),),);
-          }
-        }
+        });
       } else {
         print(phoneNumber.substring(3));
         finalData.user_account = UserAccount(
